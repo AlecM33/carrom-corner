@@ -1,0 +1,69 @@
+<h2>Let the Playoffs Begin!</h2>
+
+<div class='flex-container'>
+    <div class="flex-column-play-in">
+        <div *ngFor="let index of playIns; let i = index">
+            <div *ngIf="playIns[i].length == 3" class='bracket-box'>
+                    <p>{{playIns[i][0].playoffSeed}} {{convertToName(playIns[i][0].id)}}</p>
+                    <hr />
+                    <p>{{playIns[i][1].playoffSeed}} {{convertToName(playIns[i][1].id)}}</p>
+            </div>
+            <div *ngIf="playIns[i].length == 4" class='bracket-box'>
+                    <p>{{playIns[i][0].playoffSeed}} {{convertToName(playIns[i][0].id)}}</p>
+                    <hr />
+                    <p>{{playIns[i][1].playoffSeed}} {{convertToName(playIns[i][1].id)}}</p>
+            </div>
+            <div *ngIf="playIns[i].length == 4" class='bracket-box'>
+                    <p>{{playIns[i][2].playoffSeed}} {{convertToName(playIns[i][2].id)}}</p>
+                    <hr />
+                    <p>{{playIns[i][3].playoffSeed}} {{convertToName(playIns[i][3].id)}}</p>
+            </div>
+        </div>
+    </div>
+    <div class='flex-column-bye'>
+        <div *ngFor="let index of playIns; let i = index">
+            <div *ngIf="playIns[i].length == 3" class='bracket-box'>
+                <p>{{playIns[i][2].playoffSeed}} {{convertToName(playIns[i][2].id)}}</p>
+                <hr />
+                <input type='text' />
+            </div>
+            <div *ngIf="playIns[i].length == 4" class='bracket-box-double'>
+                <input type="text" />
+                <hr />
+                <input type="text" />
+            </div>
+        </div>
+        <div *ngIf="byePlayers.length > playIns.length">
+            <div *ngFor="let index of indexArray((byePlayers.length - playIns.length) / 2); let i = index">
+                <div class='bracket-box'>
+                    <p>{{byePlayers[byePlayers.length - (1 + 2 * i)].playoffSeed}} {{convertToName(byePlayers[byePlayers.length - (1 + 2 * i)].id)}}</p>
+                    <hr />
+                    <p>{{byePlayers[byePlayers.length - (2 + 2 * i)].playoffSeed}} {{convertToName(byePlayers[byePlayers.length - (2 + 2 * i)].id)}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class='flex-column-clean-round'>
+        <div *ngFor="let index of indexArray(firstRound.length / 2); let i = index">
+            <div class='bracket-box'>
+                <p>{{firstRound[i].playoffSeed}} {{convertToName(firstRound[2 * i].id)}}</p>
+                <hr />
+                <p>{{firstRound[firstRound.length - (i + 1)].playoffSeed}} {{convertToName(firstRound[firstRound.length - (i + 1)].id)}}</p>
+            </div>
+        </div>
+    </div>
+        <div class='flex-column-future' *ngFor="let index of indexArray(numberOfRounds); let i = index">
+            <div class='bracket-box' *ngFor="let games of indexArray(bracketSize / returnPower(i + 1))">
+                <input type="text" />
+                <hr />
+                <input type="text" />
+            </div>
+        </div>
+        <div class='flex-column-future'>
+            <div class='bracket-box-winner'>
+                <input type="text" />
+                <img src='../../assets/images/trophy.png' width="15px" height="15px" />
+            </div>
+        </div>
+</div>
+

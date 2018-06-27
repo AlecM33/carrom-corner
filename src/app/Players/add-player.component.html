@@ -1,0 +1,11 @@
+<div class="container-fluid">
+    <form (ngSubmit)="onSubmit()" #playerForm="ngForm">
+        <p>Full Name:</p>
+        <input type="text" name="name" [(ngModel)]="newPlayerName" />
+        <p>Nickname (optional):</p>
+        <input type="text" name="nickname" [(ngModel)]="newPlayerNickname" />
+        <div>
+            <input type="submit" value="Add this player"/>
+        </div>
+    </form>
+</div>

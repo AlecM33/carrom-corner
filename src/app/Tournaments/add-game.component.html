@@ -1,0 +1,16 @@
+<div class="container-fluid">
+        <form (ngSubmit)="onSubmit()" #gameForm="ngForm">
+            <p>Who Won?</p>
+            <div>
+            <input id="checkbox1" type="radio" value="{{firstName}}" name="winner" [(ngModel)]="winningPlayer" /> {{firstName}}
+            <input id="checkbox2" type="radio" value="{{secondName}}" name="winner" [(ngModel)]="winningPlayer" /> {{secondName}}
+            </div>
+            <div>
+                <p>Score Differential: </p>
+                <input type="number" min="1" max="8" name="differential" [(ngModel)]="scoreDifferential"/>
+            </div>
+            <div>
+                <input type="submit" value="Enter Result"/>
+            </div>
+        </form>
+    </div>
