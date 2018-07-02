@@ -1,0 +1,46 @@
+<h2>Let the Playoffs Begin!</h2>
+<button class='btn btn-primary btn-xs' (click)="advancePlayer()">Advance a Player »</button>
+<div *ngIf="bracket" class='flex-container'>
+    <div *ngIf="bracket">
+        <div *ngFor='let matchup of indexArray(bracket[0].length / 2); let i = index;'>
+            <div *ngIf="!isEmpty(bracket[0][2 * i]) && isEmpty(bracket[0][(2 * i) + 1])" class='bracket-box-play-in'>
+                <p>{{returnPlayInPlayer()}}</p>
+                <hr />
+                <p>{{returnPlayInPlayer()}}</p>
+            </div>
+            <div *ngIf="isEmpty(bracket[0][2 * i]) && isEmpty(bracket[0][(2 * i) + 1])">
+                <div class='bracket-box-double-play-in'>
+                    <p>{{returnPlayInPlayer()}}</p>
+                    <hr />
+                    <p>{{returnPlayInPlayer()}}</p>
+                </div>
+                <div class='bracket-box-double-play-in'>
+                    <p>{{returnPlayInPlayer()}}</p>
+                    <hr />
+                    <p>{{returnPlayInPlayer()}}</p>
+                </div>
+            </div>
+            <div *ngIf="!isEmpty(bracket[0][2 * i]) && !isEmpty(bracket[0][(2 * i) + 1])" class='empty-div'>
+                <p></p>
+                <p></p>
+            </div>
+        </div>
+    </div>
+    <div *ngFor='let round of bracket' class='flex-column'>
+        <div class='bracket-box' *ngFor='let matchup of indexArray(round.length / 2); let i = index;'>
+            <p *ngIf="!isEmpty(round[2 * i])">{{round[2 * i].playoffSeed}} {{convertToName(round[2 * i].playerId)}}</p>
+            <p *ngIf="isEmpty(round[2 * i])" class='empty-slot'></p>
+            <hr />
+            <p *ngIf="!isEmpty(round[(2 * i) + 1])">{{round[(2 * i) + 1].playoffSeed}} {{convertToName(round[(2 * i) + 1].playerId)}}</p>
+            <p *ngIf="isEmpty(round[(2 * i) + 1])" class='empty-slot'></p>
+        </div>
+    </div>
+    <div class='flex-column'>
+        <div class='bracket-box-winner'>
+            <p class='empty-slot'></p>
+            <hr />
+            <img src='../../assets/images/trophy.png' width="15px" height="15px" />
+        </div>
+    </div>
+</div>
+

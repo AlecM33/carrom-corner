@@ -13,8 +13,8 @@ import { AddDoublesComponent } from './Tournaments/add-doubles.component';
 import { CoreModule } from './core.module';
 import { TournamentListComponent } from './Tournaments/tournament-list.component';
 import { ViewTournamentComponent } from './Tournaments/view-tournament.component';
-import { AddGameComponent } from './Tournaments/add-game.component';
-import { PlayoffsComponent } from './Tournaments/playoffs.component';
+import { AddGameComponent } from './Games/add-game.component';
+import { PlayoffsComponent } from './Playoffs/playoffs.component';
 
 @NgModule({
   declarations: [

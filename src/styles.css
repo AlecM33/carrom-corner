@@ -4,8 +4,7 @@ html {
 }
 
 h2 {
-    font-size: 23px;
-    text-align: left;
+    font-size: 30px;
     padding: 25px;
 }
 
@@ -34,22 +33,65 @@ input {
 .bracket-box {
     
     width: 200px;
-    height: 90px;
-    margin: 20px;
-    white-space: nowrap;
+    margin: 30px;
     font-size: 11px;
     border: 1px solid black;
 }
 
-.bracket-box-double {
+.bracket-box-play-in {
     
     width: 200px;
-    height: 90px;
-    margin-left: 20px;
-    margin-top: 80px;
-    margin-bottom: 70px;
-    white-space: nowrap;
+    margin: 30px;
     font-size: 11px;
+    border: 1px solid black;
+}
+
+.empty-div {
+    width: 200px;
+    margin: 60px;
+   
+}
+
+label {
+    font-size: 25px;
+    padding: 10px;
+}
+
+.next-button {
+    padding: 25px;
+    text-align: right;
+}
+
+.add-all-button {
+    margin-left: 20%;
+    text-align: left;
+}
+
+.next-button button {
+    width: 150px;
+    height: 50px;
+    font-size: 20px;
+}
+
+.players-table {
+    max-height: 350px;
+    border: 1px solid black;
+    padding: 10px;
+}
+
+.flex-column-play-in {
+    margin: 20px;
+    padding: 20px;
+}
+
+.empty-slot {
+    height: 15px;
+}
+
+.bracket-box-double-play-in {
+    width: 200px;
+    margin: 7px;
+    font-size: 10px;
     border: 1px solid black;
 }
 
@@ -57,8 +99,8 @@ input {
     padding: 5px;
     border: 1px solid black;
     width: 200px;
-    height: 65px;
-    box-shadow: 3px 3px 3px 3px rgba(255, 215, 0.2);
+    height: 80px;
+    box-shadow: 3px 0px 3px 2px rgba(255, 215, 0.2);
     
 }
 
@@ -73,30 +115,23 @@ input {
 }
 
 svg {
-    margin-top: 12px;
-    margin-bottom: 12px;
+    width: 90px;
+    height: 55px;
     padding: 0;
 }
 
 .flex-container {
     display: flex;
-}
-
-.flex-column-bye {
+    flex-direction: row;
     justify-content: center;
-    flex-direction: column;
 }
 
-.flex-column-future {
+.flex-column {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
 }
 
-.flex-column-play-in {
-    justify-content: space-around;
-    flex-direction: column;
-}
 
 hr {
     border: 0;
@@ -104,14 +139,6 @@ hr {
     background: #333;
     background-image: linear-gradient(to right, #ccc, #333, #ccc);
 }
-
-
-rect {
-    fill: lightgray;
-    stroke: rgb(243, 207, 5);
-    stroke-width: 3px;
-}
-
 
 
 .pools {
@@ -170,6 +197,7 @@ tr {
 
 td {
     white-space: nowrap !important;
+    padding: 10px;
 }
 
 .playoff-prompt {

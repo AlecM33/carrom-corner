@@ -1,10 +1,10 @@
 import { Player } from "../Players/player";
-import { Team } from "./team"
+import { Team } from "../Teams/team"
 
 export class Game {
     public id: number;
     public tournamentId: number;
-    public scheduleIndex: number;
+    public scheduleIndex: number; // for randomized scheduling 
     public id1: number;
     public id2: number;
     public winner: number;

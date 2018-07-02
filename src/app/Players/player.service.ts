@@ -34,7 +34,15 @@ export class PlayerService {
         let players = [];
 
         for (let piece of ob) {
-            players.push(new Player(piece['id'], piece['name'], piece['nickname'], piece['elo'], piece['wins'], piece['losses'], piece['winPtg']));
+            players.push(new Player(
+                                    piece['id'], 
+                                    piece['name'], 
+                                    piece['nickname'], 
+                                    piece['elo'], 
+                                    piece['wins'], 
+                                    piece['losses'], 
+                                    piece['winPtg'])
+                                );
         }
         return players;
     }
@@ -44,7 +52,7 @@ export class PlayerService {
         if(this.players !== undefined && this.players.length > 0){
             return Observable.of(this.players);
         } else {
-           return this.http.get('http://localhost:3000/players').map(this.populateWithPlayers);
+            return this.http.get('http://localhost:3000/players').map(this.populateWithPlayers);
         }
     }
     

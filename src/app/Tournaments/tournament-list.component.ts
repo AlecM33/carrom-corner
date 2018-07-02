@@ -16,15 +16,14 @@ import { Router } from '@angular/router';
 })
 
 export class TournamentListComponent implements OnInit {
+
   public tournaments = [];
+  
   constructor(public ts: TournamentService, private http: HttpClient, private router: Router) { 
   }
 
-  playoffDefined(id) {
-    if (this.ts.getPlayoff(id) != undefined) {
-      return true;
-    }
-    return false;
+  playoffDefined(id): boolean {
+    return this.ts.getPlayoff(id) !== undefined;
   }
 
   viewPlayoff(id) {
@@ -34,10 +33,10 @@ export class TournamentListComponent implements OnInit {
   delete(tournament) {
     this.tournaments = [];
     this.ts.deleteTournament(tournament, tournament.name).do(() => {
-       this.ts.getTournaments().subscribe((tournaments) => {
-         this.tournaments = tournaments;
-       })
-      }).subscribe();
+        this.ts.getTournaments().subscribe((tournaments) => {
+          this.tournaments = tournaments;
+        })
+    }).subscribe();
   }
 
   viewTournament(tournament) {
@@ -47,7 +46,6 @@ export class TournamentListComponent implements OnInit {
   ngOnInit() {
     this.ts.getTournaments().subscribe((tournaments) => {
       this.tournaments = tournaments;
-    }
-  );
+    });
   }
 }

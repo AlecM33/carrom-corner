@@ -4,9 +4,9 @@ import { HttpClient, HttpHeaders} from '@angular/common/http';
 import { PlayerListComponent } from "../Players/player-list.component";
 import { Observable } from "rxjs/Observable";
 import { Tournament } from "./tournament";
-import { Pool } from "./pool";
-import { Game } from "./game";
-import { Playoff } from "./playoff";
+import { Pool } from "../Pools/pool";
+import { Game } from "../Games/game";
+import { Playoff } from "../Playoffs/playoff";
 
 @Injectable()
 export class TournamentService {
@@ -22,9 +22,19 @@ export class TournamentService {
 
     populateWithTournaments(ob: any[]): Tournament[] {
         let tournaments = [];
-
         for (let piece of ob) {
-            tournaments.push(new Tournament(piece['id'], piece['playoffDefined'], piece['name'], piece['singles'], piece['size'], piece['players'], piece['teams'], piece['games'], piece['standings']));
+            tournaments.push(
+                new Tournament(
+                                piece['id'], 
+                                piece['playoffDefined'], 
+                                piece['name'], 
+                                piece['singles'], 
+                                piece['size'], 
+                                piece['players'], 
+                                piece['teams'], 
+                                piece['games'], 
+                                piece['standings']
+                            ));
         }
         return tournaments;
     }
@@ -33,44 +43,34 @@ export class TournamentService {
         let games = [];
 
         for (let piece of ob) {
-            games.push(new Game(piece['id'], piece['tournamentId'], piece['scheduleIndex'], piece['id1'], piece['id2'], piece['winner'], piece['differential']));
+            games.push(
+                new Game(
+                        piece['id'], 
+                        piece['tournamentId'], 
+                        piece['scheduleIndex'],
+                        piece['id1'], 
+                        piece['id2'], 
+                        piece['winner'], 
+                        piece['differential']
+                    ));
         }
         return games;
     }
-    
-
-    getTopPlayer(pool): Object {
-        let topPlayer = {"wins": 0, "totalDifferential": -1000}
-        for (let player of pool) {
-            if (player.wins > topPlayer.wins) {
-                topPlayer = player;
-            }
-            if (player.wins == topPlayer.wins) {
-                if (player.totalDifferential > topPlayer.totalDifferential) {
-                    topPlayer = player;
-                }
-            }
-        }
-        return topPlayer;
-    }
 
     getGames(id): Observable<Game[]> {
-      
         return this.http.get('http://localhost:3000/games?tournamentId=' + id).map(this.populateWithGames);
-    
     }
 
     getTournaments(): Observable<Tournament[]>{
-        if(this.tournaments !== undefined && this.tournaments.length > 0){
+        if (this.tournaments !== undefined && this.tournaments.length > 0) {
             return Observable.of(this.tournaments);
-        }else{
+        } else {
            return this.http.get('http://localhost:3000/tournaments').map(this.populateWithTournaments);
         }
     }
 
     getTournament(name): Observable<Object>{
         return this.http.get('http://localhost:3000/tournaments?name=' + name);
-
     }
 
     getPlayoff(id): Observable<Object>{
@@ -118,9 +118,7 @@ export class TournamentService {
         const httpOptions = {headers: new HttpHeaders({ 'Content-Type': 'application/json' })};
         let payload = {
                         "tournamentId": newPlayoff.tournamentId,
-                        "playIns": newPlayoff.playIns,
-                        "byePlayers": newPlayoff.byePlayers,
-                        "firstRound": newPlayoff.firstRound
+                        "bracket": newPlayoff.bracket,
                       }; 
         return this.http.post('http://localhost:3000/playoffs', payload, httpOptions);
     }
@@ -140,11 +138,9 @@ export class TournamentService {
         });
     }
     
-
+    // NOTE: Also deletes corresponding pools, games, and playoffs. 
     deleteTournament(tournament, name) {
         const httpOptions = {headers: new HttpHeaders({ 'Content-Type': 'application/json' })};
-        // Delete corresponding pools for the tournament
-        //this.http.delete('http://localhost:3000/games?tournyName=' + name, httpOptions).subscribe();
         this.http.delete('http://localhost:3000/pools/' + tournament.id, httpOptions).subscribe();
         return this.http.delete('http://localhost:3000/tournaments/' + tournament.id, httpOptions);
     }

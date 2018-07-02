@@ -5,14 +5,16 @@ import { Player } from "../Players/player";
 import { ActivatedRoute, Router } from "@angular/router";
 import { HttpClient } from "@angular/common/http";
 import { TournamentService } from "./tournament.service";
-import { Game } from "./game";
-import { Playoff } from "./playoff";
+import { Game } from "../Games/game";
+import { Playoff } from "../Playoffs/playoff";
+import { BracketGraph } from "../Brackets/bracketgraph";
+import { BracketService } from "../Brackets/bracket.service";
 
 @Component({
     selector: 'cr-tournyview',
     templateUrl: './view-tournament.component.html',
   })
-  
+
 export class ViewTournamentComponent implements OnInit {
     public poolLetter = 0;
     public tournySize = 0;
@@ -30,7 +32,18 @@ export class ViewTournamentComponent implements OnInit {
     public numberOfPools = 0;
     public playoffsBegan = false;
 
-    constructor (private ps: PlayerService, private http: HttpClient, private active_route: ActivatedRoute, private router: Router, private ts: TournamentService) {
+    public bracket = [];
+
+    public treeLevels = [];
+
+    constructor (
+                    private ps: PlayerService, 
+                    private http: HttpClient, 
+                    private active_route: ActivatedRoute, 
+                    private router: Router, 
+                    private ts: TournamentService, 
+                    private bs: BracketService
+                ) {
     }
 
 
@@ -64,18 +77,20 @@ export class ViewTournamentComponent implements OnInit {
         });
     }
 
+    // Filters schedule based on user-specified string
     filterGames(input) {
-        
-        input = input.toLowerCase();
-        let matchingPlayers = this.players.filter((value) => {
-            return value.name.toLowerCase().includes(input)});
-        
-        this.gamesToDisplay = this.games.filter((game) => {
-            let matchingIds = [];
-            matchingPlayers.forEach((player) => matchingIds.push(player.id));
-            return matchingIds.includes(game.id1) || matchingIds.includes(game.id2);
-        });
-        
+        let matchingPlayers = this.players.filter((value) => 
+            {
+                return value.name.toLowerCase().includes(input.toLowerCase())
+            }
+        );
+        this.gamesToDisplay = this.games.filter((game) => 
+            {
+                let matchingIds = [];
+                matchingPlayers.forEach((player) => matchingIds.push(player.id));
+                return matchingIds.includes(game.id1) || matchingIds.includes(game.id2);
+            }
+        ); 
     }
 
     isDisabled() {
@@ -88,7 +103,7 @@ export class ViewTournamentComponent implements OnInit {
     }
 
     findWins(id): number {
-        let record = this.records.find((record) => record.id == id);
+        let record = this.records.find((record) => record.playerId == id);
         if (record != undefined) {
             return record.wins;
         }
@@ -96,7 +111,7 @@ export class ViewTournamentComponent implements OnInit {
     }
 
     findDifferential(id): number {
-        let record = this.records.find((record) => record.id == id);
+        let record = this.records.find((record) => record.playerId == id);
         if (record != undefined) {
             return record.totalDifferential;
         }
@@ -104,7 +119,7 @@ export class ViewTournamentComponent implements OnInit {
     }
 
     findLosses(id): number {
-        let record = this.records.find((record) => record.id == id);
+        let record = this.records.find((record) => record.playerId == id);
         if (record != undefined) {
             return record.losses;
         }
@@ -130,16 +145,11 @@ export class ViewTournamentComponent implements OnInit {
         }
     }
 
-    generateStandings() {
-        for (let pool of this.playerPools) {
-            this.numberOfPools ++;
-            for (let player of pool) {
-                this.records.push({id: player.id, "wins": 0, "losses": 0, "totalDifferential": 0, "pool": this.playerPools.indexOf(pool), "playoffSeed": 0})
-            }
-        }
+    // Goes through the list of games for the tournament and calculates player wins, losses, and differential
+    calculateRecords() {
         for (let game of this.games) {
             if (game.winner != 0) {
-                let winnerIndex = this.records.indexOf(this.records.find((record) => record.id == game.winner));
+                let winnerIndex = this.records.indexOf(this.records.find((record) => record.playerId == game.winner));
                 this.records[winnerIndex].wins += 1;
                 this.records[winnerIndex].totalDifferential += game.differential;
                 let loser = 0;
@@ -148,35 +158,46 @@ export class ViewTournamentComponent implements OnInit {
                 } else {
                     loser = game.id1
                 }
-                let loserIndex = this.records.indexOf(this.records.find((record) => record.id == loser));
+                let loserIndex = this.records.indexOf(this.records.find((record) => record.playerId == loser));
                 this.records[loserIndex].losses ++;
                 this.records[loserIndex].totalDifferential -= game.differential;
             }
         }
+    }
 
+    sortPools() {
         for (let pool of this.playerPools) {
-            pool.sort((a, b) => {
-                let aWins = this.findWins(a.id);
-                let bWins = this.findWins(b.id);
-                let aDiff = this.findDifferential(a.id);
-                let bDiff = this.findDifferential(b.id);
-                if (aWins > bWins) {
-                    return -1;
-                }
-                else if (aWins == bWins) {
-                    if (aDiff >= bDiff) {
+            pool.sort((a, b) => 
+                {
+                    let aWins = this.findWins(a.id);
+                    let bWins = this.findWins(b.id);
+                    let aDiff = this.findDifferential(a.id);
+                    let bDiff = this.findDifferential(b.id);
+                    if (aWins > bWins) {
                         return -1;
-                    }
-                    else {
+                    } else if (aWins == bWins) {
+                        if (aDiff >= bDiff) {
+                            return -1;
+                        } else {
+                            return 1;
+                        }
+                    } else {
                         return 1;
                     }
                 }
-                else {
-                    return 1;
-                }
-            });
-            
+            );
         }
+    }
+
+    generateStandings() {
+        for (let pool of this.playerPools) {
+            this.numberOfPools ++;
+            for (let player of pool) {
+                this.records.push({"playerId": player.id, "wins": 0, "losses": 0, "totalDifferential": 0, "pool": this.playerPools.indexOf(pool), "parent": 0, "playoffSeed": 0})
+            }
+        }
+        this.calculateRecords();
+        this.sortPools();
     }
 
     viewGame(game) {
@@ -195,9 +216,11 @@ export class ViewTournamentComponent implements OnInit {
     filterPlayers() {
         let newPlayerPools = [];
         for (let pool of this.idPools) {
-            pool = pool.map(id => this.players.find(function(player) {
-                return id == player.id;
-            }))
+            pool = pool.map(id => this.players.find(function(player) 
+                {
+                    return id == player.id;
+                }
+            ));
             newPlayerPools.push(pool);
         }
         this.playerPools = newPlayerPools;
@@ -214,16 +237,16 @@ export class ViewTournamentComponent implements OnInit {
             } else {
                 return -1;
             }
-        })
+        });
         return round;
     }
 
     addToPlayoffs(id) {
-        if (this.playoffPool.find((player) => player.id == id) === undefined) {
-            let record = this.records.find((record) => record.id == id);
+        if (this.playoffPool.find((player) => player.playerId == id) === undefined) {
+            let record = this.records.find((record) => record.playerId == id);
             this.playoffPool.push(record);
         } else {
-            let index = this.playoffPool.findIndex((el) => el.id == id);
+            let index = this.playoffPool.findIndex((el) => el.playerId == id);
             this.playoffPool.splice(index, 1);
         }
     }
@@ -252,48 +275,24 @@ export class ViewTournamentComponent implements OnInit {
             player.playoffSeed = seed;
             seed ++;
         }
-        let playoffSize = this.playoffPool.length;
-        let firstRoundSize = playoffSize;
-        while (!this.powerOfTwo(firstRoundSize)) {
-            firstRoundSize --;
-        }
 
-        let higherPower = playoffSize
-        while (!this.powerOfTwo(higherPower)) {
-            higherPower ++;
+        let bracket = this.bs.generateBracket(this.playoffPool);
+        let depth = this.bs.getTreeDepth(bracket.winnerNode)
+        for (let i = depth; i > 0; i --) {
+            let nodesAtLevel = [];
+            this.bs.getNodesAtLevel(bracket.winnerNode, i, nodesAtLevel)
+            this.treeLevels.push(nodesAtLevel);
+        } 
+
+        let pairedLevels = [];
+        for (let level of this.treeLevels) {
+            for (let i = 0; i < (level.length / 2); i++) {
+                pairedLevels.push([level[2 * i], level[2 * i + 1]]);
+            }
+            
         }
         
-        let byeAmount = higherPower - playoffSize;
-        let playInAmount = playoffSize - firstRoundSize;
-        let firstRound = [];
-        let byePlayers = [];
-        let playIns = [];
-        for (let i = 0; i < byeAmount; i++) {
-            byePlayers.push(this.playoffPool.shift());
-        }
-        if (byeAmount == 0) {
-            firstRound = this.playoffPool;
-        }
-
-        for (let i = 0; i < playInAmount; i++) {
-            let matchup = [];
-            matchup.push(this.playoffPool.shift());
-            matchup.push(this.playoffPool.pop());
-            playIns.push(matchup);
-        }
-        let j = 0;
-        while(j < byePlayers.length && j < playIns.length) {
-            playIns[playIns.length - (j + 1)].push(byePlayers[j]);
-            j++;
-        }
-        let i = 0;
-        while (playIns.find((matchup) => matchup.length == 2) != undefined) {
-            playIns[i] = playIns[i].concat(playIns[i + 1]);
-            playIns.splice(i + 1, 1);
-            i ++;
-        }
-        
-        this.ts.addPlayoff(new Playoff(undefined, this.id, playIns, byePlayers, firstRound)).subscribe(() =>
+       this.ts.addPlayoff(new Playoff(undefined, this.id, this.treeLevels)).subscribe(() =>
         {
             this.ts.toggleDefined(this.id).subscribe(() => {
                 this.router.navigateByUrl('/playoffs/' + this.id);

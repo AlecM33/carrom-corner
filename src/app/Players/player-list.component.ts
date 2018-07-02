@@ -15,7 +15,9 @@ import 'rxjs/add/operator/do';
 })
 
 export class PlayerListComponent implements OnInit {
+
   public players = [];
+
   constructor(private _playerService: PlayerService, private http: HttpClient) { 
   }
 
@@ -33,7 +35,6 @@ export class PlayerListComponent implements OnInit {
   ngOnInit() {
     this._playerService.getPlayers().subscribe((players) => {
       this.players = players;
-    }
-  );
+    });
   }
 }

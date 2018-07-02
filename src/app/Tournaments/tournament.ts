@@ -1,8 +1,9 @@
 import { Player } from "../Players/player";
-import { Game } from "./game";
-import { Team } from "./team";
+import { Game } from "../Games/game";
+import { Team } from "../Teams/team";
 
 export class Tournament {
+    
     public id: number;
     playoffDefined: boolean;
     public name: string;

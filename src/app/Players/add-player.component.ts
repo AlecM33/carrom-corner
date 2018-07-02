@@ -12,17 +12,17 @@ import { Router } from '@angular/router';
     templateUrl: 'add-player.component.html'
 })
 export class AddPlayerComponent {
-    constructor(private _playerService: PlayerService, private router: Router) {
 
+    constructor(private _playerService: PlayerService, private router: Router) {
     }
+
     newPlayerName: string;
     newPlayerNickname: string;
 
     //Function for adding a new player to the database when user submits
     onSubmit() {
         let newPlayer = {name: this.newPlayerName, nickname: this.newPlayerNickname};
-        let observable =  this._playerService.addPlayer(newPlayer);
-        observable.subscribe(() => {
+        this._playerService.addPlayer(newPlayer).subscribe(() => {
             this.router.navigateByUrl('/players');
         });
     }
