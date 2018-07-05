@@ -1,11 +1,16 @@
 /* You can add global styles to this file, and also import other style files */
 
-html {
+html, body {
+    margin: 0;
+}
+
+.page-content {
+    margin: 3%;
 }
 
 h2 {
     font-size: 30px;
-    padding: 25px;
+    padding: 20px;
 }
 
 #list-button {
@@ -27,20 +32,24 @@ input {
 }
 
 .create-buttons {
-    padding: 3%;
+    padding: 0;
 }
 
 .bracket-box {
-    
-    width: 200px;
+    height: 70px;
+    width: 150px;
     margin: 30px;
     font-size: 11px;
     border: 1px solid black;
 }
 
+.bracket-box-winner.img {
+    margin-bottom: 20px;
+}
+
 .bracket-box-play-in {
     
-    width: 200px;
+    width: 150px;
     margin: 30px;
     font-size: 11px;
     border: 1px solid black;
@@ -95,10 +104,21 @@ label {
     border: 1px solid black;
 }
 
-.bracket-box-winner {
-    padding: 5px;
-    border: 1px solid black;
+.notice-container {
+    display: flex;
+    justify-content: center;
+}
+
+#notice {
+    color: green;
     width: 200px;
+    font-size: 11px;
+    background-color: rgb(213, 241, 213);
+}
+
+.bracket-box-winner {
+    border: 1px solid black;
+    width: 150px;
     height: 80px;
     box-shadow: 3px 0px 3px 2px rgba(255, 215, 0.2);
     
@@ -121,9 +141,22 @@ svg {
 }
 
 .flex-container {
+    width: 100%;
     display: flex;
     flex-direction: row;
-    justify-content: center;
+}
+
+.result-winner {
+    color: green;
+}
+
+.result-loser {
+    color: red;
+}
+
+.results-table {
+    white-space: nowrap;
+    font-size: 12px;
 }
 
 .flex-column {
@@ -132,8 +165,26 @@ svg {
     justify-content: space-around;
 }
 
+.empty-slot {
+    height: 28px;
+    margin: 0;
+    padding: 0;
+}
+
+.bracket-box p{
+    display: flex;
+    justify-content: space-between;
+}
+
+.bracket-box-play-in p{
+    display: flex;
+    justify-content: space-between;
+}
+
 
 hr {
+    
+    margin: 0;
     border: 0;
     height: 1px;
     background: #333;
@@ -178,6 +229,15 @@ h3 {
     font-size: 16px;
 }
 
+.vs-container {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.vs-container p {
+    font-size: 25px;
+}
+
 @keyframes pulse {
     from {background-color: blue; 
             border: 2px solid lightblue;
@@ -187,6 +247,7 @@ h3 {
 }
 
 .playoff-button {
+    margin: 0px 40px 0px;
     animation: pulse 1s infinite;
     animation-direction: alternate;
 }

@@ -14,13 +14,17 @@ export class PlayoffsComponent implements OnInit{
 
     public players = [];
     public playoffId: any;
+    public winner = undefined;
     public playoff = {};
     public bracketSize = 0;
     public numberOfRounds = 0;
     public filledGameIndices = [];
     public bracket: any;
+    public originalBracket: any;
+    public originalPlayIn: any;
     public playInRound: any;
     public restOfRounds = [];
+    public playoffGames: any;
 
     
 
@@ -32,12 +36,15 @@ export class PlayoffsComponent implements OnInit{
                 this.playoff = playoff;
                 this.bracket = playoff['bracket'];
                 this.playInRound = this.bracket.shift();
-               //this.bufferDivs();
-                console.log(this.playInRound);
-                console.log(this.bracket);
-                console.log(this.playInRound);
+                let notice = document.getElementById('notice');
+                notice.textContent = "";
+                this.ts.getPlayoffGames(this.playoffId).subscribe((games) => {
+                    this.playoffGames = games;
+                });
+            //this.bufferDivs();
             });
         });
+        
     }
 
     bufferDivs() {
@@ -49,26 +56,48 @@ export class PlayoffsComponent implements OnInit{
         }
     }
 
-    advancePlayer() {
-        this.router.navigateByUrl
-        if (round === 0) {
-            let openSpotNumber = Math.ceil(this.playInRound.indexOf(player) / 2);
+    resetBracket() {
+        this.ts.getPlayoff(this.playoffId).subscribe((playoff) => {
+            this.playoff = playoff;
+            this.bracket = playoff['bracket'];
+            this.playInRound = this.bracket.shift();
+            this.winner = undefined;
+        });
+    }
+
+    saveBracket() {
+        if(confirm('Save the current bracket?')) {
+        this.ts.updatePlayoff(this.playoff, this.bracket, this.playInRound).subscribe(() => {let notice = document.getElementById('notice');
+            notice.textContent = "Bracket Successfully Saved \u2713"});
+        }
+    }
+
+    enterPlayoffResult() {
+        this.router.navigateByUrl('/playoffs/' + this.playoffId + '/enter_result');
+    }
+
+    advancePlayer(player, round) {
+        if (round === -1) {
+            let openSpotNumber = Math.ceil((this.playInRound.indexOf(player) + 1) / 2);
             let openSpotCount = 0;
             let i = 0;
             while (openSpotCount < openSpotNumber) {
-                if (this.isEmpty(this.bracket[0][i])) {
+                console.log(this.playoff['playInSpots']);
+                if (this.playoff['playInSpots'].includes(i)) {
                     openSpotCount ++;
                 }
                 i ++;
             }
-            this.bracket[0][i] = player;
+            this.bracket[0][i - 1] = player;
+        } else if (this.bracket[round].length === 2) {
+            this.winner = player;
         } else {
-            console.log('not round 1!')
+            let openSpot = Math.floor(this.bracket[round].indexOf(player) / 2);
+            this.bracket[round + 1][openSpot] = player;
         }
-        console.log(this.bracket);
     }
 
-    returnPlayInPlayer(advance: boolean) {
+    returnPlayInPlayer(matchup, index, advance: boolean) {
         let player = this.playInRound.shift();
         let seed = player.playoffSeed;
         seed = seed.toString();

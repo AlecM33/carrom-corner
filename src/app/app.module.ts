@@ -15,10 +15,11 @@ import { TournamentListComponent } from './Tournaments/tournament-list.component
 import { ViewTournamentComponent } from './Tournaments/view-tournament.component';
 import { AddGameComponent } from './Games/add-game.component';
 import { PlayoffsComponent } from './Playoffs/playoffs.component';
+import { AddPlayoffGameComponent } from './Games/add-playoff-game.component';
 
 @NgModule({
   declarations: [
-    AppComponent, PlayerListComponent, AddPlayerComponent, AddSinglesComponent, AddDoublesComponent, TournamentListComponent, ViewTournamentComponent, AddGameComponent, PlayoffsComponent
+    AppComponent, PlayerListComponent, AddPlayerComponent, AddSinglesComponent, AddDoublesComponent, TournamentListComponent, ViewTournamentComponent, AddGameComponent, PlayoffsComponent, AddPlayoffGameComponent
   ],
   imports: [
     BrowserModule, 
@@ -34,7 +35,8 @@ import { PlayoffsComponent } from './Playoffs/playoffs.component';
       { path: 'tournaments', component: TournamentListComponent},
       { path: 'tournaments/:name', component: ViewTournamentComponent},
       { path: ':name/games/:id/enter_result', component: AddGameComponent},
-      { path: 'playoffs/:id', component: PlayoffsComponent}
+      { path: 'playoffs/:id', component: PlayoffsComponent},
+      { path: 'playoffs/:id/enter_result', component: AddPlayoffGameComponent}
     ]),
     CoreModule.forRoot()
   ],

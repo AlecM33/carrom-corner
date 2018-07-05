@@ -1,0 +1,20 @@
+<div *ngIf="playoffPool" class='vs-container'>
+    <form (ngSubmit)="onSubmit()" #playoffForm="ngForm">
+        <label>Winner:</label>
+        <select name="winner" [(ngModel)]="winningPlayer">
+            <option *ngFor="let player of playoffPool">{{player}}</option>
+        </select>
+        <p> vs. </p>
+        <label>Loser:</label>
+        <select name="loser" [(ngModel)]="losingPlayer">
+            <option *ngFor="let player of playoffPool">{{player}}</option>
+        </select>
+        <div>
+            <p>Score Differential: </p>
+            <input type="number" min="1" max="8" name="differential" [(ngModel)]="scoreDifferential"/>
+        </div>
+        <div>
+            <input type="submit" value="Enter Result"/>
+        </div>
+    </form>
+</div>

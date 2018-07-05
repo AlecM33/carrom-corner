@@ -186,7 +186,7 @@ export class AddSinglesComponent implements OnInit {
                 while (i < pool.length) {
                     let rnd = this.getRandomIntInclusive(0, this.scheduleIndices.length - 1);
                     let removedIndex = this.scheduleIndices.splice(rnd, 1)[0];
-                    let newGame = new Game(undefined, this.id, removedIndex, pool[j], pool[i], 0, 0);
+                    let newGame = new Game(undefined, false, this.id, removedIndex, pool[j], pool[i], 0, 0);
                     this.ts.addGame(newGame).subscribe();
                     i++;
                 }

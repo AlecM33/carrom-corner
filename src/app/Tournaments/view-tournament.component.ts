@@ -284,15 +284,14 @@ export class ViewTournamentComponent implements OnInit {
             this.treeLevels.push(nodesAtLevel);
         } 
 
-        let pairedLevels = [];
-        for (let level of this.treeLevels) {
-            for (let i = 0; i < (level.length / 2); i++) {
-                pairedLevels.push([level[2 * i], level[2 * i + 1]]);
+        let playInSpots = [];
+        for (let spot of this.treeLevels[1]) {
+            if (JSON.stringify(spot) === '{}') {
+                playInSpots.push(this.treeLevels[1].indexOf(spot));
             }
-            
         }
         
-       this.ts.addPlayoff(new Playoff(undefined, this.id, this.treeLevels)).subscribe(() =>
+       this.ts.addPlayoff(new Playoff(undefined, this.id, playInSpots, this.treeLevels)).subscribe(() =>
         {
             this.ts.toggleDefined(this.id).subscribe(() => {
                 this.router.navigateByUrl('/playoffs/' + this.id);

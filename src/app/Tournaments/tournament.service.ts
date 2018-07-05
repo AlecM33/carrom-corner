@@ -46,6 +46,7 @@ export class TournamentService {
             games.push(
                 new Game(
                         piece['id'], 
+                        piece['playoff'],
                         piece['tournamentId'], 
                         piece['scheduleIndex'],
                         piece['id1'], 
@@ -58,7 +59,11 @@ export class TournamentService {
     }
 
     getGames(id): Observable<Game[]> {
-        return this.http.get('http://localhost:3000/games?tournamentId=' + id).map(this.populateWithGames);
+        return this.http.get('http://localhost:3000/games?tournamentId=' + id + '&playoff=false').map(this.populateWithGames);
+    }
+
+    getPlayoffGames(id): Observable<Game[]> {
+        return this.http.get('http://localhost:3000/games?tournamentId=' + id + '&playoff=true').map(this.populateWithGames);
     }
 
     getTournaments(): Observable<Tournament[]>{
@@ -104,6 +109,7 @@ export class TournamentService {
     addGame(newGame: Game) {
         const httpOptions = {headers: new HttpHeaders({ 'Content-Type': 'application/json' })};
         let payload = { 
+                        "playoff": newGame.playoff,
                         "tournamentId": newGame.tournamentId,
                         "scheduleIndex": newGame.scheduleIndex,
                         "id1": newGame.id1,
@@ -118,9 +124,20 @@ export class TournamentService {
         const httpOptions = {headers: new HttpHeaders({ 'Content-Type': 'application/json' })};
         let payload = {
                         "tournamentId": newPlayoff.tournamentId,
+                        "playInSpots": newPlayoff.playInSpots,
                         "bracket": newPlayoff.bracket,
                       }; 
         return this.http.post('http://localhost:3000/playoffs', payload, httpOptions);
+    }
+
+    updatePlayoff(playoff: Object, bracket: Array<Object>, playInRound: Array<Object>) {
+        let newBracket = Object.assign([], bracket);
+        newBracket.unshift(playInRound);
+        console.log(newBracket);
+        return this.http.patch('http://localhost:3000/playoffs/' + playoff['id'],
+        {
+            "bracket": newBracket
+        });
     }
 
     updateGame(id, winner, differential): Observable<any> {
