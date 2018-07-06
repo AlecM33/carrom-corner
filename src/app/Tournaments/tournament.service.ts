@@ -13,10 +13,6 @@ export class TournamentService {
     constructor(private http: HttpClient) {
     }
 
-    addPlayerToTournament(player: Player) {
-        
-    }
-
     tournaments: Tournament[];
     games: Game[];
 
@@ -26,7 +22,8 @@ export class TournamentService {
             tournaments.push(
                 new Tournament(
                                 piece['id'], 
-                                piece['playoffDefined'], 
+                                piece['playoffDefined'],
+                                piece['winner'], 
                                 piece['name'], 
                                 piece['singles'], 
                                 piece['size'], 
@@ -37,6 +34,21 @@ export class TournamentService {
                             ));
         }
         return tournaments;
+    }
+
+    endTournament (id, winnerId) {
+        this.declarePlayoffWinner(id, winnerId).subscribe();
+        return this.http.patch('http://localhost:3000/tournaments/' + id,
+        {
+            "winner": winnerId
+        });
+    }
+
+    declarePlayoffWinner(id, winnerId) {
+        return this.http.patch('http://localhost:3000/playoffs/' + id,
+        {
+            "winner": winnerId
+        });
     }
 
     populateWithGames(ob: any[]): Game[] {
@@ -75,6 +87,10 @@ export class TournamentService {
     }
 
     getTournament(name): Observable<Object>{
+        if (typeof(name) === 'number') {
+            return this.http.get('http://localhost:3000/tournaments?id=' + name);
+        }
+        console.log('got here');
         return this.http.get('http://localhost:3000/tournaments?name=' + name);
     }
 
@@ -126,6 +142,7 @@ export class TournamentService {
                         "tournamentId": newPlayoff.tournamentId,
                         "playInSpots": newPlayoff.playInSpots,
                         "bracket": newPlayoff.bracket,
+                        "winner": newPlayoff.winner
                       }; 
         return this.http.post('http://localhost:3000/playoffs', payload, httpOptions);
     }

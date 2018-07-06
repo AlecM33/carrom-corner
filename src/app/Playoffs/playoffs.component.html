@@ -1,11 +1,14 @@
 <div class='notice-container'>
     <p id='notice'></p>
 </div>
-<h2>Let the Playoffs Begin!</h2>
-<button class='btn btn-primary btn-xs' (click)='enterPlayoffResult()'>Enter Playoff Game Result</button>
-<button class='btn btn-primary btn-xs' (click)='resetBracket()'>Clear Changes</button>
-<button class='btn btn-success btn-xs' (click)='saveBracket()'>Save Bracket</button>
-<button *ngIf="winner" class='btn btn-danger btn-xs playoff-button' (click)='endTournament()'>End Tournament</button>
+<h2>Playoffs</h2>
+<div class='button-set' *ngIf="!isOver">
+    <button class='btn btn-primary btn-xs' (click)='enterPlayoffResult()'>Enter Playoff Game Result</button>
+    <button class='btn btn-primary btn-xs' (click)='resetBracket()'>Clear Changes</button>
+    <button class='btn btn-success btn-xs' (click)='saveBracket()'>Save Bracket</button>
+    <button *ngIf="winner" class='btn btn-danger btn-xs playoff-button' (click)='endTournament()'>End Tournament</button>
+</div>
+<h2 class='playoff-prompt' *ngIf="tournamentWinner && tournamentWinner.length > 0">This tournament is complete!</h2>
 <div *ngIf="bracket && playInRound" class='flex-container'>
     <div class='results-table'>
         <h3>Recent Playoff Game Results</h3>
@@ -18,30 +21,31 @@
                 <td>{{convertToName(game.id2)}}</td>
             </tr>
         </table>
+        <p *ngIf="playoffGames && playoffGames.length == 0" class='playoff-prompt'>You haven't entered any playoff game results!</p>
     </div>
-    <p *ngIf="!playoffGames" class='playoff-prompt'>You haven't entered any playoff game results!</p>
     <div *ngIf="bracket">
         <div *ngFor='let matchup of indexArray(playInRound.length / 2); let i = index;'>
             <div class='bracket-box-play-in'>
-                <p>{{playInRound[2 * i].playoffSeed}} {{convertToName(playInRound[2 * i].playerId)}} <button (click)="advancePlayer(playInRound[2 * i], -1)">»</button></p>
+                <p>{{playInRound[2 * i].playoffSeed}} {{convertToName(playInRound[2 * i].playerId)}} <button *ngIf="!isOver" (click)="advancePlayer(playInRound[2 * i], -1)">»</button></p>
                 <hr />
-                <p>{{playInRound[2 * i + 1].playoffSeed}} {{convertToName(playInRound[2 * i + 1].playerId)}} <button (click)="advancePlayer(playInRound[2 * i + 1], -1)">»</button></p>
+                <p>{{playInRound[2 * i + 1].playoffSeed}} {{convertToName(playInRound[2 * i + 1].playerId)}} <button *ngIf="!isOver" (click)="advancePlayer(playInRound[2 * i + 1], -1)">»</button></p>
             </div>
         </div>
     </div>
     <div *ngFor='let round of bracket; let j = index' class='flex-column'>
         <div class='bracket-box' *ngFor='let matchup of indexArray(round.length / 2); let i = index;'>
-            <p *ngIf="!isEmpty(round[2 * i])">{{round[2 * i].playoffSeed}} {{convertToName(round[2 * i].playerId)}} <button (click)="advancePlayer(round[2 * i], j)" *ngIf="!isEmpty(round[2 * i + 1])">»</button></p>
+            <p *ngIf="!isEmpty(round[2 * i])">{{round[2 * i].playoffSeed}} {{convertToName(round[2 * i].playerId)}} <button (click)="advancePlayer(round[2 * i], j)" *ngIf="!isEmpty(round[2 * i + 1]) && !isOver">»</button></p>
             <p *ngIf="isEmpty(round[2 * i])" class='empty-slot'></p>
             <hr />
-            <p *ngIf="!isEmpty(round[(2 * i) + 1])">{{round[(2 * i) + 1].playoffSeed}} {{convertToName(round[(2 * i) + 1].playerId)}} <button (click)="advancePlayer(round[2 * i + 1], j)" *ngIf="!isEmpty(round[2 * i])">»</button></p>
+            <p *ngIf="!isEmpty(round[(2 * i) + 1])">{{round[(2 * i) + 1].playoffSeed}} {{convertToName(round[(2 * i) + 1].playerId)}} <button (click)="advancePlayer(round[2 * i + 1], j)" *ngIf="!isEmpty(round[2 * i]) && !isOver">»</button></p>
             <p *ngIf="isEmpty(round[(2 * i) + 1])" class='empty-slot'></p>
         </div>
     </div>
     <div class='flex-column'>
         <div class='bracket-box-winner'>
-            <p *ngIf="winner" class='empty-slot'>{{convertToName(winner.playerId)}}</p>
-            <p *ngIf="!winner" class='empty-slot'></p>
+            <p *ngIf="tournamentWinner && tournamentWinner.length > 0" class='empty-slot'>{{tournamentWinner[0]}}</p>
+            <p *ngIf="winner && tournamentWinner && tournamentWinner.length == 0" class='empty-slot'>{{convertToName(winner.playerId)}}</p>
+            <p *ngIf="!winner && tournamentWinner && tournamentWinner.length == 0" class='empty-slot'></p>
             <hr />
             <img src='../../assets/images/trophy.png' width="20px" height="20px" />
         </div>

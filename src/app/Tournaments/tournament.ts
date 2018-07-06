@@ -6,6 +6,7 @@ export class Tournament {
     
     public id: number;
     playoffDefined: boolean;
+    public winner: string[];
     public name: string;
     public singles: boolean;
     public size: number;
@@ -17,6 +18,7 @@ export class Tournament {
     constructor(
         id: number, 
         playoffDefined: boolean,
+        winner: string[],
         name: string,
         singles: boolean,
         size: number,
@@ -27,6 +29,7 @@ export class Tournament {
 
             this.id = id;
             this.playoffDefined = playoffDefined
+            this.winner = winner;
             this.name = name;
             this.singles = singles;
             this.size = size;

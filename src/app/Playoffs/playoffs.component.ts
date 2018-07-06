@@ -18,13 +18,12 @@ export class PlayoffsComponent implements OnInit{
     public playoff = {};
     public bracketSize = 0;
     public numberOfRounds = 0;
-    public filledGameIndices = [];
     public bracket: any;
-    public originalBracket: any;
-    public originalPlayIn: any;
     public playInRound: any;
-    public restOfRounds = [];
     public playoffGames: any;
+    public tournamentWinner: any;
+
+    public isOver = true;
 
     
 
@@ -33,6 +32,7 @@ export class PlayoffsComponent implements OnInit{
             this.players = players;
             this.playoffId = this.active_route.snapshot.paramMap.get('id');
             this.ts.getPlayoff(this.playoffId).subscribe((playoff) => {
+                this.tournamentWinner = playoff['winner'];
                 this.playoff = playoff;
                 this.bracket = playoff['bracket'];
                 this.playInRound = this.bracket.shift();
@@ -41,19 +41,14 @@ export class PlayoffsComponent implements OnInit{
                 this.ts.getPlayoffGames(this.playoffId).subscribe((games) => {
                     this.playoffGames = games;
                 });
-            //this.bufferDivs();
+                this.isOver = (this.tournamentWinner) && (this.tournamentWinner.length > 0);
             });
         });
         
     }
 
-    bufferDivs() {
-        for (let i = 0; i < this.bracket[0].length / 2; i++) {
-            if (!this.isEmpty(this.bracket[0][2 * i]) && !this.isEmpty(this.bracket[0][(2 * i) + 1])) {
-                this.playInRound.splice(2 * i, 0, {});
-                this.playInRound.splice((2 * i) + 1, 0, {});
-            }
-        }
+    endTournament() {
+        this.ts.endTournament(this.playoffId, [this.convertToName(this.winner.playerId)]).subscribe(() => this.router.navigateByUrl('/playoffs/' + this.playoffId + '/winner'));
     }
 
     resetBracket() {
@@ -67,8 +62,10 @@ export class PlayoffsComponent implements OnInit{
 
     saveBracket() {
         if(confirm('Save the current bracket?')) {
-        this.ts.updatePlayoff(this.playoff, this.bracket, this.playInRound).subscribe(() => {let notice = document.getElementById('notice');
-            notice.textContent = "Bracket Successfully Saved \u2713"});
+            this.ts.updatePlayoff(this.playoff, this.bracket, this.playInRound).subscribe(() => {
+                let notice = document.getElementById('notice');
+                notice.textContent = "Bracket Successfully Saved \u2713"
+            });
         }
     }
 
@@ -95,16 +92,6 @@ export class PlayoffsComponent implements OnInit{
             let openSpot = Math.floor(this.bracket[round].indexOf(player) / 2);
             this.bracket[round + 1][openSpot] = player;
         }
-    }
-
-    returnPlayInPlayer(matchup, index, advance: boolean) {
-        let player = this.playInRound.shift();
-        let seed = player.playoffSeed;
-        seed = seed.toString();
-        let name = this.convertToName(player.playerId);
-        let bracketString = seed + ' ' + name;
-        this.playInRound.push(player);
-        return bracketString;
     }
 
     isEmpty(obj) {

@@ -13,6 +13,22 @@ h2 {
     padding: 20px;
 }
 
+.winner {
+    color: rgb(236, 208, 49);
+    font-size: 60px;
+
+}
+
+.winner-image {
+    width: 480px;
+    height: 270px;
+}
+
+.winner-subheader {
+    font-size: 30px;
+    color: rgb(194, 168, 24);
+}
+
 #list-button {
     font-size: 11px;
     border: none;
@@ -67,7 +83,7 @@ label {
 }
 
 .next-button {
-    padding: 25px;
+    padding: 15px;
     text-align: right;
 }
 

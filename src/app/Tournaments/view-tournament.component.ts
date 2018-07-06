@@ -291,15 +291,11 @@ export class ViewTournamentComponent implements OnInit {
             }
         }
         
-       this.ts.addPlayoff(new Playoff(undefined, this.id, playInSpots, this.treeLevels)).subscribe(() =>
+       this.ts.addPlayoff(new Playoff(undefined, this.id, playInSpots, this.treeLevels, [])).subscribe(() =>
         {
             this.ts.toggleDefined(this.id).subscribe(() => {
                 this.router.navigateByUrl('/playoffs/' + this.id);
             });
         });
-       
-        /*this.ts.addPlayoff(playoff).subscribe(() => {
-            this.router.navigateByUrl('/playoffs/' + playoffName);
-        });*/
     }
 }
