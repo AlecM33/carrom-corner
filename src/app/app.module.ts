@@ -31,8 +31,7 @@ import { WinnerComponent } from './Playoffs/winner.component';
     RouterModule.forRoot([
       { path: 'players/add', component: AddPlayerComponent },
       { path: 'players', component: PlayerListComponent},
-      { path: 'tournament/singles/new', component: AddSinglesComponent},
-      { path: 'tournament/doubles/new', component: AddDoublesComponent},
+      { path: 'tournament/:type/new', component: AddSinglesComponent},
       { path: 'tournaments', component: TournamentListComponent},
       { path: 'tournaments/:name', component: ViewTournamentComponent},
       { path: ':name/games/:id/enter_result', component: AddGameComponent},

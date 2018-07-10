@@ -10,7 +10,7 @@ import { TournamentService } from './tournament.service';
 import { Observable } from 'rxjs/Observable';
 import { Tournament } from './tournament';
 import { Team } from '../Teams/team';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { Pool } from '../Pools/pool';
 import { Game } from '../Games/game';
 
@@ -21,12 +21,14 @@ and for generating the pools and schedule */
     templateUrl: 'add-singles.component.html'
 })
 export class AddSinglesComponent implements OnInit {
-    constructor(private ps: PlayerService, private ts: TournamentService, private http: HttpClient, private router: Router) {
+    constructor(private ps: PlayerService, private ts: TournamentService, private http: HttpClient, private router: Router, public active_route: ActivatedRoute) {
     }
 
     public playersInTourny = new Set();
     public playersToAdd = new Set();
-    public playerIds = [];
+    public teamIds = [];
+    doublesTeamIds = [];
+    tournyType = 'singles'
     public players = [];
     public tournament: Tournament;
     public robinType = 'Single';
@@ -38,6 +40,11 @@ export class AddSinglesComponent implements OnInit {
     public id = 0;
 
     ngOnInit () {
+        this.router.events.subscribe((event) => {
+            if (event instanceof NavigationEnd) {
+                this.tournyType = this.active_route.snapshot.paramMap.get('type');
+            }
+        })
         this.ps.getPlayers().subscribe((players) => {
             this.players = players;
             for (let player of this.players) {
@@ -58,7 +65,7 @@ export class AddSinglesComponent implements OnInit {
     // Adds player to current working roster
     addPlayer(currentPlayer: Player) {
         this.playersInTourny.add(currentPlayer);
-        this.playerIds.push(currentPlayer.id);
+        this.teamIds.push(currentPlayer.id);
         this.playersToAdd.delete(currentPlayer);
         this.toggleButton();
     }
@@ -67,15 +74,39 @@ export class AddSinglesComponent implements OnInit {
     removePlayer(currentPlayer: Player) {
         this.playersInTourny.delete(currentPlayer);
         this.playersToAdd.add(currentPlayer);
-        let index = this.playerIds.findIndex((id) => id == currentPlayer.id);
-        this.playerIds.splice(index, 1);
+        let index = this.teamIds.findIndex((id) => id == currentPlayer.id);
+        this.teamIds.splice(index, 1);
         this.toggleButton();
     }
 
     // Creates a tournament object and calls the tournament service to add to the database
     createTourny() {
-        this.tournament = new Tournament(undefined, false, undefined, this.tournamentName, true, this.playersInTourny.size, this.playerIds);
-        this.ts.addTournament(this.tournament).subscribe(() => this.filterPlayers());
+        if (this.tournyType === 'doubles') {
+            this.generateTeams();
+            this.tournament = new Tournament(undefined, false, undefined, this.tournamentName, false, this.playersInTourny.size, this.doublesTeamIds);
+            this.ts.addTournament(this.tournament).subscribe(() => {
+                if (this.tournament.size / 2 >= 8) {
+                    this.generatePools(this.doublesTeamIds);
+                    this.generateSchedule(this.generatedPools);
+                } else {
+                    this.addPool(this.doublesTeamIds);
+                    this.generateSchedule(this.doublesTeamIds);
+                }
+            });            
+        } else {
+            this.tournament = new Tournament(undefined, false, undefined, this.tournamentName, true, this.playersInTourny.size, this.teamIds);
+            this.ts.addTournament(this.tournament).subscribe(() => {
+                this.generatePools(this.teamIds);
+                if (this.tournament.size >= 8) {
+                    this.generatePools(this.teamIds);
+                    this.generateSchedule(this.generatedPools);
+                    
+                } else {
+                    this.addPool(this.teamIds);
+                    this.generateSchedule(this.teamIds);
+                }
+            });   
+        }
     }
 
     // Gets a random integer in the specified range (inclusive)
@@ -89,7 +120,7 @@ export class AddSinglesComponent implements OnInit {
     addAll() {
         this.playersToAdd.forEach( (player) => {
             this.playersInTourny.add(player);
-            this.playerIds.push(player.id);
+            this.teamIds.push(player.id);
             this.playersToAdd.delete(player);
             this.toggleButton();
         });
@@ -104,8 +135,8 @@ export class AddSinglesComponent implements OnInit {
             if (j == sameSizePools) {
                 j = 0;
             }
-            let rnd = this.getRandomIntInclusive(0, this.playerIds.length - 1);
-            let removedPlayer = this.playerIds.splice(rnd, 1)[0];
+            let rnd = this.getRandomIntInclusive(0, this.teamIds.length - 1);
+            let removedPlayer = this.teamIds.splice(rnd, 1)[0];
             this.generatedPools[j].push(removedPlayer);
             
             i ++;
@@ -113,16 +144,15 @@ export class AddSinglesComponent implements OnInit {
         }
     }
 
-    addPool() {
-        let pool = new Pool(this.generatedPools, this.tournamentName);
-        this.ts.addPool(pool).subscribe(() => {
-            this.generateSchedule();
-            this.router.navigateByUrl('/tournaments/' + this.tournamentName);
+    addPool(pool) {
+        let newPool = new Pool(pool, this.tournamentName);
+        this.ts.addPool(newPool).subscribe(() => {
+            //this.router.navigateByUrl('/tournaments/' + this.tournamentName);
         });
     }
 
     // Takes the selected roster and generates an appropriate player pool distribution
-    generatePools() {
+    generatePools(teams) {
         let optimalGroupSize = 0;
         if(this.tournament.size <= 16) {
             optimalGroupSize = 4;
@@ -132,61 +162,59 @@ export class AddSinglesComponent implements OnInit {
             optimalGroupSize = 6;
         }
 
-        let sameSizePools = Math.floor(this.playerIds.length / optimalGroupSize);
-        let leftovers = this.playerIds.length % optimalGroupSize;
+        let sameSizePools = Math.floor(teams.length / optimalGroupSize);
+        let leftovers = teams.length % optimalGroupSize;
        
         for (let i=0; i < sameSizePools; i++) {
             let newPool = [];
             for (let j = 0; j < optimalGroupSize; j++) {
-                let rnd = this.getRandomIntInclusive(0, this.playerIds.length - 1);
-                let removedPlayer = this.playerIds.splice(rnd, 1)[0];
+                let rnd = this.getRandomIntInclusive(0, teams.length - 1);
+                let removedPlayer = teams.splice(rnd, 1)[0];
                 newPool.push(removedPlayer);
             }
             this.generatedPools.push(newPool);
         }
         this.distributeLeftovers(sameSizePools, leftovers);
-        this.addPool();
-    }
-
-    
-
-    // Filters player objects based on who is in the created tournament
-    filterPlayers() {
-        let tourny = this.tournament;
-        this.tournyPool = this.players.filter(function(value) {
-            return tourny.teams.includes(value['id']);
-        })
-        this.generatePools();
+        this.addPool(this.generatedPools);
     }
 
     // Generates a round robin set of games and schedules them randomly 
-    generateSchedule () {
+    generateSchedule (pools) {
         this.ts.getTournament(this.tournament.name).subscribe((tournament) => {
             this.id = tournament[0].id;
-            this.generateGames();
+            this.generateGames(pools);
             if (this.robinType === 'Double') {
-                this.generateGames();
+                this.generateGames(pools);
             }
         });
     }
 
+    generateTeams() {
+        while (this.teamIds.length > 0) {
+            let teammate1 = this.teamIds.splice(this.getRandomIntInclusive(0, this.teamIds.length - 1), 1)[0];
+            let teammate2 = this.teamIds.splice(this.getRandomIntInclusive(0, this.teamIds.length - 1), 1)[0];
+            let newTeam = [teammate1, teammate2];
+            this.doublesTeamIds.push(newTeam);
+        }
+    }
+
     // creates all games for one round robin round for every pool
-    generateGames() {
+    generateGames(pools) {
         let numberOfGames = 0;
-        for (let i = 0; i < this.generatePools.length; i++) {
-            numberOfGames = numberOfGames + (this.generatedPools[i].length * (this.generatedPools[i].length - 1) / 2);
+        for (let i = 0; i < pools.length; i++) {
+            numberOfGames = numberOfGames + (pools[i].length * (pools[i].length - 1) / 2);
         }
         for (let i = 0; i < numberOfGames; i++) {
             this.scheduleIndices.push(i);
         }
-        for (let pool of this.generatedPools) {
+        for (let pool of pools) {
             let j = 0;
             let i = j + 1;
             while (j < pool.length - 1) {
                 while (i < pool.length) {
                     let rnd = this.getRandomIntInclusive(0, this.scheduleIndices.length - 1);
                     let removedIndex = this.scheduleIndices.splice(rnd, 1)[0];
-                    let newGame = new Game(undefined, false, this.id, removedIndex, pool[j], pool[i], 0, 0);
+                    let newGame = new Game(undefined, false, this.id, removedIndex, pool[j], pool[i], undefined, 0);
                     this.ts.addGame(newGame).subscribe();
                     i++;
                 }

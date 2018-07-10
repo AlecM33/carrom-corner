@@ -27,10 +27,7 @@ export class TournamentService {
                                 piece['name'], 
                                 piece['singles'], 
                                 piece['size'], 
-                                piece['players'], 
-                                piece['teams'], 
-                                piece['games'], 
-                                piece['standings']
+                                piece['teams']
                             ));
         }
         return tournaments;
@@ -105,10 +102,7 @@ export class TournamentService {
                         "playoffDefined": newTournament.playoffDefined,
                         "singles": newTournament.singles,
                         "size": newTournament.size,
-                        "players": newTournament.players,
                         "teams": newTournament.teams,
-                        "games": newTournament.games,
-                        "standings": newTournament.pools
                       }; 
         return this.http.post('http://localhost:3000/tournaments', payload, httpOptions);
     }
@@ -128,8 +122,8 @@ export class TournamentService {
                         "playoff": newGame.playoff,
                         "tournamentId": newGame.tournamentId,
                         "scheduleIndex": newGame.scheduleIndex,
-                        "id1": newGame.id1,
-                        "id2": newGame.id2,
+                        "team1": newGame.team1,
+                        "team2": newGame.team2,
                         "winner": newGame.winner,
                         "differential": newGame.differential
                       }; 
