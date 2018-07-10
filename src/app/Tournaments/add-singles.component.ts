@@ -81,16 +81,16 @@ export class AddSinglesComponent implements OnInit {
     createTourny() {
         if (this.tournyType === 'doubles') {
             this.generateTeams();
-            this.tournament = new Tournament(undefined, false, undefined, this.tournamentName, false, this.playersInTourny.size, this.doublesTeamIds);
+            this.tournament = new Tournament(undefined, false, undefined, this.tournamentName, false, this.playersInTourny.size / 2, this.doublesTeamIds);
             this.ts.addTournament(this.tournament).subscribe(() => {
                 this.ts.getTournament(this.tournament.name).subscribe((tournament) => {
                     this.id = tournament[0].id;
-                    if (this.tournament.size / 2 >= 8) {
+                    if (this.tournament.size >= 8) {
                         this.generatePools(this.doublesTeamIds);
                         this.generateSchedule(this.generatedPools);
                     } else {
-                        this.generateSchedule(this.doublesTeamIds);
-                        this.addPool(this.doublesTeamIds);
+                        this.generateSchedule([this.doublesTeamIds]);
+                        this.addPool([this.doublesTeamIds]);
                     }
                 });
             });            
@@ -104,8 +104,8 @@ export class AddSinglesComponent implements OnInit {
                         this.generateSchedule(this.generatedPools);
                         
                     } else {
-                        this.generateSchedule(this.teamIds);
-                        this.addPool(this.teamIds);
+                        this.generateSchedule([this.teamIds]);
+                        this.addPool([this.teamIds]);
                     }
                 });
             });   
@@ -130,7 +130,7 @@ export class AddSinglesComponent implements OnInit {
     }
 
     // After generating balanced pools, rations remaining players among created pools
-    distributeLeftovers(sameSizePools, leftovers) {
+    distributeLeftovers(sameSizePools, leftovers, teams) {
         let i = 0;
         let j = 0;
         while (i < leftovers) {
@@ -139,7 +139,7 @@ export class AddSinglesComponent implements OnInit {
                 j = 0;
             }
             let rnd = this.getRandomIntInclusive(0, this.teamIds.length - 1);
-            let removedPlayer = this.teamIds.splice(rnd, 1)[0];
+            let removedPlayer = teams.splice(rnd, 1)[0];
             this.generatedPools[j].push(removedPlayer);
             
             i ++;
@@ -177,7 +177,7 @@ export class AddSinglesComponent implements OnInit {
             }
             this.generatedPools.push(newPool);
         }
-        this.distributeLeftovers(sameSizePools, leftovers);
+        this.distributeLeftovers(sameSizePools, leftovers, teams);
         this.addPool(this.generatedPools);
     }
 

@@ -42,8 +42,8 @@ export class AddPlayoffGameComponent implements OnInit{
                 this.playoffPool = [];
                 for (let round of this.bracket) {
                     for (let i = 0; i < round.length; i++) {
-                        if (JSON.stringify(round[i]) !== '{}' && !this.playoffPool.includes(this.convertToName(round[i].playerId))) {
-                            this.playoffPool = this.playoffPool.concat(this.convertToName(round[i].playerId));
+                        if (JSON.stringify(round[i]) !== '{}' && !this.playoffPool.includes(round[i].team)) {
+                            this.playoffPool.push(round[i].team);
                         }
                     }
                 }
@@ -52,19 +52,25 @@ export class AddPlayoffGameComponent implements OnInit{
         });
     }
 
-    convertToName(id) {
-        return this.players.find((player) => player.id == id).name
+    convertToName(team) {
+        let teamString = JSON.stringify(team);
+        if (team instanceof Array) {
+            let firstName = this.players.find((player) => player.id === team[0]).name;
+            let secondName = this.players.find((player) => player.id === team[1]).name;
+            return firstName + ' & ' + secondName
+        }
+        return this.players.find((player) => player.id === team).name
     }
 
     onSubmit() {
-        let id1 = this.players.find((player) => player.name === this.winningPlayer).id;
-        let id2 = this.players.find((player) => player.name === this.losingPlayer).id;
-        let playoffGame = new Game(undefined, true, this.playoffId, undefined, id1, id2, id1, this.scoreDifferential)
+        console.log(this.playoffPool);
+        console.log(this.winningPlayer);
+        console.log(this.losingPlayer);
+        let team1 = this.playoffPool.find((team) => this.convertToName(team) == this.winningPlayer);
+        let team2 = this.playoffPool.find((team) => this.convertToName(team) == this.losingPlayer);
+        let playoffGame = new Game(undefined, true, this.playoffId, undefined, team1, team2, team1, this.scoreDifferential)
         this.ts.addGame(playoffGame).subscribe(() => {
             this.router.navigateByUrl('/playoffs/' + this.playoffId);
         });
-        console.log(this.winningPlayer);
-        console.log(this.losingPlayer);
-        console.log(this.scoreDifferential);
     }
 }

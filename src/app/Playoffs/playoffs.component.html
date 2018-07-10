@@ -8,7 +8,7 @@
     <button class='btn btn-success btn-xs' (click)='saveBracket()'>Save Bracket</button>
     <button *ngIf="winner" class='btn btn-danger btn-xs playoff-button' (click)='endTournament()'>End Tournament</button>
 </div>
-<h2 class='playoff-prompt' *ngIf="tournamentWinner && tournamentWinner.length > 0">This tournament is complete!</h2>
+<h2 class='playoff-prompt' *ngIf="tournamentWinner">This tournament is complete!</h2>
 <div *ngIf="bracket && playInRound" class='flex-container'>
     <div class='results-table'>
         <h3>Recent Playoff Game Results</h3>

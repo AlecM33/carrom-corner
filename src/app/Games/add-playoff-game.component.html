@@ -2,12 +2,12 @@
     <form (ngSubmit)="onSubmit()" #playoffForm="ngForm">
         <label>Winner:</label>
         <select name="winner" [(ngModel)]="winningPlayer">
-            <option *ngFor="let player of playoffPool">{{player}}</option>
+            <option *ngFor="let team of playoffPool">{{convertToName(team)}}</option>
         </select>
         <p> vs. </p>
         <label>Loser:</label>
         <select name="loser" [(ngModel)]="losingPlayer">
-            <option *ngFor="let player of playoffPool">{{player}}</option>
+            <option *ngFor="let team of playoffPool">{{convertToName(team)}}</option>
         </select>
         <div>
             <p>Score Differential: </p>

@@ -134,6 +134,7 @@ export class TournamentService {
     addPlayoff(newPlayoff: Playoff) {
         const httpOptions = {headers: new HttpHeaders({ 'Content-Type': 'application/json' })};
         let payload = {
+                        "id": newPlayoff.id,
                         "tournamentId": newPlayoff.tournamentId,
                         "playInSpots": newPlayoff.playInSpots,
                         "bracket": newPlayoff.bracket,
