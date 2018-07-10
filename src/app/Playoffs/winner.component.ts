@@ -32,16 +32,6 @@ export class WinnerComponent implements OnInit{
         });
     }
 
-    convertToName(team) {
-        let teamString = JSON.stringify(team);
-        if (team instanceof Array) {
-            let firstName = this.players.find((player) => player.id === team[0]).name;
-            let secondName = this.players.find((player) => player.id === team[1]).name;
-            return firstName + ' & ' + secondName
-        }
-        return this.players.find((player) => player.id === team).name
-    }
-
     goHome() {
         this.router.navigateByUrl('/tournaments');
     }

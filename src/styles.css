@@ -52,7 +52,7 @@ input {
 }
 
 .bracket-box {
-    height: 70px;
+    min-height: 70px;
     width: 150px;
     margin: 30px;
     font-size: 11px;
@@ -135,7 +135,7 @@ label {
 .bracket-box-winner {
     border: 1px solid black;
     width: 150px;
-    height: 80px;
+    min-height: 80px;
     box-shadow: 3px 0px 3px 2px rgba(255, 215, 0.2);
     
 }

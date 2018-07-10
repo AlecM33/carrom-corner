@@ -18,7 +18,7 @@
                             <td *ngIf='tournament.singles == true'>Singles</td>
                             <td *ngIf='tournament.singles == false'>Doubles</td>
                             <td>{{tournament.size}}</td>
-                            <td *ngIf="tournament.winner && tournament.winner.length > 0">{{tournament.winner[0]}}</td>
+                            <td *ngIf="tournament.winner">{{tournament.winner}}</td>
                             <td><button (click)='delete(tournament)' id='list-button' class='btn btn-danger btn-xs'>Delete</button></td>
                             <td *ngIf="tournament.playoffDefined"><button (click)='viewPlayoff(tournament.id)' id='list-button' class='btn btn-success btn-xs'>View</button></td>
                             <td *ngIf="!tournament.playoffDefined"><button (click)='viewTournament(tournament)' id='list-button' class='btn btn-success btn-xs'>View</button></td>

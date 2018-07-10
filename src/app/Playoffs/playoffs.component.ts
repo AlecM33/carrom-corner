@@ -48,7 +48,7 @@ export class PlayoffsComponent implements OnInit{
     }
 
     endTournament() {
-        this.ts.endTournament(this.playoffId, this.winner).subscribe(() => this.router.navigateByUrl('/playoffs/' + this.playoffId + '/winner'));
+        this.ts.endTournament(this.playoffId, this.winner, this.convertToName(this.winner)).subscribe(() => this.router.navigateByUrl('/playoffs/' + this.playoffId + '/winner'));
     }
 
     resetBracket() {

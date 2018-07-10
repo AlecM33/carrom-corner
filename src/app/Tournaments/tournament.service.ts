@@ -33,11 +33,11 @@ export class TournamentService {
         return tournaments;
     }
 
-    endTournament (id, winner) {
+    endTournament (id, winner, winnerName) {
         this.declarePlayoffWinner(id, winner).subscribe();
         return this.http.patch('http://localhost:3000/tournaments/' + id,
         {
-            "winner": winner
+            "winner": winnerName
         });
     }
 
