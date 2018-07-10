@@ -58,8 +58,8 @@ export class TournamentService {
                         piece['playoff'],
                         piece['tournamentId'], 
                         piece['scheduleIndex'],
-                        piece['id1'], 
-                        piece['id2'], 
+                        piece['team1'], 
+                        piece['team2'], 
                         piece['winner'], 
                         piece['differential']
                     ));
@@ -87,7 +87,6 @@ export class TournamentService {
         if (typeof(name) === 'number') {
             return this.http.get('http://localhost:3000/tournaments?id=' + name);
         }
-        console.log('got here');
         return this.http.get('http://localhost:3000/tournaments?name=' + name);
     }
 
@@ -110,6 +109,7 @@ export class TournamentService {
     addPool(newPool: Pool) {
         const httpOptions = {headers: new HttpHeaders({ 'Content-Type': 'application/json' })};
         let payload = { 
+                        "tournamentId": newPool.tournamentId,
                         "pools": newPool.pools,
                         "tournyName": newPool.tournyName
                       }; 
@@ -169,7 +169,6 @@ export class TournamentService {
     // NOTE: Also deletes corresponding pools, games, and playoffs. 
     deleteTournament(tournament, name) {
         const httpOptions = {headers: new HttpHeaders({ 'Content-Type': 'application/json' })};
-        this.http.delete('http://localhost:3000/pools/' + tournament.id, httpOptions).subscribe();
         return this.http.delete('http://localhost:3000/tournaments/' + tournament.id, httpOptions);
     }
 }

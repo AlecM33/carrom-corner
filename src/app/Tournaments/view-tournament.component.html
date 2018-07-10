@@ -10,9 +10,9 @@
 
 <button *ngIf="disabled" (click)="simulate()" class="btn btn-primary btn-lg">Sim Tournament »</button>
 <h2>Pools</h2>
-<div class='pools'>
-    <div class='pool-view' *ngFor="let pool of playerPools">
-        <h3>Pool {{getLetter(playerPools.indexOf(pool))}}</h3>
+<div class='pools' *ngIf="idPools">
+    <div class='pool-view' *ngFor="let pool of idPools">
+        <h3>Pool {{getLetter(idPools.indexOf(pool))}}</h3>
         <table class='table'>
             <thead>
                 <th></th>
@@ -21,12 +21,12 @@
                 <th>Coin +/-</th>
             </thead>
             <tbody>
-                <tr *ngFor="let player of pool">
-                    <td *ngIf="playoffsBegan"><input type="checkbox" (click)="addToPlayoffs(player.id)"/></td>
-                    <td>{{player?.name}}</td>
-                    <td>{{findWins(player?.id)}}</td>
-                    <td>{{findLosses(player?.id)}}</td>
-                    <td>{{findDifferential(player?.id)}}</td>
+                <tr *ngFor="let team of pool">
+                    <td *ngIf="playoffsBegan"><input type="checkbox" (click)="addToPlayoffs(team)"/></td>
+                    <td>{{convertToName(team)}}</td>
+                    <td>{{findWins(team)}}</td>
+                    <td>{{findLosses(team)}}</td>
+                    <td>{{findDifferential(team)}}</td>
                 </tr>
             </tbody>
         </table>
@@ -40,8 +40,8 @@
                 <th><input #filter type="text" id="gameFilter" (keyup)="filterGames(filter.value)" placeholder="Search for games..." /></th>
             </thead>
             <tbody  *ngFor="let game of gamesToDisplay">
-                <tr *ngIf="game.winner == 0">
-                    <td>{{convertToName(game.id1)}} vs. {{convertToName(game.id2)}} </td>
+                <tr *ngIf="!game.winner">
+                    <td>{{convertToName(game.team1)}} vs. {{convertToName(game.team2)}} </td>
                     <td>
                         <button (click)="viewGame(game)" class="btn btn-primary btn-xs">Enter Result</button>
                     </td>

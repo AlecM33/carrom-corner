@@ -2,7 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { Tournament } from "./tournament";
 import { PlayerService } from "../Players/player.service";
 import { Player } from "../Players/player";
-import { ActivatedRoute, Router } from "@angular/router";
+import { ActivatedRoute, Router, NavigationEnd } from "@angular/router";
 import { HttpClient } from "@angular/common/http";
 import { TournamentService } from "./tournament.service";
 import { Game } from "../Games/game";
@@ -18,8 +18,7 @@ import { BracketService } from "../Brackets/bracket.service";
 export class ViewTournamentComponent implements OnInit {
     public poolLetter = 0;
     public tournySize = 0;
-    public idPools = [];
-    public playerPools = [];
+    public idPools: Array<any>
     public players = [];
     public tournyName: string;
     public poolSize: number;
@@ -33,7 +32,7 @@ export class ViewTournamentComponent implements OnInit {
     public playoffsBegan = false;
 
     public bracket = [];
-
+    tournyType = 'singles'
     public treeLevels = [];
 
     constructor (
@@ -48,13 +47,17 @@ export class ViewTournamentComponent implements OnInit {
 
 
     ngOnInit() {
+        this.router.events.subscribe((event) => {
+            if (event instanceof NavigationEnd) {
+                this.tournyType = this.active_route.snapshot.paramMap.get('type');
+            }
+        });
         this.ps.getPlayers().subscribe((players) => {
             this.players = players;
             this.tournyName = this.active_route.snapshot.paramMap.get('name');
             this.http.get('http://localhost:3000/pools?tournyName=' + this.tournyName).subscribe((playerBase) => 
                 { 
                     this.idPools = playerBase[0].pools;
-                    this.filterPlayers();
                     this.ts.getTournament(this.tournyName).subscribe((tournament) => {
                         this.id = tournament[0].id;
                         this.tournySize = tournament[0].size;
@@ -95,7 +98,7 @@ export class ViewTournamentComponent implements OnInit {
 
     isDisabled() {
         for (let game of this.games) {
-            if (game.winner == 0) {
+            if (!game.winner) {
                 return true;
             }
         }
@@ -103,7 +106,7 @@ export class ViewTournamentComponent implements OnInit {
     }
 
     findWins(id): number {
-        let record = this.records.find((record) => record.playerId == id);
+        let record = this.records.find((record) => JSON.stringify(record.team) === JSON.stringify(id));
         if (record != undefined) {
             return record.wins;
         }
@@ -111,7 +114,7 @@ export class ViewTournamentComponent implements OnInit {
     }
 
     findDifferential(id): number {
-        let record = this.records.find((record) => record.playerId == id);
+        let record = this.records.find((record) => JSON.stringify(record.team) === JSON.stringify(id));
         if (record != undefined) {
             return record.totalDifferential;
         }
@@ -119,7 +122,7 @@ export class ViewTournamentComponent implements OnInit {
     }
 
     findLosses(id): number {
-        let record = this.records.find((record) => record.playerId == id);
+        let record = this.records.find((record) => JSON.stringify(record.team) === JSON.stringify(id));
         if (record != undefined) {
             return record.losses;
         }
@@ -136,10 +139,10 @@ export class ViewTournamentComponent implements OnInit {
     simulate() {
         for (let game of this.games) {
             let rnd = this.getRandomIntInclusive(1, 2);
-            let attribute = 'id' + rnd;
-            let winnerId = game[attribute];
+            let attribute = 'team' + rnd;
+            let winner = game[attribute];
             let rndDiff = this.getRandomIntInclusive(1, 8);
-            this.ts.updateGame(game.id, winnerId, rndDiff).subscribe(() => {
+            this.ts.updateGame(game.id, winner, rndDiff).subscribe(() => {
             
             });
         }
@@ -148,17 +151,17 @@ export class ViewTournamentComponent implements OnInit {
     // Goes through the list of games for the tournament and calculates player wins, losses, and differential
     calculateRecords() {
         for (let game of this.games) {
-            if (game.winner != 0) {
-                let winnerIndex = this.records.indexOf(this.records.find((record) => record.playerId == game.winner));
+            if (game.winner) {
+                let winnerIndex = this.records.indexOf(this.records.find((record) => JSON.stringify(record.team) === JSON.stringify(game.winner)));
                 this.records[winnerIndex].wins += 1;
                 this.records[winnerIndex].totalDifferential += game.differential;
                 let loser = 0;
-                if (game.winner === game.id1) {
-                    loser = game.id2
+                if (JSON.stringify(game.winner) === JSON.stringify(game.team1)) {
+                    loser = game.team2;
                 } else {
-                    loser = game.id1
+                    loser = game.team1;
                 }
-                let loserIndex = this.records.indexOf(this.records.find((record) => record.playerId == loser));
+                let loserIndex = this.records.indexOf(this.records.find((record) => JSON.stringify(record.team) === JSON.stringify(loser)));
                 this.records[loserIndex].losses ++;
                 this.records[loserIndex].totalDifferential -= game.differential;
             }
@@ -166,13 +169,13 @@ export class ViewTournamentComponent implements OnInit {
     }
 
     sortPools() {
-        for (let pool of this.playerPools) {
+        for (let pool of this.idPools) {
             pool.sort((a, b) => 
                 {
-                    let aWins = this.findWins(a.id);
-                    let bWins = this.findWins(b.id);
-                    let aDiff = this.findDifferential(a.id);
-                    let bDiff = this.findDifferential(b.id);
+                    let aWins = this.findWins(a);
+                    let bWins = this.findWins(b);
+                    let aDiff = this.findDifferential(a);
+                    let bDiff = this.findDifferential(b);
                     if (aWins > bWins) {
                         return -1;
                     } else if (aWins == bWins) {
@@ -190,10 +193,10 @@ export class ViewTournamentComponent implements OnInit {
     }
 
     generateStandings() {
-        for (let pool of this.playerPools) {
+        for (let pool of this.idPools) {
             this.numberOfPools ++;
-            for (let player of pool) {
-                this.records.push({"playerId": player.id, "wins": 0, "losses": 0, "totalDifferential": 0, "pool": this.playerPools.indexOf(pool), "parent": 0, "playoffSeed": 0})
+            for (let team of pool) {
+                this.records.push({"team": team, "wins": 0, "losses": 0, "totalDifferential": 0, "pool": this.idPools.indexOf(pool), "parent": 0, "playoffSeed": 0})
             }
         }
         this.calculateRecords();
@@ -209,21 +212,14 @@ export class ViewTournamentComponent implements OnInit {
         return alphabet[index];
     }
 
-    convertToName(id) {
-        return this.players.find((player) => player.id == id).name
-    }
-
-    filterPlayers() {
-        let newPlayerPools = [];
-        for (let pool of this.idPools) {
-            pool = pool.map(id => this.players.find(function(player) 
-                {
-                    return id == player.id;
-                }
-            ));
-            newPlayerPools.push(pool);
+    convertToName(team) {
+        let teamString = JSON.stringify(team);
+        if (team instanceof Array) {
+            let firstName = this.players.find((player) => player.id === team[0]).name;
+            let secondName = this.players.find((player) => player.id === team[1]).name;
+            return firstName + ' & ' + secondName
         }
-        this.playerPools = newPlayerPools;
+        return this.players.find((player) => player.id === team).name
     }
 
     powerOfTwo(x) {
@@ -242,11 +238,11 @@ export class ViewTournamentComponent implements OnInit {
     }
 
     addToPlayoffs(id) {
-        if (this.playoffPool.find((player) => player.playerId == id) === undefined) {
-            let record = this.records.find((record) => record.playerId == id);
+        if (this.playoffPool.find((record) => JSON.stringify(record.team) === JSON.stringify(id)) === undefined) {
+            let record = this.records.find((record) => JSON.stringify(record.team) === JSON.stringify(id));
             this.playoffPool.push(record);
         } else {
-            let index = this.playoffPool.findIndex((el) => el.playerId == id);
+            let index = this.playoffPool.findIndex((record) => JSON.stringify(record.team) === JSON.stringify(id));
             this.playoffPool.splice(index, 1);
         }
     }

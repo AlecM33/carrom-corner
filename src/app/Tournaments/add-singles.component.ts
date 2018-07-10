@@ -40,11 +40,9 @@ export class AddSinglesComponent implements OnInit {
     public id = 0;
 
     ngOnInit () {
-        this.router.events.subscribe((event) => {
-            if (event instanceof NavigationEnd) {
-                this.tournyType = this.active_route.snapshot.paramMap.get('type');
-            }
-        })
+        
+        this.tournyType = this.active_route.snapshot.paramMap.get('type');
+        
         this.ps.getPlayers().subscribe((players) => {
             this.players = players;
             for (let player of this.players) {
@@ -85,26 +83,31 @@ export class AddSinglesComponent implements OnInit {
             this.generateTeams();
             this.tournament = new Tournament(undefined, false, undefined, this.tournamentName, false, this.playersInTourny.size, this.doublesTeamIds);
             this.ts.addTournament(this.tournament).subscribe(() => {
-                if (this.tournament.size / 2 >= 8) {
-                    this.generatePools(this.doublesTeamIds);
-                    this.generateSchedule(this.generatedPools);
-                } else {
-                    this.addPool(this.doublesTeamIds);
-                    this.generateSchedule(this.doublesTeamIds);
-                }
+                this.ts.getTournament(this.tournament.name).subscribe((tournament) => {
+                    this.id = tournament[0].id;
+                    if (this.tournament.size / 2 >= 8) {
+                        this.generatePools(this.doublesTeamIds);
+                        this.generateSchedule(this.generatedPools);
+                    } else {
+                        this.generateSchedule(this.doublesTeamIds);
+                        this.addPool(this.doublesTeamIds);
+                    }
+                });
             });            
         } else {
             this.tournament = new Tournament(undefined, false, undefined, this.tournamentName, true, this.playersInTourny.size, this.teamIds);
             this.ts.addTournament(this.tournament).subscribe(() => {
-                this.generatePools(this.teamIds);
-                if (this.tournament.size >= 8) {
-                    this.generatePools(this.teamIds);
-                    this.generateSchedule(this.generatedPools);
-                    
-                } else {
-                    this.addPool(this.teamIds);
-                    this.generateSchedule(this.teamIds);
-                }
+                this.ts.getTournament(this.tournament.name).subscribe((tournament) => {
+                    this.id = tournament[0].id;
+                    if (this.tournament.size >= 8) {
+                        this.generatePools(this.teamIds);
+                        this.generateSchedule(this.generatedPools);
+                        
+                    } else {
+                        this.generateSchedule(this.teamIds);
+                        this.addPool(this.teamIds);
+                    }
+                });
             });   
         }
     }
@@ -145,9 +148,9 @@ export class AddSinglesComponent implements OnInit {
     }
 
     addPool(pool) {
-        let newPool = new Pool(pool, this.tournamentName);
+        let newPool = new Pool(this.id, pool, this.tournamentName);
         this.ts.addPool(newPool).subscribe(() => {
-            //this.router.navigateByUrl('/tournaments/' + this.tournamentName);
+            this.router.navigateByUrl('/tournaments/' + this.tournyType + '/' + this.tournamentName);
         });
     }
 
@@ -180,13 +183,10 @@ export class AddSinglesComponent implements OnInit {
 
     // Generates a round robin set of games and schedules them randomly 
     generateSchedule (pools) {
-        this.ts.getTournament(this.tournament.name).subscribe((tournament) => {
-            this.id = tournament[0].id;
+        this.generateGames(pools);
+        if (this.robinType === 'Double') {
             this.generateGames(pools);
-            if (this.robinType === 'Double') {
-                this.generateGames(pools);
-            }
-        });
+        }
     }
 
     generateTeams() {
