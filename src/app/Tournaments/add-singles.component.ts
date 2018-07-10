@@ -74,7 +74,7 @@ export class AddSinglesComponent implements OnInit {
 
     // Creates a tournament object and calls the tournament service to add to the database
     createTourny() {
-        this.tournament = new Tournament(undefined, false, [], this.tournamentName, true, this.playersInTourny.size, this.playerIds, [], [], []);
+        this.tournament = new Tournament(undefined, false, undefined, this.tournamentName, true, this.playersInTourny.size, this.playerIds);
         this.ts.addTournament(this.tournament).subscribe(() => this.filterPlayers());
     }
 
@@ -154,7 +154,7 @@ export class AddSinglesComponent implements OnInit {
     filterPlayers() {
         let tourny = this.tournament;
         this.tournyPool = this.players.filter(function(value) {
-            return tourny.players.includes(value['id']);
+            return tourny.teams.includes(value['id']);
         })
         this.generatePools();
     }
