@@ -33,7 +33,7 @@ export class BracketService {
         if (depth === 0) {
             if (root.isLeaf()) {
                 let playerRecord = root.winner;
-                playerRecord['parent'] = root.parent.winner['playerId'];
+                playerRecord['parent'] = root.parent.winner['team'];
                 nodes.push(playerRecord);
             } else {
                 nodes.push({})

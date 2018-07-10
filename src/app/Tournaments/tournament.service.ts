@@ -33,18 +33,18 @@ export class TournamentService {
         return tournaments;
     }
 
-    endTournament (id, winnerId) {
-        this.declarePlayoffWinner(id, winnerId).subscribe();
+    endTournament (id, winner) {
+        this.declarePlayoffWinner(id, winner).subscribe();
         return this.http.patch('http://localhost:3000/tournaments/' + id,
         {
-            "winner": winnerId
+            "winner": winner
         });
     }
 
-    declarePlayoffWinner(id, winnerId) {
+    declarePlayoffWinner(id, winner) {
         return this.http.patch('http://localhost:3000/playoffs/' + id,
         {
-            "winner": winnerId
+            "winner": winner
         });
     }
 
@@ -84,8 +84,9 @@ export class TournamentService {
     }
 
     getTournament(name): Observable<Object>{
-        if (typeof(name) === 'number') {
-            return this.http.get('http://localhost:3000/tournaments?id=' + name);
+        console.log(typeof(name));
+        if (typeof(name) == 'number') {
+            return this.http.get('http://localhost:3000/tournaments/' + name);
         }
         return this.http.get('http://localhost:3000/tournaments?name=' + name);
     }

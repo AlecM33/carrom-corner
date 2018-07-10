@@ -40,7 +40,11 @@ export class TournamentListComponent implements OnInit {
   }
 
   viewTournament(tournament) {
-    this.router.navigateByUrl('/tournaments/' + tournament.name);
+    if (tournament.singles) {
+      this.router.navigateByUrl('/tournaments/singles/' + tournament.name);
+    } else {
+      this.router.navigateByUrl('/tournaments/doubles/' + tournament.name)
+    }
   }
   
   ngOnInit() {

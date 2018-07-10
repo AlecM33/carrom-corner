@@ -41,14 +41,14 @@ export class PlayoffsComponent implements OnInit{
                 this.ts.getPlayoffGames(this.playoffId).subscribe((games) => {
                     this.playoffGames = games;
                 });
-                this.isOver = (this.tournamentWinner) && (this.tournamentWinner.length > 0);
+                this.isOver = this.tournamentWinner;
             });
         });
         
     }
 
     endTournament() {
-        this.ts.endTournament(this.playoffId, [this.convertToName(this.winner.playerId)]).subscribe(() => this.router.navigateByUrl('/playoffs/' + this.playoffId + '/winner'));
+        this.ts.endTournament(this.playoffId, this.winner).subscribe(() => this.router.navigateByUrl('/playoffs/' + this.playoffId + '/winner'));
     }
 
     resetBracket() {
@@ -87,7 +87,8 @@ export class PlayoffsComponent implements OnInit{
             }
             this.bracket[0][i - 1] = player;
         } else if (this.bracket[round].length === 2) {
-            this.winner = player;
+            this.winner = player.team;
+            console.log(this.winner);
         } else {
             let openSpot = Math.floor(this.bracket[round].indexOf(player) / 2);
             this.bracket[round + 1][openSpot] = player;
@@ -116,7 +117,13 @@ export class PlayoffsComponent implements OnInit{
         return (Math.log(x)/Math.log(2)) % 1 === 0;
     }
 
-    convertToName(id) {
-        return this.players.find((player) => player.id == id).name
+    convertToName(team) {
+        let teamString = JSON.stringify(team);
+        if (team instanceof Array) {
+            let firstName = this.players.find((player) => player.id === team[0]).name;
+            let secondName = this.players.find((player) => player.id === team[1]).name;
+            return firstName + ' & ' + secondName
+        }
+        return this.players.find((player) => player.id === team).name
     }
 }

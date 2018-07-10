@@ -13,24 +13,33 @@ export class WinnerComponent implements OnInit{
     playoffId: any;
     tournament: any;
     winner: any;
-    singlesWinner: any;
-    doublesWinner: any;
+    players: any;
 
     constructor(private ps: PlayerService, public bs: BracketService, private ts: TournamentService, private http: HttpClient, private router: Router, private active_route: ActivatedRoute) {
     }
 
     ngOnInit() {
-        this.playoffId = this.active_route.snapshot.paramMap.get('id');
-        this.playoffId = parseInt(this.playoffId);
-        this.ts.getTournament(this.playoffId).subscribe((tournaments) => {
-            this.tournament = tournaments[0];
-            console.log(this.tournament);
-            this.winner = this.tournament.winner;
-            console.log(this.winner);
-            if (this.winner.length == 1) {
-                this.singlesWinner = this.winner[0];
-            }
+        this.ps.getPlayers().subscribe((players) => {
+            this.players = players;
+            this.playoffId = this.active_route.snapshot.paramMap.get('id');
+            this.playoffId = parseInt(this.playoffId);
+            this.ts.getTournament(this.playoffId).subscribe((tournament) => {
+                this.tournament = tournament;
+                console.log(this.tournament);
+                this.winner = this.tournament.winner;
+                console.log(this.winner);
+            });
         });
+    }
+
+    convertToName(team) {
+        let teamString = JSON.stringify(team);
+        if (team instanceof Array) {
+            let firstName = this.players.find((player) => player.id === team[0]).name;
+            let secondName = this.players.find((player) => player.id === team[1]).name;
+            return firstName + ' & ' + secondName
+        }
+        return this.players.find((player) => player.id === team).name
     }
 
     goHome() {

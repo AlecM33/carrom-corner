@@ -237,12 +237,12 @@ export class ViewTournamentComponent implements OnInit {
         return round;
     }
 
-    addToPlayoffs(id) {
-        if (this.playoffPool.find((record) => JSON.stringify(record.team) === JSON.stringify(id)) === undefined) {
-            let record = this.records.find((record) => JSON.stringify(record.team) === JSON.stringify(id));
+    addToPlayoffs(team) {
+        if (this.playoffPool.find((record) => JSON.stringify(record.team) === JSON.stringify(team)) === undefined) {
+            let record = this.records.find((record) => JSON.stringify(record.team) === JSON.stringify(team));
             this.playoffPool.push(record);
         } else {
-            let index = this.playoffPool.findIndex((record) => JSON.stringify(record.team) === JSON.stringify(id));
+            let index = this.playoffPool.findIndex((record) => JSON.stringify(record.team) === JSON.stringify(team));
             this.playoffPool.splice(index, 1);
         }
     }
@@ -267,8 +267,8 @@ export class ViewTournamentComponent implements OnInit {
             }
         });
         let seed = 1;
-        for (let player of this.playoffPool) {
-            player.playoffSeed = seed;
+        for (let team of this.playoffPool) {
+            team.playoffSeed = seed;
             seed ++;
         }
 
@@ -287,7 +287,7 @@ export class ViewTournamentComponent implements OnInit {
             }
         }
         
-       this.ts.addPlayoff(new Playoff(undefined, this.id, playInSpots, this.treeLevels, [])).subscribe(() =>
+       this.ts.addPlayoff(new Playoff(this.id, this.id, playInSpots, this.treeLevels, undefined)).subscribe(() =>
         {
             this.ts.toggleDefined(this.id).subscribe(() => {
                 this.router.navigateByUrl('/playoffs/' + this.id);
