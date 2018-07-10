@@ -2,8 +2,8 @@
         <form (ngSubmit)="onSubmit()" #gameForm="ngForm">
             <p>Who Won?</p>
             <div>
-            <input id="checkbox1" type="radio" value="{{firstName}}" name="winner" [(ngModel)]="winningPlayer" /> {{firstName}}
-            <input id="checkbox2" type="radio" value="{{secondName}}" name="winner" [(ngModel)]="winningPlayer" /> {{secondName}}
+            <input id="checkbox1" type="radio" value="{{team1}}" name="winner" [(ngModel)]="winningTeam" /> {{firstTeam}}
+            <input id="checkbox2" type="radio" value="{{team2}}" name="winner" [(ngModel)]="winningTeam" /> {{secondTeam}}
             </div>
             <div>
                 <p>Score Differential: </p>

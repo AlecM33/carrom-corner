@@ -204,7 +204,7 @@ export class ViewTournamentComponent implements OnInit {
     }
 
     viewGame(game) {
-        this.router.navigateByUrl(this.tournyName + '/games/' + game['id'] + '/enter_result');
+        this.router.navigateByUrl(this.tournyName + '/' + this.tournyType + '/games/' + game['id'] + '/enter_result');
     }
 
     getLetter(index: number): string {

@@ -34,7 +34,7 @@ import { WinnerComponent } from './Playoffs/winner.component';
       { path: 'tournament/:type/new', component: AddSinglesComponent},
       { path: 'tournaments', component: TournamentListComponent},
       { path: 'tournaments/:type/:name', component: ViewTournamentComponent},
-      { path: ':name/games/:id/enter_result', component: AddGameComponent},
+      { path: ':name/:type/games/:id/enter_result', component: AddGameComponent},
       { path: 'playoffs/:id', component: PlayoffsComponent},
       { path: 'playoffs/:id/enter_result', component: AddPlayoffGameComponent},
       { path: 'playoffs/:id/winner', component: WinnerComponent}
