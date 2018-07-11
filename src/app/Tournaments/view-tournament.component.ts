@@ -47,6 +47,7 @@ export class ViewTournamentComponent implements OnInit {
 
 
     ngOnInit() {
+        this.tournyType = this.active_route.snapshot.paramMap.get('type');
         this.router.events.subscribe((event) => {
             if (event instanceof NavigationEnd) {
                 this.tournyType = this.active_route.snapshot.paramMap.get('type');

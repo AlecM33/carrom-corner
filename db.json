@@ -270,6 +270,31 @@
         4
       ],
       "id": 4
+    },
+    {
+      "name": "testdub",
+      "playoffDefined": false,
+      "singles": false,
+      "size": 4,
+      "teams": [
+        [
+          7,
+          8
+        ],
+        [
+          4,
+          5
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          2,
+          6
+        ]
+      ],
+      "id": 5
     }
   ],
   "pools": [
@@ -487,6 +512,31 @@
       ],
       "tournyName": "The Tourny",
       "id": 11
+    },
+    {
+      "tournamentId": 5,
+      "pools": [
+        [
+          [
+            7,
+            8
+          ],
+          [
+            4,
+            5
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            2,
+            6
+          ]
+        ]
+      ],
+      "tournyName": "testdub",
+      "id": 12
     }
   ],
   "games": [
@@ -1202,6 +1252,96 @@
       "team2": 4,
       "differential": 0,
       "id": 57
+    },
+    {
+      "playoff": false,
+      "tournamentId": 5,
+      "scheduleIndex": 1,
+      "team1": [
+        7,
+        8
+      ],
+      "team2": [
+        4,
+        5
+      ],
+      "differential": 0,
+      "id": 58
+    },
+    {
+      "playoff": false,
+      "tournamentId": 5,
+      "scheduleIndex": 4,
+      "team1": [
+        7,
+        8
+      ],
+      "team2": [
+        3,
+        1
+      ],
+      "differential": 0,
+      "id": 59
+    },
+    {
+      "playoff": false,
+      "tournamentId": 5,
+      "scheduleIndex": 2,
+      "team1": [
+        7,
+        8
+      ],
+      "team2": [
+        2,
+        6
+      ],
+      "differential": 0,
+      "id": 60
+    },
+    {
+      "playoff": false,
+      "tournamentId": 5,
+      "scheduleIndex": 3,
+      "team1": [
+        4,
+        5
+      ],
+      "team2": [
+        3,
+        1
+      ],
+      "differential": 0,
+      "id": 61
+    },
+    {
+      "playoff": false,
+      "tournamentId": 5,
+      "scheduleIndex": 0,
+      "team1": [
+        4,
+        5
+      ],
+      "team2": [
+        2,
+        6
+      ],
+      "differential": 0,
+      "id": 62
+    },
+    {
+      "playoff": false,
+      "tournamentId": 5,
+      "scheduleIndex": 5,
+      "team1": [
+        3,
+        1
+      ],
+      "team2": [
+        2,
+        6
+      ],
+      "differential": 0,
+      "id": 63
     }
   ],
   "playoffs": [
