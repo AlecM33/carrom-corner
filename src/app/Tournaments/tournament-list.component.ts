@@ -31,12 +31,14 @@ export class TournamentListComponent implements OnInit {
   }
 
   delete(tournament) {
-    this.tournaments = [];
-    this.ts.deleteTournament(tournament, tournament.name).do(() => {
-        this.ts.getTournaments().subscribe((tournaments) => {
-          this.tournaments = tournaments;
-        })
-    }).subscribe();
+    if(confirm('Delete this bracket?')) {
+      this.tournaments = [];
+      this.ts.deleteTournament(tournament, tournament.name).do(() => {
+          this.ts.getTournaments().subscribe((tournaments) => {
+            this.tournaments = tournaments;
+          })
+      }).subscribe();
+    }
   }
 
   viewTournament(tournament) {

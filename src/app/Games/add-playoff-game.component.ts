@@ -21,6 +21,9 @@ export class AddPlayoffGameComponent implements OnInit{
     winningPlayer: any;
     losingPlayer: any;
     scoreDifferential: any;
+    teamsBlank = false;
+    scoreBlank = false;
+    scoreInvalid = false;
     
     constructor (   
                 public ps: PlayerService, 
@@ -38,7 +41,6 @@ export class AddPlayoffGameComponent implements OnInit{
             this.ts.getPlayoff(this.playoffId).subscribe((playoff) => {
                 this.playoff = playoff;
                 this.bracket = playoff['bracket'];
-                console.log(this.bracket);
                 this.playoffPool = [];
                 for (let round of this.bracket) {
                     for (let i = 0; i < round.length; i++) {
@@ -47,9 +49,17 @@ export class AddPlayoffGameComponent implements OnInit{
                         }
                     }
                 }
-                console.log(this.playoffPool);
             });
         });
+    }
+
+    validateGame() {
+        this.teamsBlank = this.winningPlayer === undefined || this.losingPlayer === undefined;
+        this.scoreBlank = this.scoreDifferential === undefined;
+        this.scoreInvalid = this.scoreDifferential < 1 || this.scoreDifferential > 8;
+        if (!this.teamsBlank && !this.scoreBlank && !this.scoreInvalid) {
+            this.submitGame();
+        }
     }
 
     convertToName(team) {
@@ -62,10 +72,7 @@ export class AddPlayoffGameComponent implements OnInit{
         return this.players.find((player) => player.id === team).name
     }
 
-    onSubmit() {
-        console.log(this.playoffPool);
-        console.log(this.winningPlayer);
-        console.log(this.losingPlayer);
+    submitGame() {
         let team1 = this.playoffPool.find((team) => this.convertToName(team) == this.winningPlayer);
         let team2 = this.playoffPool.find((team) => this.convertToName(team) == this.losingPlayer);
         let playoffGame = new Game(undefined, true, this.playoffId, undefined, team1, team2, team1, this.scoreDifferential)

@@ -21,6 +21,9 @@ export class AddGameComponent implements OnInit{
     secondTeam: string;
     tournyName: string;
     tournyType: string;
+    teamsBlank = false;
+    scoreBlank = false;
+    scoreInvalid = false;
 
     constructor (   
                 public ps: PlayerService, 
@@ -55,8 +58,17 @@ export class AddGameComponent implements OnInit{
         });
     }
 
+    validateGame() {
+        this.teamsBlank = this.winningTeam === undefined;
+        this.scoreBlank = this.scoreDifferential === undefined;
+        this.scoreInvalid = this.scoreDifferential < 1 || this.scoreDifferential > 8;
+        if (!this.teamsBlank && !this.scoreBlank && !this.scoreInvalid) {
+            this.submitGame();
+        }
+    }
+
     // user submits form for game result
-    onSubmit() {
+    submitGame() {
         if (this.winningTeam === 'team1') {
             this.ts.updateGame(this.gameId, this.currentGame[0].team1, this.scoreDifferential).subscribe(() => {
                 this.router.navigateByUrl('/tournaments/' + this.tournyType + '/' + this.tournyName);

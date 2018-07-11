@@ -59,12 +59,8 @@ input {
     border: 1px solid black;
 }
 
-.bracket-box-winner.img {
-    margin-bottom: 20px;
-}
-
 .bracket-box-play-in {
-    
+    min-height: 70px;
     width: 150px;
     margin: 30px;
     font-size: 11px;
@@ -139,7 +135,9 @@ label {
 
 .bracket-box-winner {
     border: 1px solid black;
+    font-size: 11px;
     width: 150px;
+    height: 70px;
     min-height: 80px;
     box-shadow: 3px 0px 3px 2px rgba(255, 215, 0.2);
     
@@ -260,11 +258,8 @@ h3 {
 }
 
 @keyframes pulse {
-    from {background-color: blue; 
-            border: 2px solid lightblue;
-         }
-    to {background-color: lightblue;
-            border: 2px solid lightblue; }
+    from {background-color: blue; }
+    to {background-color: lightblue;}
 }
 
 .playoff-button {

@@ -25,9 +25,7 @@ export class WinnerComponent implements OnInit{
             this.playoffId = parseInt(this.playoffId);
             this.ts.getTournament(this.playoffId).subscribe((tournament) => {
                 this.tournament = tournament;
-                console.log(this.tournament);
                 this.winner = this.tournament.winner;
-                console.log(this.winner);
             });
         });
     }

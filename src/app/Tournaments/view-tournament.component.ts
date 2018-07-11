@@ -35,6 +35,8 @@ export class ViewTournamentComponent implements OnInit {
     tournyType = 'singles'
     public treeLevels = [];
 
+    rosterInvalid = false;
+
     constructor (
                     private ps: PlayerService, 
                     private http: HttpClient, 
@@ -253,6 +255,13 @@ export class ViewTournamentComponent implements OnInit {
 
     getPlayoffRoster() {
         this.playoffsBegan = true;
+    }
+
+    playoffValidation() {
+        this.rosterInvalid = this.playoffPool.length < 2;
+        if (!this.rosterInvalid) {
+            this.startPlayoffs();
+        }
     }
 
 

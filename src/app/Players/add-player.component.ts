@@ -11,13 +11,42 @@ import { Router } from '@angular/router';
 @Component({
     templateUrl: 'add-player.component.html'
 })
-export class AddPlayerComponent {
+export class AddPlayerComponent implements OnInit {
 
     constructor(private _playerService: PlayerService, private router: Router) {
     }
 
     newPlayerName: string;
     newPlayerNickname: string;
+    players: any;
+    nameBlank = false;
+    nameInvalid = false;
+    nameTaken = false;
+
+    ngOnInit() {
+        this._playerService.getPlayers().subscribe((players) => this.players = players);
+    }
+
+    validatePlayer() {
+        this.nameBlank = this.newPlayerName === undefined || this.newPlayerName === '';
+        let regex = new RegExp('^[a-zA-Z0-9 ]*$');
+        this.nameInvalid = regex.test(this.newPlayerName) === false || regex.test(this.newPlayerNickname) === false;
+        this.nameTaken = this.checkPlayerName();
+        if (!this.nameBlank && !this.nameInvalid && !this.nameTaken) {
+            this.onSubmit();
+        }
+    }
+
+    checkPlayerName() {
+        if (this.newPlayerName) {
+            for (let player of this.players) {
+                if (player.name === this.newPlayerName) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
     //Function for adding a new player to the database when user submits
     onSubmit() {

@@ -84,7 +84,6 @@ export class TournamentService {
     }
 
     getTournament(name): Observable<Object>{
-        console.log(typeof(name));
         if (typeof(name) == 'number') {
             return this.http.get('http://localhost:3000/tournaments/' + name);
         }
@@ -146,7 +145,6 @@ export class TournamentService {
     updatePlayoff(playoff: Object, bracket: Array<Object>, playInRound: Array<Object>) {
         let newBracket = Object.assign([], bracket);
         newBracket.unshift(playInRound);
-        console.log(newBracket);
         return this.http.patch('http://localhost:3000/playoffs/' + playoff['id'],
         {
             "bracket": newBracket

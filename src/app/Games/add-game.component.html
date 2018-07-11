@@ -1,5 +1,14 @@
 <div class="container-fluid">
-        <form (ngSubmit)="onSubmit()" #gameForm="ngForm">
+        <div *ngIf="teamsBlank" class="alert alert-danger">
+            You must select a winner.
+        </div>
+        <div *ngIf="scoreInvalid" class="alert alert-danger">
+            The coin differential must be a number between 1 and 8 inclusive.
+        </div>
+        <div *ngIf="scoreBlank" class="alert alert-danger">
+            The coin differential cannot be blank.
+        </div>
+        <form (ngSubmit)="validateGame()" #gameForm="ngForm">
             <p>Who Won?</p>
             <div>
             <input id="checkbox1" type="radio" value="team1" name="winner" [(ngModel)]="winningTeam" /> {{firstTeam}}

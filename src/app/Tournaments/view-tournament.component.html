@@ -1,7 +1,10 @@
 <form (ngSubmit)="getPlayoffRoster()" #rosterForm="ngForm">
     <button *ngIf="!disabled && !playoffsBegan" type="submit" class="btn btn-primary btn-lg playoff-button">Begin Playoffs »</button>
 </form>
-<form *ngIf="playoffsBegan" (ngSubmit)="startPlayoffs()" #gameForm="ngForm">
+<div *ngIf="rosterInvalid" class="alert alert-danger">
+        You must advance at least 2 players or teams to the playoffs.
+</div>
+<form *ngIf="playoffsBegan" (ngSubmit)="playoffValidation()" #gameForm="ngForm">
         <h3 *ngIf="playoffsBegan">Select the players that advance to the playoffs!</h3>
         <h3 *ngIf="playoffsBegan">{{playoffPool.length}} players</h3>
         <button type="submit" class="btn btn-primary btn-lg playoff-button">Go!</button>

@@ -6,7 +6,7 @@
     <button class='btn btn-primary btn-xs' (click)='enterPlayoffResult()'>Enter Playoff Game Result</button>
     <button class='btn btn-primary btn-xs' (click)='resetBracket()'>Clear Changes</button>
     <button class='btn btn-success btn-xs' (click)='saveBracket()'>Save Bracket</button>
-    <button *ngIf="winner" class='btn btn-danger btn-xs playoff-button' (click)='endTournament()'>End Tournament</button>
+    <button *ngIf="winner" class='btn btn-primary btn-xs playoff-button' (click)='endTournament()'>End Tournament</button>
 </div>
 <h2 class='playoff-prompt' *ngIf="tournamentWinner">This tournament is complete!</h2>
 <div *ngIf="bracket && playInRound" class='flex-container'>
@@ -46,7 +46,6 @@
             <p *ngIf="tournamentWinner">{{convertToName(tournamentWinner)}}</p>
             <p *ngIf="winner && !tournamentWinner">{{convertToName(winner)}}</p>
             <p *ngIf="!winner && !tournamentWinner" class='empty-slot'></p>
-            <hr />
             <img src='../../assets/images/trophy.png' width="20px" height="20px" />
         </div>
     </div>

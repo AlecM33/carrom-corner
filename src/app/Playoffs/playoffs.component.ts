@@ -79,7 +79,6 @@ export class PlayoffsComponent implements OnInit{
             let openSpotCount = 0;
             let i = 0;
             while (openSpotCount < openSpotNumber) {
-                console.log(this.playoff['playInSpots']);
                 if (this.playoff['playInSpots'].includes(i)) {
                     openSpotCount ++;
                 }
@@ -88,7 +87,6 @@ export class PlayoffsComponent implements OnInit{
             this.bracket[0][i - 1] = player;
         } else if (this.bracket[round].length === 2) {
             this.winner = player.team;
-            console.log(this.winner);
         } else {
             let openSpot = Math.floor(this.bracket[round].indexOf(player) / 2);
             this.bracket[round + 1][openSpot] = player;

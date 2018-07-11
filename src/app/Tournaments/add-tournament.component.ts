@@ -70,8 +70,7 @@ export class AddTournamentComponent implements OnInit {
         } else {
             this.nameBlank = false;
         }
-        let regex = new RegExp('[a-zA-Z0-9 ]+');
-        console.log(regex.test(this.tournamentName));
+        let regex = new RegExp('^[a-zA-Z0-9 ]*$');
         if (this.tournamentName && !regex.test(this.tournamentName)) {
             this.nameFormatInvalid = true;
         } else {
