@@ -132,6 +132,11 @@ label {
     background-color: rgb(213, 241, 213);
 }
 
+.in-progress {
+    color: lightgray;
+    font-style: italic;
+}
+
 .bracket-box-winner {
     border: 1px solid black;
     width: 150px;

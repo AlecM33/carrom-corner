@@ -1,8 +1,8 @@
 import { Component, OnInit, DoCheck } from '@angular/core';
 import { AppComponent } from '../app.component';
-import { NgModel } from '@angular/forms';
+import { NgModel, Form, FormGroup, FormControl, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
 import { AddPlayerComponent } from '../Players/add-player.component'
-import { FormsModule } from '@angular/forms'
+import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { PlayerService } from '../Players/player.service';
 import { HttpClient } from '@angular/common/http';
 import { Player } from '../Players/player';
@@ -18,9 +18,9 @@ import { Game } from '../Games/game';
 /* Component for creating a singles tournament. Includes functions for presenting setup parameters
 and for generating the pools and schedule */
 @Component({
-    templateUrl: 'add-singles.component.html'
+    templateUrl: 'add-tournament.component.html'
 })
-export class AddSinglesComponent implements OnInit {
+export class AddTournamentComponent implements OnInit {
     constructor(private ps: PlayerService, private ts: TournamentService, private http: HttpClient, private router: Router, public active_route: ActivatedRoute) {
     }
 
@@ -30,6 +30,7 @@ export class AddSinglesComponent implements OnInit {
     doublesTeamIds = [];
     tournyType = 'singles'
     public players = [];
+    tournaments: any;
     public tournament: Tournament;
     public robinType = 'Single';
     public generatedPools = [];
@@ -38,10 +39,22 @@ export class AddSinglesComponent implements OnInit {
     public tournamentName: string;
     public tournyPool = [];
     public id = 0;
+    tournyForm: FormGroup;
+    nameBlank = false;
+    nameForbidden = false;
+    rosterForbidden = false;
+    rosterUneven = false;
+    nameFormatInvalid = false;
 
     ngOnInit () {
-        
         this.tournyType = this.active_route.snapshot.paramMap.get('type');
+        this.router.events.subscribe((event) => {
+            if (event instanceof NavigationEnd) {
+                this.tournyType = this.active_route.snapshot.paramMap.get('type');
+            }
+        });
+
+        this.ts.getTournaments().subscribe((tournaments) => this.tournaments = tournaments);
         
         this.ps.getPlayers().subscribe((players) => {
             this.players = players;
@@ -49,6 +62,40 @@ export class AddSinglesComponent implements OnInit {
                 this.playersToAdd.add(player);
             }
         });
+    }
+
+    tournamentValidator() {
+        if (!this.tournamentName) {
+            this.nameBlank = true;
+        } else {
+            this.nameBlank = false;
+        }
+        let regex = new RegExp('[a-zA-Z0-9 ]+');
+        console.log(regex.test(this.tournamentName));
+        if (this.tournamentName && !regex.test(this.tournamentName)) {
+            this.nameFormatInvalid = true;
+        } else {
+            this.nameFormatInvalid = false;
+        }
+        if (this.tournyType === 'doubles') {
+            this.rosterUneven = this.playersInTourny.size % 2 !== 0;
+        } else {
+            this.rosterUneven = false;
+        }
+        this.nameForbidden = this.checkTournyName();
+        this.rosterForbidden = this.playersInTourny.size < 2;
+        if (!this.nameForbidden && !this.rosterForbidden && !this.nameBlank && !this.rosterUneven) {
+            this.createTourny();
+        }
+    }
+
+    checkTournyName() {
+        for (let tournament of this.tournaments) {
+            if (this.tournamentName && tournament.name.toLowerCase() === this.tournamentName.toLowerCase()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     // Enables or disables 'next' button based on player count

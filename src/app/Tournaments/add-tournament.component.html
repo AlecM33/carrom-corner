@@ -1,0 +1,62 @@
+<div class='roster-page'>
+    <h2 *ngIf="tournyType === 'singles'">New Singles Tournament</h2>
+    <h2 *ngIf="tournyType === 'doubles'">New Doubles Tournament</h2>
+    <form class="form-horizontal" (ngSubmit)="tournamentValidator()">
+        <div class='next-button'>
+            <button type="submit" class="btn btn-success btn-xs">Create</button>
+        </div>
+        <div *ngIf="!nameBlank && nameForbidden" class="alert alert-danger">
+            There is already a tournament with that name.
+        </div>
+        <div *ngIf="!nameBlank && nameFormatInvalid" class="alert alert-danger">
+            Tournament name is invalid. Names can contain numbers, letters, and spaces.
+        </div>
+        <div *ngIf="tournyType === 'doubles' && rosterUneven" class="alert alert-danger">
+            You must add an even number of players for a doubles tournament!
+        </div>
+        <div *ngIf="nameBlank" class="alert alert-danger">
+            Tournament name cannot be blank.
+        </div>
+        <div *ngIf="rosterForbidden" class="alert alert-danger">
+            Roster must be at least 2 players in size.
+        </div>
+        <div>
+            <label>Tournament Name: </label>
+            <input id="name" type="text" name="name" [(ngModel)]="tournamentName"/>
+        </div>
+        <div>
+            <label>Single or double round robin?</label>
+            <input id="checkbox1" type="radio" value="Single" name="winner" [(ngModel)]="robinType" /> Single
+            <input id="checkbox2" type="radio" value="Double" name="winner" [(ngModel)]="robinType" /> Double
+        </div>
+    </form>
+    <div class='add-all-button'>
+        <button (click)="addAll()" class="btn btn-warning btn-xs">+ Add All Players</button>
+    </div>
+    <div class="container-fluid">
+        <div class="addPlayersList">
+            <h3>Player Pool</h3>
+            <table class="table-responsive players-table">
+                <tr *ngFor="let player of playersToAdd">
+                    <td>
+                        {{player.name}}
+                    </td>
+                    <td>
+                        <button (click)="addPlayer(player)" class="btn btn-success btn-xs add-button">add</button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="addPlayersList">
+            <h3>Current Roster: {{playersInTourny.size}} players</h3>
+            <table class="table-responsive players-table">
+                <tr *ngFor="let player of playersInTourny">
+                    <td>{{player.name}}</td> 
+                    <td>
+                        <button (click)="removePlayer(player)" class="btn btn-danger btn-xs sub-button">remove</button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
