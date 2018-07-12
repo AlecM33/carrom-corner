@@ -9,18 +9,22 @@
                 <thead>
                     <tr>
                         <th>Name</th>
-                        <th>Elo</th>
                         <th>Wins</th>
                         <th>Losses</th>
+                        <th>Winrate</th>
+                        <th>Avg Coin +/-</th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr *ngFor='let player of players'>
                         <td>{{player.name}}</td>
-                        <td>{{player.elo}}</td>
                         <td>{{player.wins}}</td>
                         <td>{{player.losses}}</td>
+                        <td *ngIf="player.gamesPlayed > 0">{{player.wins / player.gamesPlayed | percent}}</td>
+                        <td class="in-progress" *ngIf="player.gamesPlayed === 0">N/A</td>
+                        <td *ngIf="player.gamesPlayed > 0">{{player.totalDiff / player.gamesPlayed | number: '1.1-2'}}</td>
+                        <td class='in-progress' *ngIf="player.gamesPlayed === 0">N/A</td>
                         <td><button (click)='delete(player)' id='list-button' class='btn btn-danger btn-xs'>Delete</button></td>
                     </tr>
                 </tbody>

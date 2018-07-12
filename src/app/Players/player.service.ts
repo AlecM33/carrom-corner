@@ -38,10 +38,10 @@ export class PlayerService {
                                     piece['id'], 
                                     piece['name'], 
                                     piece['nickname'], 
-                                    piece['elo'], 
                                     piece['wins'], 
                                     piece['losses'], 
-                                    piece['winPtg'])
+                                    piece['totalDiff'],
+                                    piece['gamesPlayed'])
                                 );
         }
         return players;

@@ -51,6 +51,7 @@ export class AddGameComponent implements OnInit{
             this.tournyType = this.active_route.snapshot.paramMap.get('type');
                 this.tournyName = this.active_route.snapshot.paramMap.get('name');
                 this.http.get('http://localhost:3000/games?id=' + this.gameId).subscribe((game) => {
+                    console.log(game);
                     this.currentGame = game;
                     this.firstTeam = this.convertToName(this.currentGame[0].team1);
                     this.secondTeam = this.convertToName(this.currentGame[0].team2)
@@ -69,31 +70,34 @@ export class AddGameComponent implements OnInit{
 
     patchDoublesPlayers() {
         let loser1, loser2;
-        let winner1 = this.players.find((player) => player.id == this.currentGame.winner[0]);
-        let winner2 = this.players.find((player) => player.id == this.currentGame.winner[1]);
+        let winner1 = this.players.find((player) => player.id == this.currentGame[0].winner[0]);
+        let winner2 = this.players.find((player) => player.id == this.currentGame[0].winner[1]);
         if (this.winningTeam === 'team1') {
-            loser1 = this.players.find((player) => player.id == this.currentGame.team2[0]);
-            loser2 = this.players.find((player) => player.id == this.currentGame.team2[1]);
+            loser1 = this.players.find((player) => player.id == this.currentGame[0].team2[0]);
+            loser2 = this.players.find((player) => player.id == this.currentGame[0].team2[1]);
         } else {
-            loser1 = this.players.find((player) => player.id == this.currentGame.team1[0]);
-            loser2 = this.players.find((player) => player.id == this.currentGame.team1[1]);
+            loser1 = this.players.find((player) => player.id == this.currentGame[0].team1[0]);
+            loser2 = this.players.find((player) => player.id == this.currentGame[0].team1[1]);
         }
-        this.ps.updatePlayer(winner1.id, winner1.wins + 1, winner1.losses, winner1.totalDiff + this.scoreDifferential, winner1.gamesPlayed + 1);
-        this.ps.updatePlayer(winner2.id, winner2.wins + 1, winner2.losses, winner2.totalDiff + this.scoreDifferential, winner2.gamesPlayed + 1);
-        this.ps.updatePlayer(loser1.id, loser1.wins, loser1.losses, loser1.totalDiff - this.scoreDifferential, loser1.gamesPlayed + 1);
-        this.ps.updatePlayer(loser2.id, loser2.wins, loser2.losses, loser2.totalDiff - this.scoreDifferential, loser2.gamesPlayed + 1);
+        this.ps.updatePlayer(winner1.id, winner1.wins + 1, winner1.losses, winner1.totalDiff + this.currentGame[0].differential, winner1.gamesPlayed + 1).subscribe();
+        this.ps.updatePlayer(winner2.id, winner2.wins + 1, winner2.losses, winner2.totalDiff + this.currentGame[0].differential, winner2.gamesPlayed + 1).subscribe();
+        this.ps.updatePlayer(loser1.id, loser1.wins, loser1.losses + 1, loser1.totalDiff - this.currentGame[0].differential, loser1.gamesPlayed + 1).subscribe();
+        this.ps.updatePlayer(loser2.id, loser2.wins, loser2.losses + 1, loser2.totalDiff - this.currentGame[0].differential, loser2.gamesPlayed + 1).subscribe();
+        this.router.navigateByUrl('/tournaments/' + this.tournyType + '/' + this.tournyName);
     }
 
     patchSinglesPlayers() {
+        console.log(this.currentGame);
         let loser;
-        let winner = this.players.find((player) => player.id == this.currentGame.winner);
+        let winner = this.players.find((player) => player.id == this.currentGame[0].winner);
         if (this.winningTeam === 'team1') {
-            loser = this.players.find((player) => player.id == this.currentGame.team2);
+            loser = this.players.find((player) => player.id == this.currentGame[0].team2);
         } else {
-            loser = this.players.find((player) => player.id == this.currentGame.team1);
+            loser = this.players.find((player) => player.id == this.currentGame[0].team1);
         }
-        this.ps.updatePlayer(winner.id, winner.wins + 1, winner.losses, winner.totalDiff + this.scoreDifferential, winner.gamesPlayed + 1);
-        this.ps.updatePlayer(loser.id, loser.wins, loser.losses, loser.totalDiff - this.scoreDifferential, loser.gamesPlayed + 1);
+        this.ps.updatePlayer(winner.id, winner.wins + 1, winner.losses, winner.totalDiff + this.currentGame[0].differential, winner.gamesPlayed + 1).subscribe();
+        this.ps.updatePlayer(loser.id, loser.wins, loser.losses + 1, loser.totalDiff - this.currentGame[0].differential, loser.gamesPlayed + 1).subscribe();
+        this.router.navigateByUrl('/tournaments/' + this.tournyType + '/' + this.tournyName);
     }
 
     
@@ -102,17 +106,26 @@ export class AddGameComponent implements OnInit{
     submitGame() {
         if (this.winningTeam === 'team1') {
             this.ts.updateGame(this.gameId, this.currentGame[0].team1, this.scoreDifferential).subscribe(() => {
-                this.router.navigateByUrl('/tournaments/' + this.tournyType + '/' + this.tournyName);
+                this.http.get('http://localhost:3000/games?id=' + this.gameId).subscribe((game) => {
+                    this.currentGame = game;
+                    if (this.tournyType === 'doubles') {
+                        this.patchDoublesPlayers();
+                    } else {
+                        this.patchSinglesPlayers();
+                    }
+                });
             });
         } else {
             this.ts.updateGame(this.gameId, this.currentGame[0].team2, this.scoreDifferential).subscribe(() => {
-                this.router.navigateByUrl('/tournaments/' + this.tournyType + '/' + this.tournyName);
+                this.http.get('http://localhost:3000/games?id=' + this.gameId).subscribe((game) => {
+                    this.currentGame = game;
+                    if (this.tournyType === 'doubles') {
+                        this.patchDoublesPlayers();
+                    } else {
+                        this.patchSinglesPlayers();
+                    }
+                });
             });
-        }
-        if (this.tournyType === 'doubles') {
-            this.patchDoublesPlayers();
-        } else {
-            this.patchSinglesPlayers();
         }
     }
 }

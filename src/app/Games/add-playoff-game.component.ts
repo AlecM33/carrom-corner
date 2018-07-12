@@ -72,10 +72,36 @@ export class AddPlayoffGameComponent implements OnInit{
         return this.players.find((player) => player.id === team).name
     }
 
+    patchDoublesPlayers(game) {
+        let winner1 = this.players.find((player) => player.id == game.winner[0]);
+        let winner2 = this.players.find((player) => player.id == game.winner[1]);
+        let loser1 = this.players.find((player) => player.id == game.team2[0]);
+        let loser2 = this.players.find((player) => player.id == game.team2[1]);
+     
+        
+        this.ps.updatePlayer(winner1.id, winner1.wins + 1, winner1.losses, winner1.totalDiff + game.differential, winner1.gamesPlayed + 1).subscribe();
+        this.ps.updatePlayer(winner2.id, winner2.wins + 1, winner2.losses, winner2.totalDiff + game.differential, winner2.gamesPlayed + 1).subscribe();
+        this.ps.updatePlayer(loser1.id, loser1.wins, loser1.losses + 1, loser1.totalDiff - game.differential, loser1.gamesPlayed + 1).subscribe();
+        this.ps.updatePlayer(loser2.id, loser2.wins, loser2.losses + 1, loser2.totalDiff - game.differential, loser2.gamesPlayed + 1).subscribe();
+    }
+
+    patchSinglesPlayers(game) {
+        let winner = this.players.find((player) => player.id == game.winner);
+        let loser = this.players.find((player) => player.id == game.team2);
+        this.ps.updatePlayer(winner.id, winner.wins + 1, winner.losses, winner.totalDiff + game.differential, winner.gamesPlayed + 1).subscribe();
+        this.ps.updatePlayer(loser.id, loser.wins, loser.losses + 1, loser.totalDiff - game.differential, loser.gamesPlayed + 1).subscribe();
+    }
+
+
     submitGame() {
         let team1 = this.playoffPool.find((team) => this.convertToName(team) == this.winningPlayer);
         let team2 = this.playoffPool.find((team) => this.convertToName(team) == this.losingPlayer);
-        let playoffGame = new Game(undefined, true, this.playoffId, undefined, team1, team2, team1, this.scoreDifferential)
+        let playoffGame = new Game(undefined, true, this.playoffId, undefined, team1, team2, team1, this.scoreDifferential);
+        if (team1 instanceof Array) {
+            this.patchDoublesPlayers(playoffGame);
+        } else {
+            this.patchSinglesPlayers(playoffGame);
+        }
         this.ts.addGame(playoffGame).subscribe(() => {
             this.router.navigateByUrl('/playoffs/' + this.playoffId);
         });

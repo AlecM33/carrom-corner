@@ -3,367 +3,51 @@
     {
       "name": "a",
       "nickname": "",
-      "wins": 0,
-      "losses": 0,
-      "totalDiff": 0,
-      "gamesPlayed": 0,
+      "wins": 2,
+      "losses": 1,
+      "totalDiff": 2,
+      "gamesPlayed": 3,
       "id": 1
     },
     {
       "name": "b",
       "nickname": "",
-      "wins": 0,
-      "losses": 0,
-      "totalDiff": 0,
-      "gamesPlayed": 0,
+      "wins": 3,
+      "losses": 2,
+      "totalDiff": 7,
+      "gamesPlayed": 5,
       "id": 2
     },
     {
       "name": "c",
       "nickname": "",
-      "wins": 0,
-      "losses": 0,
-      "totalDiff": 0,
-      "gamesPlayed": 0,
+      "wins": 2,
+      "losses": 3,
+      "totalDiff": 3,
+      "gamesPlayed": 5,
       "id": 3
     },
     {
       "name": "d",
       "nickname": "",
-      "wins": 0,
-      "losses": 0,
-      "totalDiff": 0,
-      "gamesPlayed": 0,
+      "wins": 2,
+      "losses": 3,
+      "totalDiff": -16,
+      "gamesPlayed": 5,
       "id": 4
     },
     {
       "name": "e",
       "nickname": "",
-      "wins": 0,
-      "losses": 0,
-      "totalDiff": 0,
-      "gamesPlayed": 0,
+      "wins": 2,
+      "losses": 2,
+      "totalDiff": 4,
+      "gamesPlayed": 4,
       "id": 5
-    },
-    {
-      "name": "f",
-      "nickname": "",
-      "wins": 0,
-      "losses": 0,
-      "totalDiff": 0,
-      "gamesPlayed": 0,
-      "id": 6
-    },
-    {
-      "name": "g",
-      "nickname": "",
-      "wins": 0,
-      "losses": 0,
-      "totalDiff": 0,
-      "gamesPlayed": 0,
-      "id": 7
     }
   ],
-  "tournaments": [
-    {
-      "name": "gg",
-      "playoffDefined": true,
-      "singles": true,
-      "size": 7,
-      "teams": [
-        1,
-        2,
-        3,
-        4,
-        5,
-        6,
-        7
-      ],
-      "id": 1,
-      "winner": "b"
-    }
-  ],
-  "pools": [
-    {
-      "tournamentId": 1,
-      "pools": [
-        [
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7
-        ]
-      ],
-      "tournyName": "gg",
-      "id": 1
-    }
-  ],
-  "games": [
-    {
-      "playoff": false,
-      "tournamentId": 1,
-      "scheduleIndex": 10,
-      "team1": 1,
-      "team2": 2,
-      "differential": 7,
-      "id": 1,
-      "winner": 1
-    },
-    {
-      "playoff": false,
-      "tournamentId": 1,
-      "scheduleIndex": 14,
-      "team1": 1,
-      "team2": 3,
-      "differential": 6,
-      "id": 2,
-      "winner": 1
-    },
-    {
-      "playoff": false,
-      "tournamentId": 1,
-      "scheduleIndex": 8,
-      "team1": 1,
-      "team2": 4,
-      "differential": 3,
-      "id": 3,
-      "winner": 1
-    },
-    {
-      "playoff": false,
-      "tournamentId": 1,
-      "scheduleIndex": 1,
-      "team1": 1,
-      "team2": 5,
-      "differential": 5,
-      "id": 4,
-      "winner": 5
-    },
-    {
-      "playoff": false,
-      "tournamentId": 1,
-      "scheduleIndex": 11,
-      "team1": 1,
-      "team2": 6,
-      "differential": 5,
-      "id": 5,
-      "winner": 1
-    },
-    {
-      "playoff": false,
-      "tournamentId": 1,
-      "scheduleIndex": 17,
-      "team1": 1,
-      "team2": 7,
-      "differential": 8,
-      "id": 6,
-      "winner": 1
-    },
-    {
-      "playoff": false,
-      "tournamentId": 1,
-      "scheduleIndex": 3,
-      "team1": 2,
-      "team2": 3,
-      "differential": 8,
-      "id": 7,
-      "winner": 2
-    },
-    {
-      "playoff": false,
-      "tournamentId": 1,
-      "scheduleIndex": 15,
-      "team1": 2,
-      "team2": 4,
-      "differential": 6,
-      "id": 8,
-      "winner": 2
-    },
-    {
-      "playoff": false,
-      "tournamentId": 1,
-      "scheduleIndex": 6,
-      "team1": 2,
-      "team2": 5,
-      "differential": 3,
-      "id": 9,
-      "winner": 2
-    },
-    {
-      "playoff": false,
-      "tournamentId": 1,
-      "scheduleIndex": 16,
-      "team1": 2,
-      "team2": 6,
-      "differential": 5,
-      "id": 10,
-      "winner": 6
-    },
-    {
-      "playoff": false,
-      "tournamentId": 1,
-      "scheduleIndex": 9,
-      "team1": 2,
-      "team2": 7,
-      "differential": 8,
-      "id": 11,
-      "winner": 2
-    },
-    {
-      "playoff": false,
-      "tournamentId": 1,
-      "scheduleIndex": 2,
-      "team1": 3,
-      "team2": 4,
-      "differential": 7,
-      "id": 12,
-      "winner": 3
-    },
-    {
-      "playoff": false,
-      "tournamentId": 1,
-      "scheduleIndex": 4,
-      "team1": 3,
-      "team2": 5,
-      "differential": 7,
-      "id": 13,
-      "winner": 5
-    },
-    {
-      "playoff": false,
-      "tournamentId": 1,
-      "scheduleIndex": 5,
-      "team1": 3,
-      "team2": 6,
-      "differential": 2,
-      "id": 14,
-      "winner": 6
-    },
-    {
-      "playoff": false,
-      "tournamentId": 1,
-      "scheduleIndex": 13,
-      "team1": 3,
-      "team2": 7,
-      "differential": 5,
-      "id": 15,
-      "winner": 3
-    },
-    {
-      "playoff": false,
-      "tournamentId": 1,
-      "scheduleIndex": 19,
-      "team1": 4,
-      "team2": 5,
-      "differential": 1,
-      "id": 16,
-      "winner": 5
-    },
-    {
-      "playoff": false,
-      "tournamentId": 1,
-      "scheduleIndex": 18,
-      "team1": 4,
-      "team2": 6,
-      "differential": 7,
-      "id": 17,
-      "winner": 6
-    },
-    {
-      "playoff": false,
-      "tournamentId": 1,
-      "scheduleIndex": 7,
-      "team1": 4,
-      "team2": 7,
-      "differential": 7,
-      "id": 18,
-      "winner": 4
-    },
-    {
-      "playoff": false,
-      "tournamentId": 1,
-      "scheduleIndex": 12,
-      "team1": 5,
-      "team2": 6,
-      "differential": 2,
-      "id": 19,
-      "winner": 6
-    },
-    {
-      "playoff": false,
-      "tournamentId": 1,
-      "scheduleIndex": 20,
-      "team1": 5,
-      "team2": 7,
-      "differential": 3,
-      "id": 20,
-      "winner": 5
-    },
-    {
-      "playoff": false,
-      "tournamentId": 1,
-      "scheduleIndex": 0,
-      "team1": 6,
-      "team2": 7,
-      "differential": 5,
-      "id": 21,
-      "winner": 6
-    }
-  ],
-  "playoffs": [
-    {
-      "id": 1,
-      "tournamentId": 1,
-      "playInSpots": [],
-      "bracket": [
-        [],
-        [
-          {
-            "team": 1,
-            "wins": 5,
-            "losses": 1,
-            "totalDifferential": 24,
-            "pool": 0,
-            "parent": 1,
-            "playoffSeed": 1
-          },
-          {
-            "team": 5,
-            "wins": 4,
-            "losses": 2,
-            "totalDifferential": 11,
-            "pool": 0,
-            "parent": 1,
-            "playoffSeed": 4
-          },
-          {
-            "team": 6,
-            "wins": 5,
-            "losses": 1,
-            "totalDifferential": 16,
-            "pool": 0,
-            "parent": 6,
-            "playoffSeed": 2
-          },
-          {
-            "team": 2,
-            "wins": 4,
-            "losses": 2,
-            "totalDifferential": 13,
-            "pool": 0,
-            "parent": 6,
-            "playoffSeed": 3
-          }
-        ],
-        [
-          {},
-          {}
-        ]
-      ],
-      "winner": 2
-    }
-  ]
+  "tournaments": [],
+  "pools": [],
+  "games": [],
+  "playoffs": []
 }
