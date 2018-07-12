@@ -67,6 +67,37 @@ export class AddGameComponent implements OnInit{
         }
     }
 
+    patchDoublesPlayers() {
+        let loser1, loser2;
+        let winner1 = this.players.find((player) => player.id == this.currentGame.winner[0]);
+        let winner2 = this.players.find((player) => player.id == this.currentGame.winner[1]);
+        if (this.winningTeam === 'team1') {
+            loser1 = this.players.find((player) => player.id == this.currentGame.team2[0]);
+            loser2 = this.players.find((player) => player.id == this.currentGame.team2[1]);
+        } else {
+            loser1 = this.players.find((player) => player.id == this.currentGame.team1[0]);
+            loser2 = this.players.find((player) => player.id == this.currentGame.team1[1]);
+        }
+        this.ps.updatePlayer(winner1.id, winner1.wins + 1, winner1.losses, winner1.totalDiff + this.scoreDifferential, winner1.gamesPlayed + 1);
+        this.ps.updatePlayer(winner2.id, winner2.wins + 1, winner2.losses, winner2.totalDiff + this.scoreDifferential, winner2.gamesPlayed + 1);
+        this.ps.updatePlayer(loser1.id, loser1.wins, loser1.losses, loser1.totalDiff - this.scoreDifferential, loser1.gamesPlayed + 1);
+        this.ps.updatePlayer(loser2.id, loser2.wins, loser2.losses, loser2.totalDiff - this.scoreDifferential, loser2.gamesPlayed + 1);
+    }
+
+    patchSinglesPlayers() {
+        let loser;
+        let winner = this.players.find((player) => player.id == this.currentGame.winner);
+        if (this.winningTeam === 'team1') {
+            loser = this.players.find((player) => player.id == this.currentGame.team2);
+        } else {
+            loser = this.players.find((player) => player.id == this.currentGame.team1);
+        }
+        this.ps.updatePlayer(winner.id, winner.wins + 1, winner.losses, winner.totalDiff + this.scoreDifferential, winner.gamesPlayed + 1);
+        this.ps.updatePlayer(loser.id, loser.wins, loser.losses, loser.totalDiff - this.scoreDifferential, loser.gamesPlayed + 1);
+    }
+
+    
+
     // user submits form for game result
     submitGame() {
         if (this.winningTeam === 'team1') {
@@ -77,6 +108,11 @@ export class AddGameComponent implements OnInit{
             this.ts.updateGame(this.gameId, this.currentGame[0].team2, this.scoreDifferential).subscribe(() => {
                 this.router.navigateByUrl('/tournaments/' + this.tournyType + '/' + this.tournyName);
             });
+        }
+        if (this.tournyType === 'doubles') {
+            this.patchDoublesPlayers();
+        } else {
+            this.patchSinglesPlayers();
         }
     }
 }

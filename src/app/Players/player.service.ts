@@ -55,16 +55,26 @@ export class PlayerService {
             return this.http.get('http://localhost:3000/players').map(this.populateWithPlayers);
         }
     }
+
+    updatePlayer(id, wins, losses, totalDiff, gamesPlayed): Observable<any> {
+        return this.http.patch('http://localhost:3000/players/' + id,
+        {
+            "wins": wins,
+            "losses": losses,
+            "totalDiff": totalDiff,
+            "gamesPlayed": gamesPlayed
+        });
+    }
     
     // Sends a POST request to add a player to the database
     addPlayer(newPlayer) {
         const httpOptions = {headers: new HttpHeaders({ 'Content-Type': 'application/json' })};
         let payload = { "name": newPlayer.name,
-                        "elo": 1200,
                         "nickname": newPlayer.nickname,
-                        "wins": 0,
-                        "losses": 0,
-                        "winPtg": 0.0
+                        "wins": newPlayer.wins,
+                        "losses": newPlayer.losses,
+                        "totalDiff": newPlayer.totalDiff,
+                        "gamesPlayed": newPlayer.gamesPlayed
                       };
         return this.http.post('http://localhost:3000/players', payload, httpOptions);
     }

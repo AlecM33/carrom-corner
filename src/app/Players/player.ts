@@ -6,26 +6,26 @@ export class Player {
     public id: number;
     public name: string;
     public nickname: string;
-    public elo: number;
     public wins: number;
     public losses: number;
-    public winPtg: number;
+    public totalDiff: number;
+    public gamesPlayed: number;
 
     constructor(id: number,
                 name: string,
                 nickname: string='',
-                elo: number=1200,
                 wins: number=0,
                 losses: number=0,
-                winPtg: number=0.0) {
+                totalDiff: number,
+                gamesPlayed: number) {
 
         this.id = id;
         this.name = name;
         this.nickname = nickname;
-        this.elo = elo;
         this.wins = wins;
         this.losses = losses;
-        this.winPtg = winPtg;
+        this.totalDiff = totalDiff;
+        this.gamesPlayed = gamesPlayed;
     
     }
 }

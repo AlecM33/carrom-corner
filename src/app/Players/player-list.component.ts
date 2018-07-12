@@ -23,14 +23,14 @@ export class PlayerListComponent implements OnInit {
 
   // calls the delete function from the player service, refreshes the player list
   delete(player) {
-    if(confirm('Delete this player?')) {
+    
       this.players = [];
       this._playerService.deletePlayer(player).do(() => {
         this._playerService.getPlayers().subscribe((players) => {
           this.players = players;
         })
         }).subscribe();
-      }
+      
   }
   
   // gets player list for list view
