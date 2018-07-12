@@ -3,37 +3,37 @@
     {
       "name": "Alec Maier",
       "nickname": "",
-      "wins": 0,
+      "wins": 2,
       "losses": 0,
-      "totalDiff": 0,
-      "gamesPlayed": 0,
+      "totalDiff": 11,
+      "gamesPlayed": 2,
       "id": 1
     },
     {
       "name": "Alex Hansen",
       "nickname": "",
-      "wins": 3,
+      "wins": 5,
       "losses": 2,
-      "totalDiff": -2,
-      "gamesPlayed": 5,
+      "totalDiff": 9,
+      "gamesPlayed": 7,
       "id": 2
     },
     {
       "name": "Ellery Frampton",
       "nickname": "",
       "wins": 5,
-      "losses": 1,
-      "totalDiff": 16,
-      "gamesPlayed": 6,
+      "losses": 3,
+      "totalDiff": 5,
+      "gamesPlayed": 8,
       "id": 3
     },
     {
       "name": "Kashif Ansari",
       "nickname": "",
       "wins": 2,
-      "losses": 2,
-      "totalDiff": 5,
-      "gamesPlayed": 4,
+      "losses": 4,
+      "totalDiff": -6,
+      "gamesPlayed": 6,
       "id": 4
     },
     {
@@ -147,10 +147,10 @@
     {
       "name": "Jon Snow",
       "nickname": "",
-      "wins": 3,
+      "wins": 4,
       "losses": 2,
-      "totalDiff": -2,
-      "gamesPlayed": 5,
+      "totalDiff": 2,
+      "gamesPlayed": 6,
       "id": 17
     },
     {
@@ -166,9 +166,9 @@
       "name": "Podrick",
       "nickname": "",
       "wins": 1,
-      "losses": 3,
-      "totalDiff": -6,
-      "gamesPlayed": 4,
+      "losses": 4,
+      "totalDiff": -10,
+      "gamesPlayed": 5,
       "id": 19
     },
     {
@@ -349,7 +349,7 @@
     },
     {
       "name": "test31",
-      "playoffDefined": false,
+      "playoffDefined": true,
       "singles": true,
       "size": 31,
       "teams": [
@@ -385,7 +385,26 @@
         30,
         31
       ],
-      "id": 2
+      "id": 2,
+      "winner": "Tywin Lannister"
+    },
+    {
+      "name": "dub",
+      "playoffDefined": true,
+      "singles": false,
+      "size": 2,
+      "teams": [
+        [
+          1,
+          2
+        ],
+        [
+          3,
+          4
+        ]
+      ],
+      "id": 3,
+      "winner": "Ellery Frampton & Kashif Ansari"
     }
   ],
   "pools": [
@@ -505,6 +524,23 @@
       ],
       "tournyName": "test31",
       "id": 2
+    },
+    {
+      "tournamentId": 3,
+      "pools": [
+        [
+          [
+            1,
+            2
+          ],
+          [
+            3,
+            4
+          ]
+        ]
+      ],
+      "tournyName": "dub",
+      "id": 3
     }
   ],
   "games": [
@@ -1901,6 +1937,52 @@
       "differential": 1,
       "id": 112,
       "winner": 31
+    },
+    {
+      "playoff": true,
+      "tournamentId": "2",
+      "team1": 17,
+      "team2": 19,
+      "winner": 17,
+      "differential": 4,
+      "id": 113
+    },
+    {
+      "playoff": false,
+      "tournamentId": 3,
+      "scheduleIndex": 0,
+      "team1": [
+        1,
+        2
+      ],
+      "team2": [
+        3,
+        4
+      ],
+      "differential": 3,
+      "id": 114,
+      "winner": [
+        1,
+        2
+      ]
+    },
+    {
+      "playoff": true,
+      "tournamentId": "3",
+      "team1": [
+        1,
+        2
+      ],
+      "team2": [
+        3,
+        4
+      ],
+      "winner": [
+        1,
+        2
+      ],
+      "differential": 8,
+      "id": 115
     }
   ],
   "playoffs": [
@@ -2072,6 +2154,279 @@
       "winner": [
         21,
         3
+      ]
+    },
+    {
+      "id": 2,
+      "tournamentId": 2,
+      "playInSpots": [
+        1,
+        5,
+        9,
+        13
+      ],
+      "bracket": [
+        [
+          {
+            "team": 25,
+            "wins": 3,
+            "losses": 3,
+            "totalDifferential": -3,
+            "pool": 0,
+            "parent": 25,
+            "playoffSeed": 16
+          },
+          {
+            "team": 19,
+            "wins": 2,
+            "losses": 3,
+            "totalDifferential": -4,
+            "pool": 3,
+            "parent": 25,
+            "playoffSeed": 17
+          },
+          {
+            "team": 17,
+            "wins": 3,
+            "losses": 2,
+            "totalDifferential": 0,
+            "pool": 1,
+            "parent": 17,
+            "playoffSeed": 13
+          },
+          {
+            "team": 14,
+            "wins": 2,
+            "losses": 3,
+            "totalDifferential": -2,
+            "pool": 4,
+            "parent": 17,
+            "playoffSeed": 20
+          },
+          {
+            "team": 4,
+            "wins": 3,
+            "losses": 2,
+            "totalDifferential": 8,
+            "pool": 4,
+            "parent": 4,
+            "playoffSeed": 15
+          },
+          {
+            "team": 8,
+            "wins": 2,
+            "losses": 3,
+            "totalDifferential": 0,
+            "pool": 3,
+            "parent": 4,
+            "playoffSeed": 18
+          },
+          {
+            "team": 22,
+            "wins": 3,
+            "losses": 2,
+            "totalDifferential": 2,
+            "pool": 4,
+            "parent": 22,
+            "playoffSeed": 14
+          },
+          {
+            "team": 16,
+            "wins": 2,
+            "losses": 3,
+            "totalDifferential": -6,
+            "pool": 1,
+            "parent": 22,
+            "playoffSeed": 19
+          }
+        ],
+        [
+          {
+            "team": 15,
+            "wins": 5,
+            "losses": 0,
+            "totalDifferential": 28,
+            "pool": 3,
+            "parent": 15,
+            "playoffSeed": 1
+          },
+          {},
+          {
+            "team": 2,
+            "wins": 4,
+            "losses": 2,
+            "totalDifferential": 15,
+            "pool": 0,
+            "parent": 2,
+            "playoffSeed": 8
+          },
+          {
+            "team": 20,
+            "wins": 4,
+            "losses": 1,
+            "totalDifferential": 3,
+            "pool": 3,
+            "parent": 2,
+            "playoffSeed": 9
+          },
+          {
+            "team": 5,
+            "wins": 4,
+            "losses": 1,
+            "totalDifferential": 19,
+            "pool": 1,
+            "parent": 5,
+            "playoffSeed": 4
+          },
+          {},
+          {
+            "team": 13,
+            "wins": 4,
+            "losses": 1,
+            "totalDifferential": 15,
+            "pool": 1,
+            "parent": 13,
+            "playoffSeed": 5
+          },
+          {
+            "team": 27,
+            "wins": 3,
+            "losses": 2,
+            "totalDifferential": 1,
+            "pool": 2,
+            "parent": 13,
+            "playoffSeed": 12
+          },
+          {
+            "team": 31,
+            "wins": 5,
+            "losses": 0,
+            "totalDifferential": 21,
+            "pool": 4,
+            "parent": 31,
+            "playoffSeed": 2
+          },
+          {},
+          {
+            "team": 23,
+            "wins": 4,
+            "losses": 1,
+            "totalDifferential": 10,
+            "pool": 2,
+            "parent": 23,
+            "playoffSeed": 7
+          },
+          {
+            "team": 11,
+            "wins": 3,
+            "losses": 2,
+            "totalDifferential": 12,
+            "pool": 2,
+            "parent": 23,
+            "playoffSeed": 10
+          },
+          {
+            "team": 18,
+            "wins": 4,
+            "losses": 2,
+            "totalDifferential": 15,
+            "pool": 0,
+            "parent": 18,
+            "playoffSeed": 3
+          },
+          {},
+          {
+            "team": 21,
+            "wins": 4,
+            "losses": 1,
+            "totalDifferential": 20,
+            "pool": 2,
+            "parent": 21,
+            "playoffSeed": 6
+          },
+          {
+            "team": 12,
+            "wins": 3,
+            "losses": 3,
+            "totalDifferential": -2,
+            "pool": 0,
+            "parent": 21,
+            "playoffSeed": 11
+          }
+        ],
+        [
+          {},
+          {
+            "team": 2,
+            "wins": 4,
+            "losses": 2,
+            "totalDifferential": 15,
+            "pool": 0,
+            "parent": 2,
+            "playoffSeed": 8
+          },
+          {},
+          {},
+          {},
+          {},
+          {},
+          {}
+        ],
+        [
+          {},
+          {},
+          {},
+          {}
+        ],
+        [
+          {},
+          {}
+        ]
+      ],
+      "winner": 18
+    },
+    {
+      "id": 3,
+      "tournamentId": 3,
+      "playInSpots": [],
+      "bracket": [
+        [],
+        [
+          {
+            "team": [
+              1,
+              2
+            ],
+            "wins": 1,
+            "losses": 0,
+            "totalDifferential": 3,
+            "pool": 0,
+            "parent": [
+              1,
+              2
+            ],
+            "playoffSeed": 1
+          },
+          {
+            "team": [
+              3,
+              4
+            ],
+            "wins": 0,
+            "losses": 1,
+            "totalDifferential": -3,
+            "pool": 0,
+            "parent": [
+              1,
+              2
+            ],
+            "playoffSeed": 2
+          }
+        ]
+      ],
+      "winner": [
+        3,
+        4
       ]
     }
   ]

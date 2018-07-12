@@ -24,6 +24,7 @@
         <p *ngIf="playoffGames && playoffGames.length == 0" class='playoff-prompt'>You haven't entered any playoff game results!</p>
     </div>
     <div *ngIf="bracket">
+        <h3 *ngIf="playInRound.length > 0">Play-in Matches</h3>
         <div *ngFor='let matchup of indexArray(playInRound.length / 2); let i = index;'>
             <div class='bracket-box-play-in'>
                 <p>{{playInRound[2 * i].playoffSeed}} {{convertToName(playInRound[2 * i].team)}} <button *ngIf="!isOver" (click)="advancePlayer(playInRound[2 * i], -1)">»</button></p>
@@ -46,7 +47,7 @@
             <p *ngIf="tournamentWinner">{{convertToName(tournamentWinner)}}</p>
             <p *ngIf="winner && !tournamentWinner">{{convertToName(winner)}}</p>
             <p *ngIf="!winner && !tournamentWinner" class='empty-slot'></p>
-            <img src='../../assets/images/trophy.png' width="20px" height="20px" />
+            <img id="trophy" src='../../assets/images/trophy.png' width="20px" height="20px" />
         </div>
     </div>
 </div>
