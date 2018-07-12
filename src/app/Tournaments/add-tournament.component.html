@@ -5,20 +5,22 @@
         <div class='next-button'>
             <button type="submit" class="btn btn-success btn-xs">Create</button>
         </div>
-        <div *ngIf="!nameBlank && nameForbidden" class="alert alert-danger">
-            There is already a tournament with that name.
-        </div>
-        <div *ngIf="!nameBlank && nameFormatInvalid" class="alert alert-danger">
-            Tournament name is invalid. Names can contain numbers, letters, and spaces.
-        </div>
-        <div *ngIf="tournyType === 'doubles' && rosterUneven" class="alert alert-danger">
-            You must add an even number of players for a doubles tournament!
-        </div>
-        <div *ngIf="nameBlank" class="alert alert-danger">
-            Tournament name cannot be blank.
-        </div>
-        <div *ngIf="rosterForbidden" class="alert alert-danger">
-            Roster must be at least 2 players in size.
+        <div class='validation-notices'>
+            <div id="error" *ngIf="!nameBlank && nameForbidden" class="alert alert-danger">
+                There is already a tournament with that name.
+            </div>
+            <div id="error" *ngIf="!nameBlank && nameFormatInvalid" class="alert alert-danger">
+                Tournament name is invalid. Names can contain numbers, letters, and spaces.
+            </div>
+            <div id="error" *ngIf="tournyType === 'doubles' && rosterUneven" class="alert alert-danger">
+                You must add an even number of players for a doubles tournament!
+            </div>
+            <div id="error" *ngIf="nameBlank" class="alert alert-danger">
+                Tournament name cannot be blank.
+            </div>
+            <div id="error" *ngIf="rosterForbidden" class="alert alert-danger">
+                Roster must be at least 2 players in size.
+            </div>
         </div>
         <div>
             <label>Tournament Name: </label>
@@ -33,30 +35,34 @@
     <div class='add-all-button'>
         <button (click)="addAll()" class="btn btn-warning btn-xs">+ Add All Players</button>
     </div>
-    <div class="container-fluid">
+    
         <div class="addPlayersList">
             <h3>Player Pool</h3>
-            <table class="table-responsive players-table">
-                <tr *ngFor="let player of playersToAdd">
-                    <td>
-                        {{player.name}}
-                    </td>
-                    <td>
-                        <button (click)="addPlayer(player)" class="btn btn-success btn-xs add-button">add</button>
-                    </td>
-                </tr>
-            </table>
+            <div class='roster-list'>
+                <table class="table-responsive table-dark players-table">
+                    <tr *ngFor="let player of playersToAdd">
+                        <td>
+                            {{player.name}}
+                        </td>
+                        <td>
+                            <button (click)="addPlayer(player)" class="btn btn-success btn-xs add-button">add</button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
         </div>
         <div class="addPlayersList">
             <h3>Current Roster: {{playersInTourny.size}} players</h3>
-            <table class="table-responsive players-table">
-                <tr *ngFor="let player of playersInTourny">
-                    <td>{{player.name}}</td> 
-                    <td>
-                        <button (click)="removePlayer(player)" class="btn btn-danger btn-xs sub-button">remove</button>
-                    </td>
-                </tr>
-            </table>
+            <div class='roster-list'>
+                <table class="table-responsive table-dark players-table">
+                    <tr *ngFor="let player of playersInTourny">
+                        <td>{{player.name}}</td> 
+                        <td>
+                            <button (click)="removePlayer(player)" class="btn btn-danger btn-xs sub-button">remove</button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
         </div>
-    </div>
+    
 </div>

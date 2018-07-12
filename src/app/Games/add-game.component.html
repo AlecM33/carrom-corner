@@ -1,25 +1,27 @@
 <div class="container-fluid">
-        <div *ngIf="teamsBlank" class="alert alert-danger">
-            You must select a winner.
+        <div class='validation-notices'>
+            <div id="error" *ngIf="teamsBlank" class="alert alert-danger">
+                You must select a winner.
+            </div>
+            <div id="error" *ngIf="scoreInvalid" class="alert alert-danger">
+                The coin differential must be a number between 1 and 8 inclusive.
+            </div>
+            <div id="error" *ngIf="scoreBlank" class="alert alert-danger">
+                The coin differential cannot be blank.
+            </div>
         </div>
-        <div *ngIf="scoreInvalid" class="alert alert-danger">
-            The coin differential must be a number between 1 and 8 inclusive.
-        </div>
-        <div *ngIf="scoreBlank" class="alert alert-danger">
-            The coin differential cannot be blank.
-        </div>
-        <form (ngSubmit)="validateGame()" #gameForm="ngForm">
-            <p>Who Won?</p>
+        <form class='add-player' (ngSubmit)="validateGame()" #gameForm="ngForm">
+            <h3>Who Won?</h3>
             <div>
             <input id="checkbox1" type="radio" value="team1" name="winner" [(ngModel)]="winningTeam" /> {{firstTeam}}
             <input id="checkbox2" type="radio" value="team2" name="winner" [(ngModel)]="winningTeam" /> {{secondTeam}}
             </div>
             <div>
-                <p>Score Differential: </p>
+                <h3>Score Differential: </h3>
                 <input type="number" min="1" max="8" name="differential" [(ngModel)]="scoreDifferential"/>
             </div>
             <div>
-                <input type="submit" value="Enter Result"/>
+                <input class='btn btn-primary' type="submit" value="Enter Result"/>
             </div>
         </form>
     </div>

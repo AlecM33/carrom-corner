@@ -1,20 +1,20 @@
-<div *ngIf="nameBlank" class="alert alert-danger">
-    You must give a name.
-</div>
-<div *ngIf="nameTaken" class="alert alert-danger">
-    This player has already been added.
-</div>
-<div *ngIf="nameInvalid" class="alert alert-danger">
+<div class='validation-notices'>    
+    <div id="error" *ngIf="nameBlank" class="alert alert-danger">
+        You must give a name.
+    </div>
+    <div id="error" *ngIf="nameTaken" class="alert alert-danger">
+        This player has already been added.
+    </div>
+    <div id="error" *ngIf="nameInvalid" class="alert alert-danger">
         Player name or nickname is invalid. Valid names/nicknames can have letters, numbers, and spaces.
     </div>
-<div class="container-fluid">
-    <form (ngSubmit)="validatePlayer()" #playerForm="ngForm">
-        <p>Full Name:</p>
-        <input type="text" name="name" [(ngModel)]="newPlayerName" />
-        <p>Nickname (optional):</p>
-        <input type="text" name="nickname" [(ngModel)]="newPlayerNickname" />
-        <div>
-            <input type="submit" value="Add this player"/>
-        </div>
-    </form>
 </div>
+<form class='add-player' (ngSubmit)="validatePlayer()" #playerForm="ngForm">
+    <h3>Full Name:</h3>
+    <input type="text" name="name" [(ngModel)]="newPlayerName" />
+    <h3>Nickname (optional):</h3>
+    <input type="text" name="nickname" [(ngModel)]="newPlayerNickname" />
+    <div>
+        <input class='btn btn-primary' type="submit" value="Add this player"/>
+    </div>
+</form>

@@ -1,31 +1,28 @@
-<div class='panel panel-primary'>
-        <div class='panel-body'>
-            <div class='table-responsive'>
-                <table class='table'>
-                    <thead>
-                        <tr>
-                            <th>Tournament Name</th>
-                            <th>Singles/Doubles</th>
-                            <th>Players</th>
-                            <th>Winner</th>
-                            <th></th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor='let tournament of tournaments'>
-                            <td>{{tournament.name}}</td>
-                            <td *ngIf='tournament.singles == true'>Singles</td>
-                            <td *ngIf='tournament.singles == false'>Doubles</td>
-                            <td>{{tournament.size}}</td>
-                            <td *ngIf="tournament.winner">{{tournament.winner}}</td>
-                            <td class='in-progress' *ngIf="!tournament.winner">In progress...</td>
-                            <td><button (click)='delete(tournament)' id='list-button' class='btn btn-danger btn-xs'>Delete</button></td>
-                            <td *ngIf="tournament.playoffDefined"><button (click)='viewPlayoff(tournament.id)' id='list-button' class='btn btn-success btn-xs'>View</button></td>
-                            <td *ngIf="!tournament.playoffDefined"><button (click)='viewTournament(tournament)' id='list-button' class='btn btn-success btn-xs'>View</button></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
+
+<div class='table-responsive table-dark app-table'>
+    <table class='table'>
+        <thead>
+            <tr>
+                <th>Tournament Name</th>
+                <th>Singles/Doubles</th>
+                <th>Players</th>
+                <th>Winner</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor='let tournament of tournaments'>
+                <td>{{tournament.name}}</td>
+                <td *ngIf='tournament.singles == true'>Singles</td>
+                <td *ngIf='tournament.singles == false'>Doubles</td>
+                <td>{{tournament.size}}</td>
+                <td *ngIf="tournament.winner">{{tournament.winner}}</td>
+                <td class='in-progress' *ngIf="!tournament.winner">In progress...</td>
+                <td><button (click)='delete(tournament)' id='list-button' class='btn btn-danger btn-xs'>Delete</button></td>
+                <td *ngIf="tournament.playoffDefined"><button (click)='viewPlayoff(tournament.id)' id='list-button' class='btn btn-success btn-xs'>View</button></td>
+                <td *ngIf="!tournament.playoffDefined"><button (click)='viewTournament(tournament)' id='list-button' class='btn btn-success btn-xs'>View</button></td>
+            </tr>
+        </tbody>
+    </table>
+</div>

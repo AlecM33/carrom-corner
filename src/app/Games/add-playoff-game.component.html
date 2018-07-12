@@ -1,11 +1,13 @@
-<div *ngIf="teamsBlank" class="alert alert-danger">
-    You must select a winner and a loser.
-</div>
-<div *ngIf="scoreInvalid" class="alert alert-danger">
-    The coin differential must be a number between 1 and 8 inclusive.
-</div>
-<div *ngIf="scoreBlank" class="alert alert-danger">
-    The coin differential cannot be blank.
+<div class='validation-notices'>
+    <div id="error" *ngIf="teamsBlank" class="alert alert-danger">
+        You must select a winner and a loser.
+    </div>
+    <div id="error" *ngIf="scoreInvalid" class="alert alert-danger">
+        The coin differential must be a number between 1 and 8 inclusive.
+    </div>
+    <div id="error" *ngIf="scoreBlank" class="alert alert-danger">
+        The coin differential cannot be blank.
+    </div>
 </div>
 <div *ngIf="playoffPool" class='vs-container'>
     <form (ngSubmit)="validateGame()" #playoffForm="ngForm">

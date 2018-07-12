@@ -2,10 +2,28 @@
 
 html, body {
     margin: 0;
+    text-align: center;
+    background-image: url("assets/images/purty_wood.png");
+    background-color: rgba(155, 150, 150, 0.2) !important;
+    background-blend-mode: color;
 }
 
-.page-content {
-    margin: 3%;
+.app-title {
+    color: white;
+    font-size: 25px;
+}
+
+.nav-links {
+    margin: 0px 20px 0px;
+}
+
+.link {
+    color: gold;
+}
+
+.link:hover {
+    color: darkgray;
+    text-decoration: none;
 }
 
 h2 {
@@ -17,6 +35,13 @@ h2 {
     color: rgb(236, 208, 49);
     font-size: 60px;
 
+}
+
+.page-content {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: center;
 }
 
 .winner-image {
@@ -48,7 +73,12 @@ input {
 }
 
 .create-buttons {
-    padding: 0;
+    opacity: 0;
+    -webkit-animation: slide_in 0.7s;
+    -moz-animation: slide_in 0.7s;
+    animation: slide_in 0.7s;
+    animation-fill-mode: forwards;
+    padding: 2%;
 }
 
 .bracket-box {
@@ -78,26 +108,75 @@ label {
     padding: 10px;
 }
 
-.next-button {
-    padding: 15px;
-    text-align: right;
-}
-
-.add-all-button {
-    margin-left: 20%;
+.add-player h3 {
     text-align: left;
 }
 
+.add-player input {
+    margin: 10px;
+}
+
+.pool-table {
+    border: 2px solid gold;
+    border-radius: 3px;
+}
+
+#error {
+    font-size: 11px;
+    margin: 0px 5px 0px;
+}
+
+.validation-notices {
+    display: flex;
+    text-align: center;
+    justify-content: center;
+}
+
+.next-button {
+    padding: 15px;
+}
+
+button {
+    border: 1px solid black !important;
+}
+
 .next-button button {
-    width: 150px;
-    height: 50px;
-    font-size: 20px;
+    width: 120px;
+    height: 40px;
+    font-size: 15px;
+}
+
+.app-navbar {
+    border: 1px solid rgb(247, 211, 6);
+    border-radius: 5px;
+}
+
+.app-table {
+    width: 1000px;
+    border: 1px solid gold;
+    border-radius: 3px;
+    opacity: 0;
+    -webkit-animation: fadein 0.7s;
+    -moz-animation: fadein 0.7s;
+    animation: fadein 0.7s;
+    animation-delay: 0.2s;
+    animation-fill-mode: forwards;
+}
+
+.roster-list {
+    border: 1px solid green;
+    border-radius: 3px;
 }
 
 .players-table {
+    opacity: 0;
+    -webkit-animation: fadein 0.5s;
+    -moz-animation: fadein 0.5s;
+    animation: fadein 0.5s;
+    animation-delay: 0.2s;
+    animation-fill-mode: forwards;
     max-height: 350px;
-    border: 1px solid black;
-    padding: 10px;
+    
 }
 
 .flex-column-play-in {
@@ -219,7 +298,7 @@ hr {
     justify-content: space-around;
 }
 .addPlayersList {
-    width: 30%;
+    width: 400px;
     display: inline-table;
 }
 
@@ -236,7 +315,26 @@ div {
     min-width: 20%;
 }
 
+.tourny-list-table {
+    opacity: 0;
+    -webkit-animation: fadein 0.7s;
+    -moz-animation: fadein 0.7s;
+    animation: fadein 0.7s;
+    animation-delay: 0.2s;
+    animation-fill-mode: forwards;
+}
+
+.players-table td {
+    width: 300px;
+}
+
 .tourny-table {
+    opacity: 0;
+    -webkit-animation: fadein 0.7s;
+    -moz-animation: fadein 0.7s;
+    animation: fadein 0.7s;
+    animation-delay: 0.2s;
+    animation-fill-mode: forwards;
     font-size: 13px;
     min-height: 400px;
     max-height: 400px;
@@ -262,6 +360,23 @@ h3 {
     to {background-color: lightblue;}
 }
 
+@keyframes fadein {
+    from { opacity: 0; }
+    to {opacity: 1; }
+}
+
+@keyframes slide_in {
+    from {
+        transform: translateX(-5%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
 .playoff-button {
     margin: 0px 40px 0px;
     animation: pulse 1s infinite;
@@ -278,7 +393,7 @@ td {
 }
 
 .playoff-prompt {
-    color: rgb(24, 177, 24);
+    color: rgb(19, 134, 19);
     font-weight: bold;
 }
 

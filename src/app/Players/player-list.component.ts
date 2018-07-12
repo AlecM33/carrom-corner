@@ -23,20 +23,37 @@ export class PlayerListComponent implements OnInit {
 
   // calls the delete function from the player service, refreshes the player list
   delete(player) {
-    
       this.players = [];
       this._playerService.deletePlayer(player).do(() => {
         this._playerService.getPlayers().subscribe((players) => {
           this.players = players;
         })
         }).subscribe();
-      
+  }
+
+  sortPlayers() {
+    this.players.sort((a, b) => {
+      if (b.gamesPlayed == 0) {
+        return -1;
+      } else if ((a.wins/a.gamesPlayed) > (b.wins/b.gamesPlayed)) {
+        return -1;
+      } else if ((a.wins/a.gamesPlayed) == (b.wins/b.gamesPlayed)) {
+          if (a.totalDiff >= b.totalDiff) {
+            return -1;
+          } else {
+            return 1;
+          }
+      } else {
+        return 1;
+      }
+    })
   }
   
   // gets player list for list view
   ngOnInit() {
     this._playerService.getPlayers().subscribe((players) => {
       this.players = players;
+      this.sortPlayers();
       for (let player of this.players) {
         console.log(player.gamesPlayed);
         console.log(typeof(player.gamesPlayed));

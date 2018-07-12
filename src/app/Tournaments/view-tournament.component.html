@@ -1,8 +1,10 @@
 <form (ngSubmit)="getPlayoffRoster()" #rosterForm="ngForm">
     <button *ngIf="!disabled && !playoffsBegan" type="submit" class="btn btn-primary btn-lg playoff-button">Begin Playoffs »</button>
 </form>
-<div *ngIf="rosterInvalid" class="alert alert-danger">
-        You must advance at least 2 players or teams to the playoffs.
+<div class='validation-notices'>
+    <div id="error" *ngIf="rosterInvalid" class="alert alert-danger">
+            You must advance at least 2 players or teams to the playoffs.
+    </div>
 </div>
 <form *ngIf="playoffsBegan" (ngSubmit)="playoffValidation()" #gameForm="ngForm">
         <h3 *ngIf="playoffsBegan">Select the players that advance to the playoffs!</h3>
@@ -16,8 +18,9 @@
 <div class='pools' *ngIf="idPools">
     <div class='pool-view' *ngFor="let pool of idPools">
         <h3>Pool {{getLetter(idPools.indexOf(pool))}}</h3>
-        <table class='table'>
+        <table class='table table-dark pool-table'>
             <thead>
+                <th *ngIf="playoffsBegan"></th>
                 <th></th>
                 <th>Wins</th>
                 <th>Losses</th>
@@ -37,15 +40,15 @@
 </div>
     <h2>Games To Play</h2>
     <div *ngIf="isDisabled()" class='tourny-table'>
-        <table class='table'>
+        <table class='table table-dark pool-table'>
             <thead>
                 <th>Games</th>
                 <th><input #filter type="text" id="gameFilter" (keyup)="filterGames(filter.value)" placeholder="Search for games..." /></th>
             </thead>
-            <tbody  *ngFor="let game of gamesToDisplay">
-                <tr *ngIf="!game.winner">
-                    <td>{{convertToName(game.team1)}} vs. {{convertToName(game.team2)}} </td>
-                    <td>
+            <tbody >
+                <tr *ngFor="let game of gamesToDisplay">
+                    <td *ngIf="!game.winner">{{convertToName(game.team1)}} vs. {{convertToName(game.team2)}} </td>
+                    <td *ngIf="!game.winner">
                         <button (click)="viewGame(game)" class="btn btn-primary btn-xs">Enter Result</button>
                     </td>
                 </tr>
