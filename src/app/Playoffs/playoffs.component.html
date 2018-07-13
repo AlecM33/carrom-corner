@@ -27,18 +27,18 @@
         <h3 *ngIf="playInRound.length > 0">Play-in Matches</h3>
         <div *ngFor='let matchup of indexArray(playInRound.length / 2); let i = index;'>
             <div class='bracket-box-play-in'>
-                <p>{{playInRound[2 * i].playoffSeed}} {{convertToName(playInRound[2 * i].team)}} <button *ngIf="!isOver" (click)="advancePlayer(playInRound[2 * i], -1)">»</button></p>
+                <p>{{playInRound[2 * i].playoffSeed}} {{convertToName(playInRound[2 * i].team)}} <button id="advance-button" *ngIf="!isOver" (click)="advancePlayer(playInRound[2 * i], -1)">»</button></p>
                 <hr />
-                <p>{{playInRound[2 * i + 1].playoffSeed}} {{convertToName(playInRound[2 * i + 1].team)}} <button *ngIf="!isOver" (click)="advancePlayer(playInRound[2 * i + 1], -1)">»</button></p>
+                <p>{{playInRound[2 * i + 1].playoffSeed}} {{convertToName(playInRound[2 * i + 1].team)}} <button id="advance-button" *ngIf="!isOver" (click)="advancePlayer(playInRound[2 * i + 1], -1)">»</button></p>
             </div>
         </div>
     </div>
     <div *ngFor='let round of bracket; let j = index' class='flex-column'>
         <div class='bracket-box' *ngFor='let matchup of indexArray(round.length / 2); let i = index;'>
-            <p *ngIf="!isEmpty(round[2 * i])">{{round[2 * i].playoffSeed}} {{convertToName(round[2 * i].team)}} <button (click)="advancePlayer(round[2 * i], j)" *ngIf="!isEmpty(round[2 * i + 1]) && !isOver">»</button></p>
+            <p *ngIf="!isEmpty(round[2 * i])">{{round[2 * i].playoffSeed}} {{convertToName(round[2 * i].team)}} <button id="advance-button" (click)="advancePlayer(round[2 * i], j)" *ngIf="!isEmpty(round[2 * i + 1]) && !isOver">»</button></p>
             <p *ngIf="isEmpty(round[2 * i])" class='empty-slot'></p>
             <hr />
-            <p *ngIf="!isEmpty(round[(2 * i) + 1])">{{round[(2 * i) + 1].playoffSeed}} {{convertToName(round[(2 * i) + 1].team)}} <button (click)="advancePlayer(round[2 * i + 1], j)" *ngIf="!isEmpty(round[2 * i]) && !isOver">»</button></p>
+            <p *ngIf="!isEmpty(round[(2 * i) + 1])">{{round[(2 * i) + 1].playoffSeed}} {{convertToName(round[(2 * i) + 1].team)}} <button id="advance-button" (click)="advancePlayer(round[2 * i + 1], j)" *ngIf="!isEmpty(round[2 * i]) && !isOver">»</button></p>
             <p *ngIf="isEmpty(round[(2 * i) + 1])" class='empty-slot'></p>
         </div>
     </div>
