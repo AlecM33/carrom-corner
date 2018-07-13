@@ -1,7 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 
 html, body {
-    margin: 0;
+    margin-bottom: 3%;
     text-align: center;
     background-image: url("assets/images/purty_wood.png");
     background-color: rgba(155, 150, 150, 0.2) !important;
@@ -153,6 +153,7 @@ button {
 }
 
 .app-navbar {
+    box-shadow: -3px 4px 10px 2px rgb(71, 71, 71);
     border: 1px solid rgb(247, 211, 6);
     border-radius: 5px;
 }

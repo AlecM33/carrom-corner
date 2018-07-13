@@ -66,7 +66,7 @@ export class ViewTournamentComponent implements OnInit {
                         this.tournySize = tournament[0].size;
                         this.ts.getGames(this.id).subscribe((games) => {
                             this.games = games;
-                            this.gamesToDisplay = this.games;
+                            this.gamesToDisplay = this.games.filter((game) => game.winner === undefined);
                             this.games.sort((a, b) => {
                                 if (a.scheduleIndex >= b.scheduleIndex) {
                                     return 1;

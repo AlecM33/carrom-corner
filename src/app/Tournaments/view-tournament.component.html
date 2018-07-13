@@ -47,8 +47,8 @@
             </thead>
             <tbody >
                 <tr *ngFor="let game of gamesToDisplay">
-                    <td *ngIf="!game.winner">{{convertToName(game.team1)}} vs. {{convertToName(game.team2)}} </td>
-                    <td *ngIf="!game.winner">
+                    <td>{{convertToName(game.team1)}} vs. {{convertToName(game.team2)}} </td>
+                    <td>
                         <button (click)="viewGame(game)" class="btn btn-primary btn-xs">Enter Result</button>
                     </td>
                 </tr>
