@@ -241,11 +241,42 @@ img#trophy {
     padding: 5px;
 }
 
-svg {
-    width: 90px;
-    height: 55px;
-    padding: 0;
+.striker {
+    transform: translate(-100px, 400px);
+    animation: strike 3s infinite;
+    animation-delay: 1s
 }
+
+.coin {
+    transform: translate(400px, 100px);
+    animation: struck 3s infinite;
+    animation-delay: 1s
+}
+
+@keyframes strike {
+    0% {
+      transform: translate(-100px, 400px);
+    }
+    25% {
+      transform: translate(320px, 70px);
+    }
+    75% {
+        transform: translate(560px, -250px);
+    }
+  }
+
+  @keyframes struck {
+    0% {
+      transform: translate(400, 100px);
+    }
+    25% {
+      transform: translate(400px, 100px);
+    }
+    65% {
+        transform: translate(1200px, 320px);
+    }
+  }
+
 
 .winner-container {
     background-color: #343a40;
