@@ -87,6 +87,7 @@ input {
 }
 
 .bracket-box {
+    text-align: left;
     background-color: #343a40;
     min-height: 70px;
     width: 180px;
@@ -96,6 +97,7 @@ input {
 }
 
 .bracket-box-play-in {
+    text-align: left;
     background-color: #343a40;
     min-height: 70px;
     width: 180px;
@@ -242,38 +244,70 @@ img#trophy {
 }
 
 .striker {
-    transform: translate(-100px, 400px);
-    animation: strike 3s infinite;
-    animation-delay: 1s
+    transform: translate(30px, 420px);
+    animation: strike 1.5s;
+    animation-delay: 2s;
+    animation-fill-mode: forwards;
 }
 
 .coin {
-    transform: translate(400px, 100px);
-    animation: struck 3s infinite;
-    animation-delay: 1s
+    
+    transform: translate(220px, 263.25px);
+    animation: struck 1.5s;
+    animation-delay: 2s;
+    animation-fill-mode: forwards;
+}
+
+.coin2 {
+    transform: translate(-70px, 40px);
+}
+
+.coin3 {
+    transform: translate(630px, 140px);
+}
+
+.coin4 {
+    transform: translate(289px, 374px);
+}
+
+.coin5 {
+    transform: translate(81px, 620px);
+}
+
+.coin6 {
+    transform: translate(645px, 550px);
+}
+
+.nice-shot {
+    font-family: Georgia, cursive;
+    text-shadow: -3px 3px 6px rgb(71, 71, 71);
+    transform: translate(80px, 300px);
+    font-size: 120px;
+    font-style: italic;
+    font-variant: small-caps;
+    animation: fadesharpen 4s;
+    animation-delay: 4s;
+    animation-fill-mode: both;
 }
 
 @keyframes strike {
     0% {
-      transform: translate(-100px, 400px);
+      transform: translate(30px, 420px);
     }
-    25% {
-      transform: translate(320px, 70px);
-    }
-    75% {
-        transform: translate(560px, -250px);
+    100% {
+      transform: translate(330px, 172.5px);
     }
   }
 
   @keyframes struck {
     0% {
-      transform: translate(400, 100px);
+      transform: translate(220px, 263.25px);
     }
-    25% {
-      transform: translate(400px, 100px);
+    21% {
+      transform: translate(220px, 263.25px);
     }
-    65% {
-        transform: translate(1200px, 320px);
+    100% {
+        transform: translate(730px,-157.5px);
     }
   }
 
@@ -407,6 +441,15 @@ h3 {
 @keyframes pulse {
     from {background-color: blue; }
     to {background-color: rgb(60, 168, 204);}
+}
+
+@keyframes fadesharpen {
+    from { opacity: 0;
+            filter: blur(50px); 
+            letter-spacing: 5px;}
+    to {opacity: 1; 
+        filter: blur(0px);
+        letter-spacing: 15px;}
 }
 
 @keyframes fadein {
