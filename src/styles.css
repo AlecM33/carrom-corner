@@ -245,7 +245,7 @@ img#trophy {
 
 .striker {
     transform: translate(30px, 420px);
-    animation: strike 1.5s;
+    animation: strike 1s;
     animation-delay: 2s;
     animation-fill-mode: forwards;
 }
@@ -253,7 +253,7 @@ img#trophy {
 .coin {
     
     transform: translate(220px, 263.25px);
-    animation: struck 1.5s;
+    animation: struck 1s ease-out;
     animation-delay: 2s;
     animation-fill-mode: forwards;
 }
@@ -290,6 +290,24 @@ img#trophy {
     animation-fill-mode: both;
 }
 
+.player-list-header {
+    margin: 0;
+    padding: 0;
+    text-align: left;
+    animation: fadein 2s;
+    animation-fill-mode: backwards;
+    animation-play-state: initial;
+    animation-delay: 0.5s;
+}
+
+.player-list-subheader {
+    margin-bottom: 20px;
+    text-align: left;
+    animation: fadein 2s;
+    animation-fill-mode: backwards;
+    animation-delay: 1s;
+}
+
 @keyframes strike {
     0% {
       transform: translate(30px, 420px);
@@ -303,7 +321,7 @@ img#trophy {
     0% {
       transform: translate(220px, 263.25px);
     }
-    21% {
+    23% {
       transform: translate(220px, 263.25px);
     }
     100% {

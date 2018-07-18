@@ -5,6 +5,7 @@ import { PlayerListComponent } from "./player-list.component";
 import { IfObservable } from "rxjs/observable/IfObservable";
 import { Observable } from "rxjs/Observable";
 import 'rxjs/add/observable/of';
+import { EloService } from "./elo.service";
 
 /* This service provides useful methods in regards to manipulating player data and 
 making calls to the database */
@@ -14,7 +15,7 @@ export class PlayerService {
 
     public players: Player[];
 
-    constructor(private http: HttpClient) {
+    constructor(private http: HttpClient, private elo_adjuster: EloService) {
     }
 
 
@@ -38,6 +39,8 @@ export class PlayerService {
                                     piece['id'], 
                                     piece['name'], 
                                     piece['nickname'], 
+                                    piece['elo'],
+                                    piece['doublesElo'],
                                     piece['wins'], 
                                     piece['losses'], 
                                     piece['totalDiff'],
@@ -56,11 +59,31 @@ export class PlayerService {
         }
     }
 
-    updatePlayer(id, wins, losses, totalDiff, gamesPlayed): Observable<any> {
+    getNewDoublesElos(winner1, winner2, loser1, loser2): Array<number> {
+        let elos = [];
+        let winningKFactor1 = Math.floor(800 / (winner1.gamesPlayed + 1));
+        let winningKFactor2 = Math.floor(800 / (winner2.gamesPlayed + 1));
+        let losingKFactor1 = Math.floor(800 / (loser1.gamesPlayed + 1));
+        let losingKFactor2 = Math.floor(800 / (loser2.gamesPlayed + 1));
+        
+        let winningTeamElo = Math.ceil(winner1.elo + winner2.elo) / 2;
+        let losingTeamElo = Math.ceil(loser1.elo + loser2.elo) / 2;
+
+        elos.push(this.elo_adjuster.calculateNewElo(winner1.elo, 1, this.elo_adjuster.calculateExpScore(winningTeamElo, losingTeamElo), winningKFactor1));
+        elos.push(this.elo_adjuster.calculateNewElo(winner2.elo, 1, this.elo_adjuster.calculateExpScore(winningTeamElo, losingTeamElo), winningKFactor2));
+        elos.push(this.elo_adjuster.calculateNewElo(loser1.elo, 0, this.elo_adjuster.calculateExpScore(losingTeamElo, winningTeamElo), losingKFactor1));
+        elos.push(this.elo_adjuster.calculateNewElo(loser2.elo, 0, this.elo_adjuster.calculateExpScore(losingTeamElo, winningTeamElo), losingKFactor2));
+
+        return elos;
+    }
+
+    updatePlayer(id, elo, doublesElo, wins, losses, totalDiff, gamesPlayed): Observable<any> {
         return this.http.patch('http://localhost:3000/players/' + id,
         {
             "wins": wins,
             "losses": losses,
+            "elo": elo,
+            "doublesElo": doublesElo,
             "totalDiff": totalDiff,
             "gamesPlayed": gamesPlayed
         });
@@ -71,6 +94,8 @@ export class PlayerService {
         const httpOptions = {headers: new HttpHeaders({ 'Content-Type': 'application/json' })};
         let payload = { "name": newPlayer.name,
                         "nickname": newPlayer.nickname,
+                        "elo": newPlayer.elo,
+                        "doublesElo": newPlayer.doublesElo, 
                         "wins": newPlayer.wins,
                         "losses": newPlayer.losses,
                         "totalDiff": newPlayer.totalDiff,

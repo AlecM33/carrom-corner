@@ -35,10 +35,10 @@ export class PlayerListComponent implements OnInit {
     this.players.sort((a, b) => {
       if (b.gamesPlayed == 0) {
         return -1;
-      } else if ((a.wins/a.gamesPlayed) > (b.wins/b.gamesPlayed)) {
+      } else if (a.elo > b.elo) {
         return -1;
-      } else if ((a.wins/a.gamesPlayed) == (b.wins/b.gamesPlayed)) {
-          if (a.totalDiff >= b.totalDiff) {
+      } else if ((a.elo) == (b.elo)) {
+          if (a.doublesElo >= b.doublesElo) {
             return -1;
           } else {
             return 1;

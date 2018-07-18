@@ -6,6 +6,8 @@ export class Player {
     public id: number;
     public name: string;
     public nickname: string;
+    public elo: number;
+    public doublesElo: number;
     public wins: number;
     public losses: number;
     public totalDiff: number;
@@ -14,6 +16,8 @@ export class Player {
     constructor(id: number,
                 name: string,
                 nickname: string='',
+                elo: number,
+                doublesElo: number, 
                 wins: number=0,
                 losses: number=0,
                 totalDiff: number,
@@ -21,6 +25,8 @@ export class Player {
 
         this.id = id;
         this.name = name;
+        this.elo = elo;
+        this.doublesElo = doublesElo;
         this.nickname = nickname;
         this.wins = wins;
         this.losses = losses;

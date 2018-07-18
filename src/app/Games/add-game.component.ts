@@ -5,6 +5,7 @@ import { HttpClient } from "@angular/common/http";
 import { PlayerService } from "../Players/player.service";
 import { TournamentService } from "../Tournaments/tournament.service";
 import { ViewTournamentComponent } from "../Tournaments/view-tournament.component";
+import { EloService } from "../Players/elo.service";
 
 @Component({
     templateUrl: "add-game.component.html"
@@ -30,7 +31,8 @@ export class AddGameComponent implements OnInit{
                 private ts: TournamentService, 
                 private router: Router, 
                 private http: HttpClient, 
-                private active_route: ActivatedRoute
+                private active_route: ActivatedRoute,
+                private elo_adjuster: EloService
             ) { 
     }
 
@@ -79,10 +81,11 @@ export class AddGameComponent implements OnInit{
             loser1 = this.players.find((player) => player.id == this.currentGame[0].team1[0]);
             loser2 = this.players.find((player) => player.id == this.currentGame[0].team1[1]);
         }
-        this.ps.updatePlayer(winner1.id, winner1.wins + 1, winner1.losses, winner1.totalDiff + this.currentGame[0].differential, winner1.gamesPlayed + 1).subscribe();
-        this.ps.updatePlayer(winner2.id, winner2.wins + 1, winner2.losses, winner2.totalDiff + this.currentGame[0].differential, winner2.gamesPlayed + 1).subscribe();
-        this.ps.updatePlayer(loser1.id, loser1.wins, loser1.losses + 1, loser1.totalDiff - this.currentGame[0].differential, loser1.gamesPlayed + 1).subscribe();
-        this.ps.updatePlayer(loser2.id, loser2.wins, loser2.losses + 1, loser2.totalDiff - this.currentGame[0].differential, loser2.gamesPlayed + 1).subscribe();
+        let newElos = this.ps.getNewDoublesElos(winner1, winner2, loser1, loser2);
+        this.ps.updatePlayer(winner1.id, winner1.elo, newElos[0], winner1.wins + 1, winner1.losses, winner1.totalDiff + this.currentGame[0].differential, winner1.gamesPlayed + 1).subscribe();
+        this.ps.updatePlayer(winner2.id, winner2.elo, newElos[1], winner2.wins + 1, winner2.losses, winner2.totalDiff + this.currentGame[0].differential, winner2.gamesPlayed + 1).subscribe();
+        this.ps.updatePlayer(loser1.id, loser1.elo, newElos[2], loser1.wins, loser1.losses + 1, loser1.totalDiff - this.currentGame[0].differential, loser1.gamesPlayed + 1).subscribe();
+        this.ps.updatePlayer(loser2.id, loser2.elo, newElos[3], loser2.wins, loser2.losses + 1, loser2.totalDiff - this.currentGame[0].differential, loser2.gamesPlayed + 1).subscribe();
         this.router.navigateByUrl('/tournaments/' + this.tournyType + '/' + this.tournyName);
     }
 
@@ -95,8 +98,12 @@ export class AddGameComponent implements OnInit{
         } else {
             loser = this.players.find((player) => player.id == this.currentGame[0].team1);
         }
-        this.ps.updatePlayer(winner.id, winner.wins + 1, winner.losses, winner.totalDiff + this.currentGame[0].differential, winner.gamesPlayed + 1).subscribe();
-        this.ps.updatePlayer(loser.id, loser.wins, loser.losses + 1, loser.totalDiff - this.currentGame[0].differential, loser.gamesPlayed + 1).subscribe();
+        let winningKFactor = Math.floor(800 / (winner.gamesPlayed + 1));
+        let losingKFactor = Math.floor(800 / (loser.gamesPlayed + 1));
+        let newWinnerElo = this.elo_adjuster.calculateNewElo(winner.elo, 1, this.elo_adjuster.calculateExpScore(winner.elo, loser.elo), winningKFactor);
+        let newLoserElo = this.elo_adjuster.calculateNewElo(loser.elo, 0, this.elo_adjuster.calculateExpScore(loser.elo, winner.elo), losingKFactor);  
+        this.ps.updatePlayer(winner.id, newWinnerElo, winner.doublesElo, winner.wins + 1, winner.losses, winner.totalDiff + this.currentGame[0].differential, winner.gamesPlayed + 1).subscribe();
+        this.ps.updatePlayer(loser.id, newLoserElo, loser.doublesElo, loser.wins, loser.losses + 1, loser.totalDiff - this.currentGame[0].differential, loser.gamesPlayed + 1).subscribe();
         this.router.navigateByUrl('/tournaments/' + this.tournyType + '/' + this.tournyName);
     }
 

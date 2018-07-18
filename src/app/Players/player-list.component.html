@@ -3,12 +3,16 @@
 <div class='create-buttons'>
     <button class='btn btn-primary' [routerLink]="['/players/add']">Add a player</button>
 </div>
+<h2 class="player-list-header">Anteil Carrom Playerbase</h2>
+<h3 class="player-list-subheader">* Rankings are determined by singles elo, then doubles elo</h3>
 <div class='table-responsive table-dark app-table'>
     <table class='table'>
         <thead>
             <tr>
-                <th>Office Rank</th>
+                <th>Office Rank *</th>
                 <th>Name</th>
+                <th>Singles Elo</th>
+                <th>Doubles Elo</th>
                 <th>Wins</th>
                 <th>Losses</th>
                 <th>Winrate</th>
@@ -20,6 +24,8 @@
             <tr *ngFor='let player of players'>
                 <td>{{players.indexOf(player) + 1}}</td>
                 <td>{{player.name}}</td>
+                <td>{{player.elo | number: '1.0-0'}}</td>
+                <td>{{player.doublesElo | number: '1.0-0'}}</td>
                 <td>{{player.wins}}</td>
                 <td>{{player.losses}}</td>
                 <td *ngIf="player.gamesPlayed > 0">{{player.wins / player.gamesPlayed | percent}}</td>
