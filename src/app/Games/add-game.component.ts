@@ -53,7 +53,6 @@ export class AddGameComponent implements OnInit{
             this.tournyType = this.active_route.snapshot.paramMap.get('type');
                 this.tournyName = this.active_route.snapshot.paramMap.get('name');
                 this.http.get('http://localhost:3000/games?id=' + this.gameId).subscribe((game) => {
-                    console.log(game);
                     this.currentGame = game;
                     this.firstTeam = this.convertToName(this.currentGame[0].team1);
                     this.secondTeam = this.convertToName(this.currentGame[0].team2)
@@ -82,15 +81,14 @@ export class AddGameComponent implements OnInit{
             loser2 = this.players.find((player) => player.id == this.currentGame[0].team1[1]);
         }
         let newElos = this.ps.getNewDoublesElos(winner1, winner2, loser1, loser2);
-        this.ps.updatePlayer(winner1.id, winner1.elo, newElos[0], winner1.wins + 1, winner1.losses, winner1.totalDiff + this.currentGame[0].differential, winner1.gamesPlayed + 1).subscribe();
-        this.ps.updatePlayer(winner2.id, winner2.elo, newElos[1], winner2.wins + 1, winner2.losses, winner2.totalDiff + this.currentGame[0].differential, winner2.gamesPlayed + 1).subscribe();
-        this.ps.updatePlayer(loser1.id, loser1.elo, newElos[2], loser1.wins, loser1.losses + 1, loser1.totalDiff - this.currentGame[0].differential, loser1.gamesPlayed + 1).subscribe();
-        this.ps.updatePlayer(loser2.id, loser2.elo, newElos[3], loser2.wins, loser2.losses + 1, loser2.totalDiff - this.currentGame[0].differential, loser2.gamesPlayed + 1).subscribe();
+        this.ps.updatePlayer(winner1.id, winner1.elo, newElos[0], winner1.wins + 1, winner1.losses, winner1.totalDiff + this.currentGame[0].differential, winner1.singlesPlayed, winner1.doublesPlayed + 1).subscribe();
+        this.ps.updatePlayer(winner2.id, winner2.elo, newElos[1], winner2.wins + 1, winner2.losses, winner2.totalDiff + this.currentGame[0].differential, winner2.singlesPlayed, winner2.doublesPlayed + 1).subscribe();
+        this.ps.updatePlayer(loser1.id, loser1.elo, newElos[2], loser1.wins, loser1.losses + 1, loser1.totalDiff - this.currentGame[0].differential, loser1.singlesPlayed, loser1.doublesPlayed + 1).subscribe();
+        this.ps.updatePlayer(loser2.id, loser2.elo, newElos[3], loser2.wins, loser2.losses + 1, loser2.totalDiff - this.currentGame[0].differential, loser2.singlesPlayed, loser2.doublesPlayed + 1).subscribe();
         this.router.navigateByUrl('/tournaments/' + this.tournyType + '/' + this.tournyName);
     }
 
     patchSinglesPlayers() {
-        console.log(this.currentGame);
         let loser;
         let winner = this.players.find((player) => player.id == this.currentGame[0].winner);
         if (this.winningTeam === 'team1') {
@@ -98,12 +96,12 @@ export class AddGameComponent implements OnInit{
         } else {
             loser = this.players.find((player) => player.id == this.currentGame[0].team1);
         }
-        let winningKFactor = Math.floor(800 / (winner.gamesPlayed + 1));
-        let losingKFactor = Math.floor(800 / (loser.gamesPlayed + 1));
+        let winningKFactor = this.ps.getKFactor(winner, true);
+        let losingKFactor = this.ps.getKFactor(loser, true);
         let newWinnerElo = this.elo_adjuster.calculateNewElo(winner.elo, 1, this.elo_adjuster.calculateExpScore(winner.elo, loser.elo), winningKFactor);
         let newLoserElo = this.elo_adjuster.calculateNewElo(loser.elo, 0, this.elo_adjuster.calculateExpScore(loser.elo, winner.elo), losingKFactor);  
-        this.ps.updatePlayer(winner.id, newWinnerElo, winner.doublesElo, winner.wins + 1, winner.losses, winner.totalDiff + this.currentGame[0].differential, winner.gamesPlayed + 1).subscribe();
-        this.ps.updatePlayer(loser.id, newLoserElo, loser.doublesElo, loser.wins, loser.losses + 1, loser.totalDiff - this.currentGame[0].differential, loser.gamesPlayed + 1).subscribe();
+        this.ps.updatePlayer(winner.id, newWinnerElo, winner.doublesElo, winner.wins + 1, winner.losses, winner.totalDiff + this.currentGame[0].differential, winner.singlesPlayed + 1, winner.doublesPlayed).subscribe();
+        this.ps.updatePlayer(loser.id, newLoserElo, loser.doublesElo, loser.wins, loser.losses + 1, loser.totalDiff - this.currentGame[0].differential, loser.singlesPlayed + 1, loser.doublesPlayed).subscribe();
         this.router.navigateByUrl('/tournaments/' + this.tournyType + '/' + this.tournyName);
     }
 

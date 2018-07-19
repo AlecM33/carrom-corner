@@ -33,12 +33,14 @@ export class PlayerListComponent implements OnInit {
 
   sortPlayers() {
     this.players.sort((a, b) => {
+      let aAvg = (a.elo + b.doublesElo) / 2;
+      let bAvg = (b.elo + b.doublesElo) / 2;
       if (b.gamesPlayed == 0) {
         return -1;
-      } else if (a.elo > b.elo) {
+      } else if (aAvg > bAvg) {
         return -1;
-      } else if ((a.elo) == (b.elo)) {
-          if (a.doublesElo >= b.doublesElo) {
+      } else if ((aAvg) == (bAvg)) {
+          if (a.gamesPlayed >= b.gamesPlayed) {
             return -1;
           } else {
             return 1;
@@ -54,10 +56,6 @@ export class PlayerListComponent implements OnInit {
     this._playerService.getPlayers().subscribe((players) => {
       this.players = players;
       this.sortPlayers();
-      for (let player of this.players) {
-        console.log(player.gamesPlayed);
-        console.log(typeof(player.gamesPlayed));
-      }
     });
   }
 }

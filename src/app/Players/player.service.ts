@@ -44,7 +44,8 @@ export class PlayerService {
                                     piece['wins'], 
                                     piece['losses'], 
                                     piece['totalDiff'],
-                                    piece['gamesPlayed'])
+                                    piece['singlesPlayed'],
+                                    piece['doublesPlayed'])
                                 );
         }
         return players;
@@ -59,25 +60,48 @@ export class PlayerService {
         }
     }
 
+    getKFactor(player, singles): Number {
+        let gamesPlayed;
+        if (singles) {
+            if (player.singlesPlayed <= 20) {
+                return 200;
+            }
+            else if (player.singlesPlayed > 10 && player.singlesPlayed < 40) {
+                return 48;
+            } else {
+                return 32;
+            }
+        } else {
+            if (player.doublesPlayed <= 20) {
+                return 200;
+            }
+            else if (player.doublesPlayed > 10 && player.doublesPlayed < 40) {
+                return 48;
+            } else {
+                return 32;
+            }
+        }
+    }
+
     getNewDoublesElos(winner1, winner2, loser1, loser2): Array<number> {
         let elos = [];
-        let winningKFactor1 = Math.floor(800 / (winner1.gamesPlayed + 1));
-        let winningKFactor2 = Math.floor(800 / (winner2.gamesPlayed + 1));
-        let losingKFactor1 = Math.floor(800 / (loser1.gamesPlayed + 1));
-        let losingKFactor2 = Math.floor(800 / (loser2.gamesPlayed + 1));
+        let winningKFactor1 = this.getKFactor(winner1, false);
+        let winningKFactor2 = this.getKFactor(winner2, false);
+        let losingKFactor1 = this.getKFactor(loser1, false);
+        let losingKFactor2 = this.getKFactor(loser2, false);
         
         let winningTeamElo = Math.ceil(winner1.elo + winner2.elo) / 2;
         let losingTeamElo = Math.ceil(loser1.elo + loser2.elo) / 2;
 
-        elos.push(this.elo_adjuster.calculateNewElo(winner1.elo, 1, this.elo_adjuster.calculateExpScore(winningTeamElo, losingTeamElo), winningKFactor1));
-        elos.push(this.elo_adjuster.calculateNewElo(winner2.elo, 1, this.elo_adjuster.calculateExpScore(winningTeamElo, losingTeamElo), winningKFactor2));
-        elos.push(this.elo_adjuster.calculateNewElo(loser1.elo, 0, this.elo_adjuster.calculateExpScore(losingTeamElo, winningTeamElo), losingKFactor1));
-        elos.push(this.elo_adjuster.calculateNewElo(loser2.elo, 0, this.elo_adjuster.calculateExpScore(losingTeamElo, winningTeamElo), losingKFactor2));
+        elos.push(this.elo_adjuster.calculateNewElo(winner1.doublesElo, 1, this.elo_adjuster.calculateExpScore(winningTeamElo, losingTeamElo), winningKFactor1));
+        elos.push(this.elo_adjuster.calculateNewElo(winner2.doublesElo, 1, this.elo_adjuster.calculateExpScore(winningTeamElo, losingTeamElo), winningKFactor2));
+        elos.push(this.elo_adjuster.calculateNewElo(loser1.doublesElo, 0, this.elo_adjuster.calculateExpScore(losingTeamElo, winningTeamElo), losingKFactor1));
+        elos.push(this.elo_adjuster.calculateNewElo(loser2.doublesElo, 0, this.elo_adjuster.calculateExpScore(losingTeamElo, winningTeamElo), losingKFactor2));
 
         return elos;
     }
 
-    updatePlayer(id, elo, doublesElo, wins, losses, totalDiff, gamesPlayed): Observable<any> {
+    updatePlayer(id, elo, doublesElo, wins, losses, totalDiff, singlesPlayed, doublesPlayed): Observable<any> {
         return this.http.patch('http://localhost:3000/players/' + id,
         {
             "wins": wins,
@@ -85,7 +109,8 @@ export class PlayerService {
             "elo": elo,
             "doublesElo": doublesElo,
             "totalDiff": totalDiff,
-            "gamesPlayed": gamesPlayed
+            "singlesPlayed": singlesPlayed,
+            "doublesPlayed": doublesPlayed
         });
     }
     
@@ -99,7 +124,8 @@ export class PlayerService {
                         "wins": newPlayer.wins,
                         "losses": newPlayer.losses,
                         "totalDiff": newPlayer.totalDiff,
-                        "gamesPlayed": newPlayer.gamesPlayed
+                        "singlesPlayed": newPlayer.singlesPlayed,
+                        "doublesPlayed": newPlayer.doublesPlayed
                       };
         return this.http.post('http://localhost:3000/players', payload, httpOptions);
     }

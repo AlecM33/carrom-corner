@@ -4,7 +4,7 @@
     <button class='btn btn-primary' [routerLink]="['/players/add']">Add a player</button>
 </div>
 <h2 class="player-list-header">Anteil Carrom Playerbase</h2>
-<h3 class="player-list-subheader">* Rankings are determined by singles elo, then doubles elo</h3>
+<h3 class="player-list-subheader">* Rankings are determined by an average of singles and doubles elo</h3>
 <div class='table-responsive table-dark app-table'>
     <table class='table'>
         <thead>
@@ -28,10 +28,10 @@
                 <td>{{player.doublesElo | number: '1.0-0'}}</td>
                 <td>{{player.wins}}</td>
                 <td>{{player.losses}}</td>
-                <td *ngIf="player.gamesPlayed > 0">{{player.wins / player.gamesPlayed | percent}}</td>
-                <td class="in-progress" *ngIf="player.gamesPlayed === 0">N/A</td>
-                <td *ngIf="player.gamesPlayed > 0">{{player.totalDiff / player.gamesPlayed | number: '1.1-2'}}</td>
-                <td class='in-progress' *ngIf="player.gamesPlayed === 0">N/A</td>
+                <td *ngIf="player.singlesPlayed > 0 || player.doublesPlayed > 0">{{player.wins / (player.singlesPlayed + player.doublesPlayed) | percent}}</td>
+                <td class="in-progress" *ngIf="player.singlesPlayed === 0 && player.doublesPlayed === 0">N/A</td>
+                <td *ngIf="player.singlesPlayed > 0 || player.doublesPlayed > 0">{{player.totalDiff / (player.singlesPlayed + player.doublesPlayed) | number: '1.1-2'}}</td>
+                <td class='in-progress' *ngIf="player.singlesPlayed === 0 && player.doublesPlayed === 0">N/A</td>
                 <td><button (click)='delete(player)' id='list-button' class='btn btn-danger btn-xs'>Delete</button></td>
             </tr>
         </tbody>

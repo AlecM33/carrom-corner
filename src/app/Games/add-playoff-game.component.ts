@@ -82,21 +82,21 @@ export class AddPlayoffGameComponent implements OnInit{
      
         let newElos = this.ps.getNewDoublesElos(winner1, winner2, loser1, loser2);
 
-        this.ps.updatePlayer(winner1.id, winner1.elo, newElos[0], winner1.wins + 1, winner1.losses, winner1.totalDiff + game.differential, winner1.gamesPlayed + 1).subscribe();
-        this.ps.updatePlayer(winner2.id, winner2.elo, newElos[1], winner2.wins + 1, winner2.losses, winner2.totalDiff + game.differential, winner2.gamesPlayed + 1).subscribe();
-        this.ps.updatePlayer(loser1.id, loser1.elo, newElos[2], loser1.wins, loser1.losses + 1, loser1.totalDiff - game.differential, loser1.gamesPlayed + 1).subscribe();
-        this.ps.updatePlayer(loser2.id, loser2.elo, newElos[3], loser2.wins, loser2.losses + 1, loser2.totalDiff - game.differential, loser2.gamesPlayed + 1).subscribe();
+        this.ps.updatePlayer(winner1.id, winner1.elo, newElos[0], winner1.wins + 1, winner1.losses, winner1.totalDiff + game.differential, winner1.singlesPlayed, winner1.doublesPlayed + 1).subscribe();
+        this.ps.updatePlayer(winner2.id, winner2.elo, newElos[1], winner2.wins + 1, winner2.losses, winner2.totalDiff + game.differential, winner2.singlesPlayed, winner2.doublesPlayed + 1).subscribe();
+        this.ps.updatePlayer(loser1.id, loser1.elo, newElos[2], loser1.wins, loser1.losses + 1, loser1.totalDiff - game.differential, loser1.singlesPlayed, loser1.doublesPlayed + 1).subscribe();
+        this.ps.updatePlayer(loser2.id, loser2.elo, newElos[3], loser2.wins, loser2.losses + 1, loser2.totalDiff - game.differential, loser2.singlesPlayed, loser2.doublesPlayed + 1).subscribe();
     }
 
     patchSinglesPlayers(game) {
         let winner = this.players.find((player) => player.id == game.winner);
         let loser = this.players.find((player) => player.id == game.team2);
-        let winningKFactor = Math.floor(800 / (winner.gamesPlayed + 1));
-        let losingKFactor = Math.floor(800 / (loser.gamesPlayed + 1));
+        let winningKFactor = this.ps.getKFactor(winner, true);
+        let losingKFactor = this.ps.getKFactor(loser, true);
         let newWinnerElo = this.elo_adjuster.calculateNewElo(winner.elo, 1, this.elo_adjuster.calculateExpScore(winner.elo, loser.elo), winningKFactor);
         let newLoserElo = this.elo_adjuster.calculateNewElo(loser.elo, 0, this.elo_adjuster.calculateExpScore(loser.elo, winner.elo), losingKFactor);  
-        this.ps.updatePlayer(winner.id, newWinnerElo, winner.doublesElo, winner.wins + 1, winner.losses, winner.totalDiff + game.differential, winner.gamesPlayed + 1).subscribe();
-        this.ps.updatePlayer(loser.id, newLoserElo, loser.doublesElo, loser.wins, loser.losses + 1, loser.totalDiff - game.differential, loser.gamesPlayed + 1).subscribe();
+        this.ps.updatePlayer(winner.id, newWinnerElo, winner.doublesElo, winner.wins + 1, winner.losses, winner.totalDiff + game.differential, winner.singlesPlayed + 1, winner.doublesPlayed).subscribe();
+        this.ps.updatePlayer(loser.id, newLoserElo, loser.doublesElo, loser.wins, loser.losses + 1, loser.totalDiff - game.differential, loser.singlesPlayed + 1, loser.doublesPlayed).subscribe();
     }
 
 

@@ -16,11 +16,12 @@ export class EloService {
     }
 
     transformRatings(rating) {
-        return Math.pow(10, (Math.ceil(rating / 400)));
+        console.log(Math.pow(10, rating / 400));
+        return Math.pow(10, rating / 400);
     }
 
     calculateExpScore(rating1, rating2) {
-        return this.transformRatings(rating1) / (this.transformRatings(rating1) + this.transformRatings(rating2))
+        return this.transformRatings(rating1) / ((this.transformRatings(rating1) + this.transformRatings(rating2)));
     }
 
     calculateNewElo(rating, actualScore, expScore, kFactor) {
