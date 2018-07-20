@@ -63,22 +63,22 @@ export class PlayerService {
     getKFactor(player, singles): Number {
         let gamesPlayed;
         if (singles) {
-            if (player.singlesPlayed <= 20) {
+            if (player.singlesPlayed <= 10) {
                 return 400 / (player.singlesPlayed + 1);
             }
-            else if (player.singlesPlayed > 20 && player.singlesPlayed < 40) {
-                return 48;
-            } else {
+            else if (player.singlesPlayed > 10 && player.singlesPlayed < 30) {
                 return 32;
+            } else {
+                return 24;
             }
         } else {
-            if (player.doublesPlayed <= 20) {
-                return 200;
+            if (player.doublesPlayed <= 10) {
+                return 400 / (player.doublesPlayed + 1);
             }
-            else if (player.doublesPlayed > 20 && player.doublesPlayed < 40) {
-                return 48;
-            } else {
+            else if (player.doublesPlayed > 10 && player.doublesPlayed < 30) {
                 return 32;
+            } else {
+                return 24;
             }
         }
     }
