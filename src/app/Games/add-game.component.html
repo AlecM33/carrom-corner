@@ -11,14 +11,18 @@
             </div>
         </div>
         <form class='add-player' (ngSubmit)="validateGame()" #gameForm="ngForm">
-            <h3>Who Won?</h3>
-            <div>
-            <input id="checkbox1" type="radio" value="team1" name="winner" [(ngModel)]="winningTeam" /> {{firstTeam}}
-            <input id="checkbox2" type="radio" value="team2" name="winner" [(ngModel)]="winningTeam" /> {{secondTeam}}
+            <h3 id="who-won">Who Won?</h3>
+            <div class="radio-container first">
+                <input type="radio" value="team1" name="winner" [(ngModel)]="winningTeam" /> <label>{{firstTeam}}</label>
+                <span class="radio-button"></span>
+            </div>
+            <div class="radio-container second">
+                <input type="radio" value="team2" name="winner" [(ngModel)]="winningTeam" /> <label>{{secondTeam}}</label>
+                <span class="radio-button"></span>
             </div>
             <div>
-                <h3>Score Differential: </h3>
-                <input type="number" min="1" max="8" name="differential" [(ngModel)]="scoreDifferential"/>
+                <h3 id="score-diff">Score Differential: </h3>
+                <input class="diff-input" type="number" min="1" max="8" name="differential" [(ngModel)]="scoreDifferential"/>
             </div>
             <div>
                 <input class='btn btn-primary' type="submit" value="Enter Result"/>

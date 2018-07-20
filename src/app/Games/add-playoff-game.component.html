@@ -11,16 +11,24 @@
 </div>
 <div *ngIf="playoffPool" class='vs-container'>
     <form class='add-player' (ngSubmit)="validateGame()" #playoffForm="ngForm">
-        <label>Winner:</label>
-        <select name="winner" [(ngModel)]="winningPlayer">
-            <option *ngFor="let team of playoffPool">{{convertToName(team)}}</option>
-        </select>
-        <p> vs. </p>
-        <label>Loser:</label>
-        <select name="loser" [(ngModel)]="losingPlayer">
-            <option *ngFor="let team of playoffPool">{{convertToName(team)}}</option>
-        </select>
-        <div>
+        <div class="winner-loser">
+            <div>
+                <label>Winner:</label>
+                <select name="winner" [(ngModel)]="winningPlayer">
+                    <option *ngFor="let team of playoffPool">{{convertToName(team)}}</option>
+                </select>
+            </div>
+            <div>
+                <p> VS. </p>
+            </div>
+            <div>
+                <label>Loser:</label>
+                <select name="loser" [(ngModel)]="losingPlayer">
+                    <option *ngFor="let team of playoffPool">{{convertToName(team)}}</option>
+                </select>
+            </div>
+        </div>
+        <div class="diff-container">
             <p>Score Differential: </p>
             <input type="number" min="1" max="8" name="differential" [(ngModel)]="scoreDifferential"/>
         </div>
