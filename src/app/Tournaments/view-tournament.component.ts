@@ -95,9 +95,9 @@ export class ViewTournamentComponent implements OnInit {
                 let matchingIds = [];
                 matchingPlayers.forEach((player) => matchingIds.push(player.id));
                 if (this.tournyType === 'doubles') {
-                    return matchingIds.includes(game.team1[0]) || matchingIds.includes(game.team1[1]) || matchingIds.includes(game.team2[0]) || matchingIds.includes(game.team2[1]);
+                    return (matchingIds.includes(game.team1[0]) || matchingIds.includes(game.team1[1]) || matchingIds.includes(game.team2[0]) || matchingIds.includes(game.team2[1])) && !game.winner;
                 }
-                return matchingIds.includes(game.team1) || matchingIds.includes(game.team2);
+                return (matchingIds.includes(game.team1) || matchingIds.includes(game.team2)) && !game.winner;
             }
         ); 
     }

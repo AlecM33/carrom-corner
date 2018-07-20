@@ -31,6 +31,6 @@ export class WinnerComponent implements OnInit{
     }
 
     goHome() {
-        this.router.navigateByUrl('/tournaments');
+        this.router.navigateByUrl('');
     }
 }

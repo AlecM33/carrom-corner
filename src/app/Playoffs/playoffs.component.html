@@ -12,7 +12,7 @@
 <div *ngIf="bracket && playInRound" class='flex-container'>
     <div class='results-table'>
         <h3>Playoff Game Results</h3>
-        <table *ngIf="playoffGames" class="table playoff-games-table">
+        <table *ngIf="playoffGames" class="playoff-games-table">
             <tr *ngFor="let game of playoffGames">
                 <td class='result-winner'>W +{{game.differential}} </td>
                 <td>{{convertToName(game.winner)}}</td>

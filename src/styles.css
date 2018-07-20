@@ -334,10 +334,12 @@ img#trophy {
     background-color: #343a40;
     border: 1px solid gold;
     border-radius: 6px;
+    width: 100%;
     box-shadow: -3px 4px 10px 2px rgb(71, 71, 71);
 }
 
 .flex-container {
+    margin-top: 5%;
     width: 100%;
     display: flex;
     flex-direction: row;
@@ -351,8 +353,15 @@ img#trophy {
     color: red;
 }
 
+.results-table tr {
+    border-top: 1px solid gray;
+}
+
 .results-table {
     font-size: 12px;
+    background-color: rgb(236, 235, 235);
+    border: 1px solid black;
+    box-shadow: -3px 4px 10px 2px rgb(71, 71, 71);
 }
 
 .flex-column {

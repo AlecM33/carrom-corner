@@ -33,7 +33,7 @@ export class PlayerListComponent implements OnInit {
 
   sortPlayers() {
     this.players.sort((a, b) => {
-      let aAvg = (a.elo + b.doublesElo) / 2;
+      let aAvg = (a.elo + a.doublesElo) / 2;
       let bAvg = (b.elo + b.doublesElo) / 2;
       if (b.gamesPlayed == 0) {
         return -1;
