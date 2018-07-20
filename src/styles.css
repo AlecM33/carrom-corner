@@ -538,6 +538,7 @@ div {
     color: #FFF;
     position: relative;
     z-index: 2;
+    padding: 0px 10px;
 }
 
 .add-player #who-won {

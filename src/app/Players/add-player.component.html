@@ -10,9 +10,9 @@
     </div>
 </div>
 <form class='add-player' (ngSubmit)="validatePlayer()" #playerForm="ngForm">
-    <h3>Full Name:</h3>
+    <label>Full Name:</label>
     <input type="text" name="name" [(ngModel)]="newPlayerName" />
-    <h3>Nickname (optional):</h3>
+    <label>Nickname (optional):</label>
     <input type="text" name="nickname" [(ngModel)]="newPlayerNickname" />
     <div>
         <input class='btn btn-primary' type="submit" value="Add this player"/>
