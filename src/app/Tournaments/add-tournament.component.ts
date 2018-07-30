@@ -75,7 +75,7 @@ export class AddTournamentComponent implements OnInit {
         } else {
             this.nameBlank = false;
         }
-        if (this.tournamentName && !(/'^[a-zA-Z0-9 ]*$'/).test(this.tournamentName)) {
+        if (this.tournamentName && !(/^[a-zA-Z0-9 ]*$/).test(this.tournamentName)) {
             this.nameFormatInvalid = true;
         } else {
             this.nameFormatInvalid = false;

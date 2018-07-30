@@ -32,7 +32,7 @@ export class AddPlayerComponent implements OnInit {
     // Validates name characters and uniqueness
     validatePlayer() {
         this.nameBlank = this.newPlayerName === undefined || this.newPlayerName === '';
-        this.nameInvalid = (/'^[a-zA-Z0-9 ]*$'/).test(this.newPlayerName) === false || (/'^[a-zA-Z0-9 ]*$'/).test(this.newPlayerNickname) === false;
+        this.nameInvalid = (/^[a-zA-Z0-9 ]*$/).test(this.newPlayerName) === false || (/^[a-zA-Z0-9 ]*$/).test(this.newPlayerNickname) === false;
         this.nameTaken = this.checkNameUniqueness();
         if (!this.nameBlank && !this.nameInvalid && !this.nameTaken) {
             this.onSubmit();
@@ -43,7 +43,7 @@ export class AddPlayerComponent implements OnInit {
     checkNameUniqueness() {
         if (this.newPlayerName) {
             for (let player of this.players) {
-                if (player.name.toLowerCase === this.newPlayerName.toLowerCase) {
+                if (player.name.toLowerCase() === this.newPlayerName.toLowerCase()) {
                     return true;
                 }
             }
