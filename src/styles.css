@@ -154,7 +154,6 @@ button {
 
 .app-table {
     box-shadow: -3px 4px 10px 2px rgb(71, 71, 71);
-    width: 1000px;
     border: 1px solid gold;
     border-radius: 3px;
     opacity: 0;

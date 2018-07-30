@@ -1,7 +1,7 @@
 import { Injectable, Optional, OnInit } from "@angular/core";
-import { Player } from "./player";
+import { Player } from "../Players/player";
 import { HttpClient, HttpHeaders} from '@angular/common/http';
-import { PlayerListComponent } from "./player-list.component";
+import { PlayerListComponent } from "../Players/player-list.component";
 import { IfObservable } from "rxjs/observable/IfObservable";
 import { Observable } from "rxjs/Observable";
 import 'rxjs/add/observable/of';

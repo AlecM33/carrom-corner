@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Tournament } from './tournament';
 import { HttpModule, JsonpModule } from '@angular/http';
-import { TournamentService } from './tournament.service';
+import { TournamentService } from '../Services/tournament.service';
 import { AppComponent } from '../app.component';
 import { Observable } from 'rxjs/Observable';
 import { HttpClient } from '@angular/common/http';
@@ -19,11 +19,11 @@ export class TournamentListComponent implements OnInit {
 
   public tournaments = [];
   
-  constructor(public ts: TournamentService, private http: HttpClient, private router: Router) { 
+  constructor(public _tournyService: TournamentService, private http: HttpClient, private router: Router) { 
   }
 
   playoffDefined(id): boolean {
-    return this.ts.getPlayoff(id) !== undefined;
+    return this._tournyService.getPlayoff(id) !== undefined;
   }
 
   viewPlayoff(id) {
@@ -33,8 +33,8 @@ export class TournamentListComponent implements OnInit {
   delete(tournament) {
     if(confirm('Delete this bracket?')) {
       this.tournaments = [];
-      this.ts.deleteTournament(tournament, tournament.name).do(() => {
-          this.ts.getTournaments().subscribe((tournaments) => {
+      this._tournyService.deleteTournament(tournament, tournament.name).do(() => {
+          this._tournyService.getTournaments().subscribe((tournaments) => {
             this.tournaments = tournaments;
           })
       }).subscribe();
@@ -50,7 +50,7 @@ export class TournamentListComponent implements OnInit {
   }
   
   ngOnInit() {
-    this.ts.getTournaments().subscribe((tournaments) => {
+    this._tournyService.getTournaments().subscribe((tournaments) => {
       this.tournaments = tournaments;
     });
   }

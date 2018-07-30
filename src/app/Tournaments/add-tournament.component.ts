@@ -3,16 +3,17 @@ import { AppComponent } from '../app.component';
 import { NgModel, Form, FormGroup, FormControl, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
 import { AddPlayerComponent } from '../Players/add-player.component'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
-import { PlayerService } from '../Players/player.service';
+import { PlayerService } from '../Services/player.service';
 import { HttpClient } from '@angular/common/http';
 import { Player } from '../Players/player';
-import { TournamentService } from './tournament.service';
+import { TournamentService } from '../Services/tournament.service';
 import { Observable } from 'rxjs/Observable';
 import { Tournament } from './tournament';
 import { Team } from '../Teams/team';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { Pool } from '../Pools/pool';
 import { Game } from '../Games/game';
+import { GameService } from '../Services/game.service';
 
 
 /* Component for creating a singles tournament. Includes functions for presenting setup parameters
@@ -21,25 +22,29 @@ and for generating the pools and schedule */
     templateUrl: 'add-tournament.component.html'
 })
 export class AddTournamentComponent implements OnInit {
-    constructor(private ps: PlayerService, private ts: TournamentService, private http: HttpClient, private router: Router, public active_route: ActivatedRoute) {
+    constructor(private _playerService: PlayerService, 
+                private _tournyService: TournamentService, 
+                private http: HttpClient, 
+                private router: Router, 
+                public active_route: ActivatedRoute,
+                private _gameService: GameService) {
     }
 
     public playersInTourny = new Set();
     public playersToAdd = new Set();
     public teamIds = [];
-    doublesTeamIds = [];
-    tournyType = 'singles'
+    public doublesTeamIds = [];
+    public tournyType = 'singles'
     public players = [];
-    tournaments: any;
+    public tournaments: Tournament[];
     public tournament: Tournament;
     public robinType = 'Single';
     public generatedPools = [];
-    isDisabled = true;
     public scheduleIndices = [];
     public tournamentName: string;
-    public tournyPool = [];
     public id = 0;
-    tournyForm: FormGroup;
+
+
     nameBlank = false;
     nameForbidden = false;
     rosterForbidden = false;
@@ -54,9 +59,9 @@ export class AddTournamentComponent implements OnInit {
             }
         });
 
-        this.ts.getTournaments().subscribe((tournaments) => this.tournaments = tournaments);
+        this._tournyService.getTournaments().subscribe((tournaments) => this.tournaments = tournaments);
         
-        this.ps.getPlayers().subscribe((players) => {
+        this._playerService.getPlayers().subscribe((players) => {
             this.players = players;
             for (let player of this.players) {
                 this.playersToAdd.add(player);
@@ -70,8 +75,7 @@ export class AddTournamentComponent implements OnInit {
         } else {
             this.nameBlank = false;
         }
-        let regex = new RegExp('^[a-zA-Z0-9 ]*$');
-        if (this.tournamentName && !regex.test(this.tournamentName)) {
+        if (this.tournamentName && !(/'^[a-zA-Z0-9 ]*$'/).test(this.tournamentName)) {
             this.nameFormatInvalid = true;
         } else {
             this.nameFormatInvalid = false;
@@ -97,21 +101,11 @@ export class AddTournamentComponent implements OnInit {
         return false;
     }
 
-    // Enables or disables 'next' button based on player count
-    toggleButton() {
-        if (this.playersInTourny.size >= 8) {
-            this.isDisabled = false;
-        } else {
-            this.isDisabled = true;
-        }
-    }
-    
     // Adds player to current working roster
     addPlayer(currentPlayer: Player) {
         this.playersInTourny.add(currentPlayer);
         this.teamIds.push(currentPlayer.id);
         this.playersToAdd.delete(currentPlayer);
-        this.toggleButton();
     }
 
     // Removes player from current working roster
@@ -120,7 +114,6 @@ export class AddTournamentComponent implements OnInit {
         this.playersToAdd.add(currentPlayer);
         let index = this.teamIds.findIndex((id) => id == currentPlayer.id);
         this.teamIds.splice(index, 1);
-        this.toggleButton();
     }
 
     // Creates a tournament object and calls the tournament service to add to the database
@@ -128,8 +121,8 @@ export class AddTournamentComponent implements OnInit {
         if (this.tournyType === 'doubles') {
             this.generateTeams();
             this.tournament = new Tournament(undefined, false, undefined, this.tournamentName, false, this.playersInTourny.size / 2, this.doublesTeamIds);
-            this.ts.addTournament(this.tournament).subscribe(() => {
-                this.ts.getTournament(this.tournament.name).subscribe((tournament) => {
+            this._tournyService.addTournament(this.tournament).subscribe(() => {
+                this._tournyService.getTournament(this.tournament.name).subscribe((tournament) => {
                     this.id = tournament[0].id;
                     if (this.tournament.size >= 8) {
                         this.generatePools(this.doublesTeamIds);
@@ -142,8 +135,8 @@ export class AddTournamentComponent implements OnInit {
             });            
         } else {
             this.tournament = new Tournament(undefined, false, undefined, this.tournamentName, true, this.playersInTourny.size, this.teamIds);
-            this.ts.addTournament(this.tournament).subscribe(() => {
-                this.ts.getTournament(this.tournament.name).subscribe((tournament) => {
+            this._tournyService.addTournament(this.tournament).subscribe(() => {
+                this._tournyService.getTournament(this.tournament.name).subscribe((tournament) => {
                     this.id = tournament[0].id;
                     if (this.tournament.size >= 8) {
                         this.generatePools(this.teamIds);
@@ -171,7 +164,6 @@ export class AddTournamentComponent implements OnInit {
             this.playersInTourny.add(player);
             this.teamIds.push(player.id);
             this.playersToAdd.delete(player);
-            this.toggleButton();
         });
     }
 
@@ -195,7 +187,7 @@ export class AddTournamentComponent implements OnInit {
 
     addPool(pool) {
         let newPool = new Pool(this.id, pool, this.tournamentName);
-        this.ts.addPool(newPool).subscribe(() => {
+        this._tournyService.addPool(newPool).subscribe(() => {
             this.router.navigateByUrl('/tournaments/' + this.tournyType + '/' + this.tournamentName);
         });
     }
@@ -261,7 +253,7 @@ export class AddTournamentComponent implements OnInit {
                     let rnd = this.getRandomIntInclusive(0, this.scheduleIndices.length - 1);
                     let removedIndex = this.scheduleIndices.splice(rnd, 1)[0];
                     let newGame = new Game(undefined, false, this.id, removedIndex, pool[j], pool[i], undefined, 0);
-                    this.ts.addGame(newGame).subscribe();
+                    this._gameService.addGame(newGame).subscribe();
                     i++;
                 }
                 j++;

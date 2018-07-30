@@ -1,7 +1,7 @@
 import { Injectable, Optional, OnInit } from "@angular/core";
-import { Player } from "./player";
+import { Player } from "../Players/player";
 import { HttpClient, HttpHeaders} from '@angular/common/http';
-import { PlayerListComponent } from "./player-list.component";
+import { PlayerListComponent } from "../Players/player-list.component";
 import { IfObservable } from "rxjs/observable/IfObservable";
 import { Observable } from "rxjs/Observable";
 import 'rxjs/add/observable/of';
@@ -18,16 +18,24 @@ export class PlayerService {
     constructor(private http: HttpClient, private elo_adjuster: EloService) {
     }
 
-
-    adjustPlayerElo(winningPlayer: Player, losingPlayer: Player) {
+    convertTeamToName(team) {
+        let teamString = JSON.stringify(team);
+        if (team instanceof Array) {
+            let firstName = this.players.find((player) => player.id === team[0]).name;
+            let secondName = this.players.find((player) => player.id === team[1]).name;
+            return firstName + ' & ' + secondName
+        }
+        return this.players.find((player) => player.id === team).name
     }
 
-    adjustPlayerRecord(gameResult: number) {
-
-    }
-
-    adjustTournamentWins(winningPlayer: Player) {
-        
+    convertToName(team) {
+        let teamString = JSON.stringify(team);
+        if (team instanceof Array) {
+            let firstName = this.players.find((player) => player.id === team[0]).name;
+            let secondName = this.players.find((player) => player.id === team[1]).name;
+            return firstName + ' & ' + secondName
+        }
+        return this.players.find((player) => player.id === team).name
     }
 
     // Takes an observable and creates player objects from the data observed

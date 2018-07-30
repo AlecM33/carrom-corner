@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Player } from './player';
-import { PlayerService } from './player.service';
+import { PlayerService } from '../Services/player.service';
 import { AppComponent } from '../app.component';
 import { NgModel } from '@angular/forms';
 import { FormsModule } from '@angular/forms'
@@ -18,7 +18,9 @@ export class AddPlayerComponent implements OnInit {
 
     newPlayerName: string;
     newPlayerNickname: string;
-    players: any;
+    players: Player[];
+
+    // booleans for validating player form
     nameBlank = false;
     nameInvalid = false;
     nameTaken = false;
@@ -27,20 +29,21 @@ export class AddPlayerComponent implements OnInit {
         this._playerService.getPlayers().subscribe((players) => this.players = players);
     }
 
+    // Validates name characters and uniqueness
     validatePlayer() {
         this.nameBlank = this.newPlayerName === undefined || this.newPlayerName === '';
-        let regex = new RegExp('^[a-zA-Z0-9 ]*$');
-        this.nameInvalid = regex.test(this.newPlayerName) === false || regex.test(this.newPlayerNickname) === false;
-        this.nameTaken = this.checkPlayerName();
+        this.nameInvalid = (/'^[a-zA-Z0-9 ]*$'/).test(this.newPlayerName) === false || (/'^[a-zA-Z0-9 ]*$'/).test(this.newPlayerNickname) === false;
+        this.nameTaken = this.checkNameUniqueness();
         if (!this.nameBlank && !this.nameInvalid && !this.nameTaken) {
             this.onSubmit();
         }
     }
 
-    checkPlayerName() {
+    // checks database for duplicate names
+    checkNameUniqueness() {
         if (this.newPlayerName) {
             for (let player of this.players) {
-                if (player.name === this.newPlayerName) {
+                if (player.name.toLowerCase === this.newPlayerName.toLowerCase) {
                     return true;
                 }
             }

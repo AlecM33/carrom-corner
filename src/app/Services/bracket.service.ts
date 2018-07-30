@@ -1,9 +1,10 @@
 import { Injectable } from "@angular/core";
-import { BracketGraph } from "./bracketgraph";
-import { BracketNode } from "./bracketnode";
+import { BracketGraph } from "../Brackets/bracketgraph";
+import { BracketNode } from "../Brackets/bracketnode";
 import { split } from "ts-node";
-import { ChildTeams } from "./childteams";
+import { ChildTeams } from "../Brackets/childteams";
 
+/* This service provides relevant methods for constructing a tournament bracket with a variable number of players */
 @Injectable() 
 export class BracketService {
 

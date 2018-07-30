@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Player } from './player';
 import { HttpModule, JsonpModule } from '@angular/http';
-import { PlayerService } from './player.service';
+import { PlayerService } from '../Services/player.service';
 import { AppComponent } from '../app.component';
 import { Observable } from 'rxjs/Observable';
 import { HttpClient } from '@angular/common/http';
@@ -18,7 +18,14 @@ export class PlayerListComponent implements OnInit {
 
   public players = [];
 
-  constructor(private _playerService: PlayerService, private http: HttpClient) { 
+  constructor(private _playerService: PlayerService, private http: HttpClient) {}
+
+   // gets player list for list view
+   ngOnInit() {
+    this._playerService.getPlayers().subscribe((players) => {
+      this.players = players;
+      this.sortPlayers();
+    });
   }
 
   // calls the delete function from the player service, refreshes the player list
@@ -28,18 +35,19 @@ export class PlayerListComponent implements OnInit {
         this._playerService.getPlayers().subscribe((players) => {
           this.players = players;
         })
-        }).subscribe();
+      }).subscribe();
   }
 
+  // Sorts players by an average of their singles and doubles elo 
   sortPlayers() {
     this.players.sort((a, b) => {
       let aAvg = (a.elo + a.doublesElo) / 2;
       let bAvg = (b.elo + b.doublesElo) / 2;
-      if (b.gamesPlayed == 0) {
+      if (b.gamesPlayed === 0) {
         return -1;
       } else if (aAvg > bAvg) {
         return -1;
-      } else if ((aAvg) == (bAvg)) {
+      } else if (aAvg === bAvg) {
           if (a.gamesPlayed >= b.gamesPlayed) {
             return -1;
           } else {
@@ -49,13 +57,5 @@ export class PlayerListComponent implements OnInit {
         return 1;
       }
     })
-  }
-  
-  // gets player list for list view
-  ngOnInit() {
-    this._playerService.getPlayers().subscribe((players) => {
-      this.players = players;
-      this.sortPlayers();
-    });
-  }
+  } 
 }

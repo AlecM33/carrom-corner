@@ -1,58 +1,64 @@
 import { Component, OnInit } from "@angular/core";
-import { PlayerService } from "../Players/player.service";
-import { TournamentService } from "../Tournaments/tournament.service";
+import { PlayerService } from "../Services/player.service";
+import { TournamentService } from "../Services/tournament.service";
 import { HttpClient } from "@angular/common/http";
 import { Router, ActivatedRoute } from "@angular/router";
-import { BracketService } from "../Brackets/bracket.service";
+import { BracketService } from "../Services/bracket.service";
+import { Player } from "../Players/player";
+import { Game } from "../Games/game";
+import { GameService } from "../Services/game.service";
 
 @Component({
     templateUrl: 'playoffs.component.html'
 })
 export class PlayoffsComponent implements OnInit{
-    constructor(private ps: PlayerService, public bs: BracketService, private ts: TournamentService, private http: HttpClient, private router: Router, private active_route: ActivatedRoute) {
+
+    constructor(private _playerService: PlayerService, 
+                private _tournyService: TournamentService, 
+                private http: HttpClient, private router: Router, 
+                private active_route: ActivatedRoute,
+                private _gameService: GameService) {
     }
 
-    public players = [];
-    public playoffId: any;
-    public winner = undefined;
-    public playoff = {};
+    public players: Player[];
+    public playoffId: string;
+    public winner: Player;
+    public playoff: Object;
     public bracketSize = 0;
     public numberOfRounds = 0;
-    public bracket: any;
-    public playInRound: any;
-    public playoffGames: any;
-    public tournamentWinner: any;
+    public bracket = [];
+    public playInRound = [];
+    public playoffGames: Game[];
 
     public isOver = true;
 
     
 
     ngOnInit() {
-        this.ps.getPlayers().subscribe((players) => {
+        this._playerService.getPlayers().subscribe((players) => {
             this.players = players;
             this.playoffId = this.active_route.snapshot.paramMap.get('id');
-            this.ts.getPlayoff(this.playoffId).subscribe((playoff) => {
-                this.tournamentWinner = playoff['winner'];
+            this._tournyService.getPlayoff(this.playoffId).subscribe((playoff) => {
+                this.isOver = playoff['winner'];
                 this.playoff = playoff;
                 this.bracket = playoff['bracket'];
                 this.playInRound = this.bracket.shift();
                 let notice = document.getElementById('notice');
                 notice.textContent = "";
-                this.ts.getPlayoffGames(this.playoffId).subscribe((games) => {
+                this._gameService.getPlayoffGames(this.playoffId).subscribe((games) => {
                     this.playoffGames = games;
                 });
-                this.isOver = this.tournamentWinner;
             });
         });
         
     }
 
     endTournament() {
-        this.ts.endTournament(this.playoffId, this.winner, this.convertToName(this.winner)).subscribe(() => this.router.navigateByUrl('/playoffs/' + this.playoffId + '/winner'));
+        this._tournyService.endTournament(this.playoffId, this.winner, this.convertToName(this.winner)).subscribe(() => this.router.navigateByUrl('/playoffs/' + this.playoffId + '/winner'));
     }
 
     resetBracket() {
-        this.ts.getPlayoff(this.playoffId).subscribe((playoff) => {
+        this._tournyService.getPlayoff(this.playoffId).subscribe((playoff) => {
             this.playoff = playoff;
             this.bracket = playoff['bracket'];
             this.playInRound = this.bracket.shift();
@@ -62,7 +68,7 @@ export class PlayoffsComponent implements OnInit{
 
     saveBracket() {
         if(confirm('Save the current bracket?')) {
-            this.ts.updatePlayoff(this.playoff, this.bracket, this.playInRound).subscribe(() => {
+            this._tournyService.updatePlayoff(this.playoff, this.bracket, this.playInRound).subscribe(() => {
                 let notice = document.getElementById('notice');
                 notice.textContent = "Bracket Successfully Saved \u2713"
             });

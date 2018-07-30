@@ -1,14 +1,15 @@
 import { Component, OnInit } from "@angular/core";
 import { Tournament } from "./tournament";
-import { PlayerService } from "../Players/player.service";
+import { PlayerService } from "../Services/player.service";
 import { Player } from "../Players/player";
 import { ActivatedRoute, Router, NavigationEnd } from "@angular/router";
 import { HttpClient } from "@angular/common/http";
-import { TournamentService } from "./tournament.service";
+import { TournamentService } from "../Services/tournament.service";
 import { Game } from "../Games/game";
 import { Playoff } from "../Playoffs/playoff";
 import { BracketGraph } from "../Brackets/bracketgraph";
-import { BracketService } from "../Brackets/bracket.service";
+import { BracketService } from "../Services/bracket.service";
+import { GameService } from "../Services/game.service";
 
 @Component({
     selector: 'cr-tournyview',
@@ -16,12 +17,11 @@ import { BracketService } from "../Brackets/bracket.service";
   })
 
 export class ViewTournamentComponent implements OnInit {
-    public poolLetter = 0;
+
     public tournySize = 0;
     public idPools: Array<any>
     public players = [];
     public tournyName: string;
-    public poolSize: number;
     public games = [];
     public gamesToDisplay = [];
     public id: number;
@@ -32,18 +32,19 @@ export class ViewTournamentComponent implements OnInit {
     public playoffsBegan = false;
 
     public bracket = [];
-    tournyType = 'singles'
+    public tournyType = 'singles'
     public treeLevels = [];
 
     rosterInvalid = false;
 
     constructor (
-                    private ps: PlayerService, 
+                    private _playerService: PlayerService, 
                     private http: HttpClient, 
                     private active_route: ActivatedRoute, 
                     private router: Router, 
-                    private ts: TournamentService, 
-                    private bs: BracketService
+                    private _tournyService: TournamentService, 
+                    private _bracketService: BracketService,
+                    private _gameService: GameService
                 ) {
     }
 
@@ -55,16 +56,16 @@ export class ViewTournamentComponent implements OnInit {
                 this.tournyType = this.active_route.snapshot.paramMap.get('type');
             }
         });
-        this.ps.getPlayers().subscribe((players) => {
+        this._playerService.getPlayers().subscribe((players) => {
             this.players = players;
             this.tournyName = this.active_route.snapshot.paramMap.get('name');
             this.http.get('http://localhost:3000/pools?tournyName=' + this.tournyName).subscribe((playerBase) => 
                 { 
                     this.idPools = playerBase[0].pools;
-                    this.ts.getTournament(this.tournyName).subscribe((tournament) => {
+                    this._tournyService.getTournament(this.tournyName).subscribe((tournament) => {
                         this.id = tournament[0].id;
                         this.tournySize = tournament[0].size;
-                        this.ts.getGames(this.id).subscribe((games) => {
+                        this._gameService.getGames(this.id).subscribe((games) => {
                             this.games = games;
                             this.gamesToDisplay = this.games.filter((game) => game.winner === undefined);
                             this.gamesToDisplay.sort((a, b) => {
@@ -141,14 +142,14 @@ export class ViewTournamentComponent implements OnInit {
         return Math.floor(Math.random() * (max - min + 1)) + min; 
     }
 
-
+    // Function that simulates all tournament games for testing
     simulate() {
         for (let game of this.games) {
             let rnd = this.getRandomIntInclusive(1, 2);
             let attribute = 'team' + rnd;
             let winner = game[attribute];
             let rndDiff = this.getRandomIntInclusive(1, 8);
-            this.ts.updateGame(game.id, winner, rndDiff).subscribe(() => {
+            this._gameService.updateGame(game.id, winner, rndDiff).subscribe(() => {
             
             });
         }
@@ -264,6 +265,30 @@ export class ViewTournamentComponent implements OnInit {
         }
     }
 
+    // Builds a bracket using the bracket service and then splits them into rounds
+    constructBracket() {
+        let bracket = this._bracketService.generateBracket(this.playoffPool);
+        let depth = this._bracketService.getTreeDepth(bracket.winnerNode)
+        for (let i = depth; i > 0; i --) {
+            let nodesAtLevel = [];
+            this._bracketService.getNodesAtLevel(bracket.winnerNode, i, nodesAtLevel)
+            this.treeLevels.push(nodesAtLevel);
+        } 
+
+        let playInSpots = [];
+        for (let spot of this.treeLevels[1]) {
+            if (JSON.stringify(spot) === '{}') {
+                playInSpots.push(this.treeLevels[1].indexOf(spot));
+            }
+        }
+        this._tournyService.addPlayoff(new Playoff(this.id, this.id, playInSpots, this.treeLevels, undefined)).subscribe(() =>
+        {
+            this._tournyService.toggleDefined(this.id).subscribe(() => {
+                this.router.navigateByUrl('/playoffs/' + this.id);
+            });
+        });
+    }
+
 
     startPlayoffs() {
         this.playoffPool.sort((a, b) => {
@@ -284,27 +309,6 @@ export class ViewTournamentComponent implements OnInit {
             team.playoffSeed = seed;
             seed ++;
         }
-
-        let bracket = this.bs.generateBracket(this.playoffPool);
-        let depth = this.bs.getTreeDepth(bracket.winnerNode)
-        for (let i = depth; i > 0; i --) {
-            let nodesAtLevel = [];
-            this.bs.getNodesAtLevel(bracket.winnerNode, i, nodesAtLevel)
-            this.treeLevels.push(nodesAtLevel);
-        } 
-
-        let playInSpots = [];
-        for (let spot of this.treeLevels[1]) {
-            if (JSON.stringify(spot) === '{}') {
-                playInSpots.push(this.treeLevels[1].indexOf(spot));
-            }
-        }
-        
-       this.ts.addPlayoff(new Playoff(this.id, this.id, playInSpots, this.treeLevels, undefined)).subscribe(() =>
-        {
-            this.ts.toggleDefined(this.id).subscribe(() => {
-                this.router.navigateByUrl('/playoffs/' + this.id);
-            });
-        });
+        this.constructBracket();
     }
 }

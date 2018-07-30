@@ -3,18 +3,17 @@ import { Player } from "../Players/player";
 import { HttpClient, HttpHeaders} from '@angular/common/http';
 import { PlayerListComponent } from "../Players/player-list.component";
 import { Observable } from "rxjs/Observable";
-import { Tournament } from "./tournament";
+import { Tournament } from "../Tournaments/tournament";
 import { Pool } from "../Pools/pool";
 import { Game } from "../Games/game";
 import { Playoff } from "../Playoffs/playoff";
 
 @Injectable()
 export class TournamentService {
-    constructor(private http: HttpClient) {
-    }
+
+    constructor(private http: HttpClient) {}
 
     tournaments: Tournament[];
-    games: Game[];
 
     populateWithTournaments(ob: any[]): Tournament[] {
         let tournaments = [];
@@ -46,33 +45,6 @@ export class TournamentService {
         {
             "winner": winner
         });
-    }
-
-    populateWithGames(ob: any[]): Game[] {
-        let games = [];
-
-        for (let piece of ob) {
-            games.push(
-                new Game(
-                        piece['id'], 
-                        piece['playoff'],
-                        piece['tournamentId'], 
-                        piece['scheduleIndex'],
-                        piece['team1'], 
-                        piece['team2'], 
-                        piece['winner'], 
-                        piece['differential']
-                    ));
-        }
-        return games;
-    }
-
-    getGames(id): Observable<Game[]> {
-        return this.http.get('http://localhost:3000/games?tournamentId=' + id + '&playoff=false').map(this.populateWithGames);
-    }
-
-    getPlayoffGames(id): Observable<Game[]> {
-        return this.http.get('http://localhost:3000/games?tournamentId=' + id + '&playoff=true').map(this.populateWithGames);
     }
 
     getTournaments(): Observable<Tournament[]>{
@@ -116,20 +88,6 @@ export class TournamentService {
         return this.http.post('http://localhost:3000/pools', payload, httpOptions);
     }
 
-    addGame(newGame: Game) {
-        const httpOptions = {headers: new HttpHeaders({ 'Content-Type': 'application/json' })};
-        let payload = { 
-                        "playoff": newGame.playoff,
-                        "tournamentId": newGame.tournamentId,
-                        "scheduleIndex": newGame.scheduleIndex,
-                        "team1": newGame.team1,
-                        "team2": newGame.team2,
-                        "winner": newGame.winner,
-                        "differential": newGame.differential
-                      }; 
-        return this.http.post('http://localhost:3000/games', payload, httpOptions);
-    }
-
     addPlayoff(newPlayoff: Playoff) {
         const httpOptions = {headers: new HttpHeaders({ 'Content-Type': 'application/json' })};
         let payload = {
@@ -148,14 +106,6 @@ export class TournamentService {
         return this.http.patch('http://localhost:3000/playoffs/' + playoff['id'],
         {
             "bracket": newBracket
-        });
-    }
-
-    updateGame(id, winner, differential): Observable<any> {
-        return this.http.patch('http://localhost:3000/games/' + id,
-        {
-            "winner": winner,
-            "differential": differential
         });
     }
 

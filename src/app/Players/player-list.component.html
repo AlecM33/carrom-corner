@@ -23,7 +23,8 @@
         <tbody>
             <tr *ngFor='let player of players'>
                 <td>{{players.indexOf(player) + 1}}</td>
-                <td>{{player.name}}</td>
+                <td *ngIf="!player.nickname">{{player.name}}</td>
+                <td *ngIf="player.nickname">{{player.nickname}}</td>
                 <td>{{player.elo | number: '1.0-0'}}</td>
                 <td>{{player.doublesElo | number: '1.0-0'}}</td>
                 <td>{{player.wins}}</td>
