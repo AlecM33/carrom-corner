@@ -1,6 +1,9 @@
 <div class='notice-container'>
     <p id='notice'></p>
 </div>
+<div class="back-button">
+    <button class="main-buttons create-button" (click)='goBack()'>« Back</button>
+</div>
 <!--<h2>Playoffs</h2>-->
 <div class='button-set' *ngIf="!isOver">
     <button class="main-buttons create-button" (click)='enterPlayoffResult()'>Enter Playoff Game Result</button>

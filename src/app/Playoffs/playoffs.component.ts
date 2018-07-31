@@ -55,6 +55,10 @@ export class PlayoffsComponent implements OnInit{
         
     }
 
+    goBack() {
+        this.router.navigateByUrl('/tournaments');
+    }
+
     endTournament() {
         this._tournyService.endTournament(this.playoffId, this.winner, this.convertToName(this.winner)).subscribe(() => this.router.navigateByUrl('/playoffs/' + this.playoffId + '/winner'));
     }
