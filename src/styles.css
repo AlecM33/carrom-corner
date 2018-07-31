@@ -8,6 +8,10 @@ html, body {
     background-blend-mode: color;
 }
 
+html {
+    overflow-y: scroll;
+}
+
 .app-title {
     color: white;
     font-size: 25px;
@@ -15,6 +19,14 @@ html, body {
 
 .nav-links {
     margin: 0px 20px 0px;
+}
+
+.navbar {
+    display: flex;
+    justify-content: left;
+}
+
+input#name {
 }
 
 .link {
@@ -74,12 +86,14 @@ h2 {
 }
 
 .create-buttons {
+    display: flex;
+    justify-content: center;
     opacity: 0;
     -webkit-animation: slide_in_right 0.7s;
     -moz-animation: slide_in_right 0.7s;
     animation: slide_in_right 0.7s;
     animation-fill-mode: forwards;
-    padding: 2%;
+    padding: 20px;
 }
 
 .bracket-box {
@@ -317,9 +331,10 @@ img#trophy {
     animation-fill-mode: both;
 }
 
-.player-list-header {
+.player-list-header, .tourny-list-header {
     margin: 0;
-    padding: 0;
+    padding: 10px;
+    font-weight: bold;
     text-align: left;
     animation: fadein 2s;
     animation-fill-mode: backwards;
