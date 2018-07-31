@@ -59,28 +59,32 @@ export class ViewTournamentComponent implements OnInit {
         this._playerService.getPlayers().subscribe((players) => {
             this.players = players;
             this.tournyName = this.active_route.snapshot.paramMap.get('name');
-            this.http.get('http://localhost:3000/pools?tournyName=' + this.tournyName).subscribe((playerBase) => 
+            this.http.get('http://localhost:3000/pools?tournyName=' + this.tournyName).subscribe((tournyRoster) => 
                 { 
-                    this.idPools = playerBase[0].pools;
+                    this.idPools = tournyRoster[0].pools;
                     this._tournyService.getTournament(this.tournyName).subscribe((tournament) => {
                         this.id = tournament[0].id;
                         this.tournySize = tournament[0].size;
-                        this._gameService.getGames(this.id).subscribe((games) => {
-                            this.games = games;
-                            this.gamesToDisplay = this.games.filter((game) => game.winner === undefined);
-                            this.gamesToDisplay.sort((a, b) => {
-                                if (a.scheduleIndex >= b.scheduleIndex) {
-                                    return 1;
-                                }
-                                else {
-                                    return -1;
-                                }
-                            })
-                            this.disabled = this.isDisabled();
-                            this.generateStandings();
-                        });
+                        this.getTournyGames();
                     });
             });
+        });
+    }
+
+    getTournyGames() {
+        this._gameService.getGames(this.id).subscribe((games) => {
+            this.games = games;
+            this.gamesToDisplay = this.games.filter((game) => game.winner === undefined);
+            this.gamesToDisplay.sort((a, b) => {
+                if (a.scheduleIndex >= b.scheduleIndex) {
+                    return 1;
+                }
+                else {
+                    return -1;
+                }
+            })
+            this.disabled = this.isDisabled();
+            this.generateStandings();
         });
     }
 
@@ -143,7 +147,7 @@ export class ViewTournamentComponent implements OnInit {
     }
 
     // Function that simulates all tournament games for testing
-    simulate() {
+    /*simulate() {
         for (let game of this.games) {
             let rnd = this.getRandomIntInclusive(1, 2);
             let attribute = 'team' + rnd;
@@ -153,7 +157,7 @@ export class ViewTournamentComponent implements OnInit {
             
             });
         }
-    }
+    }*/
 
     // Goes through the list of games for the tournament and calculates player wins, losses, and differential
     calculateRecords() {
