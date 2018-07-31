@@ -85,17 +85,6 @@ h2 {
     width: 100%;
 }
 
-.create-buttons {
-    display: flex;
-    justify-content: center;
-    opacity: 0;
-    -webkit-animation: slide_in_right 0.7s;
-    -moz-animation: slide_in_right 0.7s;
-    animation: slide_in_right 0.7s;
-    animation-fill-mode: forwards;
-    padding: 20px;
-}
-
 .bracket-box {
     text-align: left;
     background-color: #343a40;
@@ -154,12 +143,40 @@ label {
 .add-all-button {
     background-color: rgb(8, 150, 8);
     border-bottom: 2px solid rgb(3, 95, 3);
+    height: 40px;
+}
+
+.end-button {
+    background-color: rgb(231, 162, 13);
+    border: 2px solid rgb(154, 104, 13);
+    animation: pulse 1s infinite;
+    animation-direction: alternate-reverse;
+}
+
+.clear-button {
+    background-color: rgb(184, 18, 18);
+    border-bottom: 2px solid rgb(103, 6, 6);
 }
 
 .add-all-button:hover, .add-all-button:focus, .add-all-button:active {
     box-shadow: 0 10px 10px -10px rgba(0, 0, 0, 0.7);
     transform: scale(1.05);
     background-color: rgb(42, 176, 42);
+    outline: none;
+}
+
+.end-button:hover, .end-button:focus, .end-button:active {
+    box-shadow: 0 10px 10px -10px rgba(0, 0, 0, 0.7);
+    transform: scale(1.05);
+    animation: none;
+    background-color: rgb(248, 190, 66);
+    outline: none;
+}
+
+.clear-button:hover, .clear-button:focus, .clear-button:active {
+    box-shadow: 0 10px 10px -10px rgba(0, 0, 0, 0.7);
+    transform: scale(1.05);
+    background-color: rgb(206, 36, 36);
     outline: none;
 }
 
@@ -200,6 +217,7 @@ label {
     box-shadow: -3px 4px 10px 2px rgb(71, 71, 71);
     border: 1px solid rgb(247, 211, 6);
     border-radius: 5px;
+    margin-bottom: 25px;
 }
 
 .app-table {
@@ -249,6 +267,7 @@ label {
 #notice {
     color: green;
     width: 200px;
+    border-radius: 4px;
     font-size: 11px;
     background-color: rgb(213, 241, 213);
 }
@@ -278,6 +297,11 @@ img#trophy {
     stroke-width: 2px;
     stroke: orange;
 }
+
+.play-in-box {
+    border: 1px solid black;
+}
+
 .button-warning {
     font-size: 10px;
     color: red;
@@ -336,18 +360,34 @@ img#trophy {
     padding: 10px;
     font-weight: bold;
     text-align: left;
-    animation: fadein 2s;
+}
+
+.player-list-header, .tourny-list-header, .player-list-subheader, .add-all-button {
+    animation: fadein 1s;
     animation-fill-mode: backwards;
     animation-play-state: initial;
     animation-delay: 0.2s;
 }
 
+.player-header-container {
+    display: flex;
+    flex-direction: row;
+}
+
+.player-header-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.add-btn-container {
+    display: flex;
+    align-items: center;
+    padding-left: 50px;
+}
+
 .player-list-subheader {
     margin-bottom: 20px;
     text-align: left;
-    animation: fadein 2s;
-    animation-fill-mode: backwards;
-    animation-delay: 0.7s;
 }
 
 @keyframes strike {
@@ -381,18 +421,28 @@ img#trophy {
 }
 
 .flex-container {
-    margin-top: 5%;
     width: 100%;
     display: flex;
+    flex-direction: column;
+    animation: fadein 1s;
+    animation-fill-mode: backwards;
+    animation-delay: 0.4s;
+}
+
+.bracket-container {
+    display: flex;
     flex-direction: row;
+    margin-bottom: 10px;
 }
 
 .result-winner {
-    color: green;
+    color: rgb(29, 155, 29);
+    font-size: 15px;
 }
 
 .result-loser {
-    color: red;
+    color: rgb(218, 34, 34);
+    font-size: 15px;
 }
 
 .results-table tr {
@@ -401,13 +451,18 @@ img#trophy {
 }
 
 .results-table {
+    width: 70%;
+    margin-bottom: 15px;
+    margin: 0 auto;
     padding: 10px;
     overflow-y: scroll;
     height: 250px;
     font-size: 12px;
-    background-color: rgb(236, 235, 235);
-    border: 1px solid black;
     box-shadow: -3px 4px 10px 2px rgb(71, 71, 71);
+}
+
+.results-container {
+    margin: 20px;
 }
 
 .flex-column {
@@ -440,8 +495,14 @@ hr {
     margin: 0;
     border: 0;
     height: 1px;
-    background: #333;
-    background-image: linear-gradient(to right, #333, #ccc, #333);
+    background: rgb(127, 124, 124);
+}
+
+#playoff-hr {
+    margin: 0;
+    border: 0;
+    height: 2px;
+    background: rgb(59, 58, 58);
 }
 
 
@@ -469,17 +530,6 @@ div {
     font-size: 0.7em;
     min-width: 20%;
 }
-
-.tourny-list-table {
-    opacity: 0;
-    -webkit-animation: fadein 0.7s;
-    -moz-animation: fadein 0.7s;
-    animation: fadein 0.7s;
-    animation-delay: 0.2s;
-    animation-fill-mode: forwards;
-    box-shadow: -3px 4px 10px 2px rgb(71, 71, 71);
-}
-
 .players-table td {
     width: 300px;
 }
@@ -634,8 +684,12 @@ h3 {
 }
 
 @keyframes pulse {
-    from {background-color: blue; }
-    to {background-color: rgb(60, 168, 204);}
+    0% {
+      opacity:0.1;
+    }
+    100% {
+      opacity:1;
+    }
 }
 
 @keyframes fadesharpen {

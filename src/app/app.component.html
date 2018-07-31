@@ -10,11 +10,11 @@
           <a class='link' [routerLink]="['/tournaments']">Tournaments</a>
         </li>
       </ul>
+      <span class="create-buttons">
+        <button class='main-buttons create-button' [routerLink]="['/tournament/singles/new']">+ Create A Singles Tournament</button>
+        <button class='main-buttons create-button' [routerLink]="['/tournament/doubles/new']">+ Create A Doubles Tournament</button>
+      </span>
   </nav>
-  <div class='create-buttons'>
-    <button class='main-buttons create-button' [routerLink]="['/tournament/singles/new']">+ Create A Singles Tournament</button>
-    <button class='main-buttons create-button' [routerLink]="['/tournament/doubles/new']">+ Create A Doubles Tournament</button>
-  </div>
 </div>
 <div class='page-content'>
     <router-outlet></router-outlet>

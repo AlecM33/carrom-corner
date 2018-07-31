@@ -1,10 +1,14 @@
 
     
-<div class='create-buttons'>
-    <button class='main-buttons add-all-button' [routerLink]="['/players/add']">Add a player</button>
+<div class='player-header-container'>
+    <div class="player-header-text">
+        <h2 class="player-list-header">Anteil Carrom Playerbase</h2>
+        <h3 class="player-list-subheader">* Rankings are determined by an average of singles and doubles elo</h3>
+    </div>
+    <div class="add-btn-container">
+        <button class='main-buttons add-all-button' [routerLink]="['/players/add']">Add a player</button>
+    </div>
 </div>
-<h2 class="player-list-header">Anteil Carrom Playerbase</h2>
-<h3 class="player-list-subheader">* Rankings are determined by an average of singles and doubles elo</h3>
 <div class='table-responsive table-dark app-table'>
     <table class='table'>
         <thead>
