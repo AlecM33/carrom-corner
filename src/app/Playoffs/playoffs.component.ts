@@ -29,6 +29,7 @@ export class PlayoffsComponent implements OnInit{
     public bracket = [];
     public playInRound = [];
     public playoffGames: Game[];
+    public tournamentWinner: undefined;
 
     public isOver = true;
 
@@ -39,7 +40,8 @@ export class PlayoffsComponent implements OnInit{
             this.players = players;
             this.playoffId = this.active_route.snapshot.paramMap.get('id');
             this._tournyService.getPlayoff(this.playoffId).subscribe((playoff) => {
-                this.isOver = playoff['winner'];
+                this.tournamentWinner = playoff['winner'];
+                this.isOver = this.tournamentWinner;
                 this.playoff = playoff;
                 this.bracket = playoff['bracket'];
                 this.playInRound = this.bracket.shift();

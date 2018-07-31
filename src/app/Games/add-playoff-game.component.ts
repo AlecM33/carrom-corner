@@ -70,6 +70,16 @@ export class AddPlayoffGameComponent implements OnInit{
         }
     }
 
+    convertToName(team) {
+        let teamString = JSON.stringify(team);
+        if (team instanceof Array) {
+            let firstName = this.players.find((player) => player.id === team[0]).name;
+            let secondName = this.players.find((player) => player.id === team[1]).name;
+            return firstName + ' & ' + secondName
+        }
+        return this.players.find((player) => player.id === team).name
+    }
+
     // Updates player database with results from entered doubles game
     patchDoublesPlayers(game) {
         let winner1 = this.players.find((player) => player.id == game.winner[0]);
@@ -103,8 +113,8 @@ export class AddPlayoffGameComponent implements OnInit{
 
     // Submits game form, patches database, adds game to the database
     submitGame() {
-        let team1 = this.playoffPool.find((team) => this._playerService.convertToName(team) == this.winningPlayer);
-        let team2 = this.playoffPool.find((team) => this._playerService.convertToName(team) == this.losingPlayer);
+        let team1 = this.playoffPool.find((team) => this.convertToName(team) == this.winningPlayer);
+        let team2 = this.playoffPool.find((team) => this.convertToName(team) == this.losingPlayer);
         let playoffGame = new Game(undefined, true, this.playoffId, undefined, team1, team2, team1, this.scoreDifferential);
         if (team1 instanceof Array) {
             this.patchDoublesPlayers(playoffGame);

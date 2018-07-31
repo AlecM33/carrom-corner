@@ -17,6 +17,8 @@ import 'rxjs/add/operator/do';
 export class PlayerListComponent implements OnInit {
 
   public players = [];
+  public newPlayers = [];
+  public sortablePlayers = [];
 
   constructor(private _playerService: PlayerService, private http: HttpClient) {}
 
@@ -24,6 +26,8 @@ export class PlayerListComponent implements OnInit {
    ngOnInit() {
     this._playerService.getPlayers().subscribe((players) => {
       this.players = players;
+      this.sortablePlayers = this.players.filter((player) => player.singlesPlayed > 0 || player.doublesPlayed > 0);
+      this.newPlayers = this.players.filter((player) => player.singlesPlayed === 0 && player.doublesPlayed === 0);
       this.sortPlayers();
     });
   }
@@ -34,17 +38,19 @@ export class PlayerListComponent implements OnInit {
       this._playerService.deletePlayer(player).do(() => {
         this._playerService.getPlayers().subscribe((players) => {
           this.players = players;
+          this.sortablePlayers = this.players.filter((player) => player.singlesPlayed > 0 || player.doublesPlayed > 0);
+          this.newPlayers = this.players.filter((player) => player.singlesPlayed === 0 && player.doublesPlayed === 0);
         })
       }).subscribe();
   }
 
   // Sorts players by an average of their singles and doubles elo 
   sortPlayers() {
-    this.players.sort((a, b) => {
+    this.sortablePlayers.sort((a, b) => {
       let aAvg = (a.elo + a.doublesElo) / 2;
       let bAvg = (b.elo + b.doublesElo) / 2;
       if (b.gamesPlayed === 0) {
-        return -1;
+        return 1;
       } else if (aAvg > bAvg) {
         return -1;
       } else if (aAvg === bAvg) {

@@ -13,7 +13,7 @@
 </form>
 
 
-<!--<button *ngIf="disabled" (click)="simulate()" class="btn btn-primary btn-lg">Sim Tournament »</button>-->
+<button *ngIf="disabled" (click)="simulate()" class="btn btn-primary btn-lg">Sim Tournament »</button>
 <h2>Pools</h2>
 <div class='pools' *ngIf="idPools">
     <div class='pool-view' *ngFor="let pool of idPools">
@@ -40,7 +40,7 @@
 </div>
     <h2>Games To Play</h2>
     <div *ngIf="isDisabled()" class='tourny-table'>
-        <table class='table table-dark pool-table'>
+        <table class='table table-dark'>
             <thead>
                 <th>Games</th>
                 <th><input #filter type="text" id="gameFilter" (keyup)="filterGames(filter.value)" placeholder="Search for games..." /></th>

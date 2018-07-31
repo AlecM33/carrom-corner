@@ -116,7 +116,13 @@ label {
     text-align: left;
 }
 
-.create-button {
+.main-buttons {
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    color: white;
+    padding: 10px;
+    font-size: 12px;
     margin: 10px;
     display: inline-block;
     vertical-align: middle;
@@ -126,19 +132,40 @@ label {
     transition-property: box-shadow, transform;
 }
 
-.create-button:hover, .create-button:focus, .create-button:active {
-    box-shadow: 0 10px 10px -10px rgba(0, 0, 0, 0.5);
+.create-button {
+    background-color: rgb(48, 112, 214);
+    border-bottom: 2px solid rgb(22, 63, 145);
+}
+
+.add-all-button {
+    background-color: rgb(8, 150, 8);
+    border-bottom: 2px solid rgb(3, 95, 3);
+}
+
+.add-all-button:hover, .add-all-button:focus, .add-all-button:active {
+    box-shadow: 0 10px 10px -10px rgba(0, 0, 0, 0.7);
     transform: scale(1.05);
+    background-color: rgb(42, 176, 42);
+    outline: none;
+}
+
+.create-button:hover, .create-button:focus, .create-button:active {
+    box-shadow: 0 10px 10px -10px rgba(0, 0, 0, 0.7);
+    transform: scale(1.05);
+    background-color: rgb(76, 143, 252);
+    outline: none;
 }
 
 .pool-table {
     border: 2px solid gold;
     border-radius: 3px;
+    width: 350px;
 }
 
 #error {
     font-size: 11px;
     margin: 0px 5px 0px;
+    border: 1px solid rgb(159, 10, 10);
 }
 
 .validation-notices {
@@ -151,14 +178,8 @@ label {
     padding: 15px;
 }
 
-button {
-    border: 1px solid black !important;
-}
-
 .next-button button {
-    width: 120px;
-    height: 40px;
-    font-size: 15px;
+    width: 100px;
 }
 
 .app-navbar {
@@ -192,6 +213,7 @@ button {
     animation-delay: 0.2s;
     animation-fill-mode: forwards;
     height: 350px;
+    width: 380px;
     overflow-y: scroll;  
 }
 
@@ -579,6 +601,8 @@ div {
     max-height: 400px;
     overflow: auto;
     margin-bottom: 10%;
+    width: 70%;
+    margin: 0 auto;
 }
 
 h3 {

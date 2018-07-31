@@ -21,18 +21,28 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor='let player of players'>
-                <td>{{players.indexOf(player) + 1}}</td>
+            <tr *ngFor='let player of sortablePlayers'>
+                <td>{{sortablePlayers.indexOf(player) + 1}}</td>
                 <td *ngIf="!player.nickname">{{player.name}}</td>
                 <td *ngIf="player.nickname">{{player.nickname}}</td>
                 <td>{{player.elo | number: '1.0-0'}}</td>
                 <td>{{player.doublesElo | number: '1.0-0'}}</td>
                 <td>{{player.wins}}</td>
                 <td>{{player.losses}}</td>
-                <td *ngIf="player.singlesPlayed > 0 || player.doublesPlayed > 0">{{player.wins / (player.singlesPlayed + player.doublesPlayed) | percent}}</td>
-                <td class="in-progress" *ngIf="player.singlesPlayed === 0 && player.doublesPlayed === 0">N/A</td>
-                <td *ngIf="player.singlesPlayed > 0 || player.doublesPlayed > 0">{{player.totalDiff / (player.singlesPlayed + player.doublesPlayed) | number: '1.1-2'}}</td>
-                <td class='in-progress' *ngIf="player.singlesPlayed === 0 && player.doublesPlayed === 0">N/A</td>
+                <td>{{player.wins / (player.singlesPlayed + player.doublesPlayed) | percent}}</td>
+                <td>{{player.totalDiff / (player.singlesPlayed + player.doublesPlayed) | number: '1.1-2'}}</td>
+                <td><button (click)='delete(player)' id='list-button' class='btn btn-danger btn-xs'>Delete</button></td>
+            </tr>
+            <tr *ngFor='let player of newPlayers'>
+                <td>-</td>
+                <td *ngIf="!player.nickname">{{player.name}}</td>
+                <td *ngIf="player.nickname">{{player.nickname}}</td>
+                <td>{{player.elo | number: '1.0-0'}}</td>
+                <td>{{player.doublesElo | number: '1.0-0'}}</td>
+                <td>{{player.wins}}</td>
+                <td>{{player.losses}}</td>
+                <td class="in-progress">N/A</td>
+                <td class='in-progress'>N/A</td>
                 <td><button (click)='delete(player)' id='list-button' class='btn btn-danger btn-xs'>Delete</button></td>
             </tr>
         </tbody>

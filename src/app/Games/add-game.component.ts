@@ -47,10 +47,25 @@ export class AddGameComponent implements OnInit{
             this.tournyName = this.active_route.snapshot.paramMap.get('name');
             this.http.get('http://localhost:3000/games?id=' + this.gameId).subscribe((game) => {
                 this.currentGame = game;
-                this.firstTeam = this._playerService.convertTeamToName(this.currentGame[0].team1);
-                this.secondTeam = this._playerService.convertTeamToName(this.currentGame[0].team2)
+                if (this.tournyType === 'singles') {
+                    this.firstTeam = this.convertToName(this.currentGame[0].team1);
+                    this.secondTeam = this.convertToName(this.currentGame[0].team2);
+                } else {
+                    this.firstTeam = this.convertToName(this.currentGame[0].team1);
+                    this.secondTeam = this.convertToName(this.currentGame[0].team2);
+                }
             });
         });
+    }
+
+    convertToName(team) {
+        let teamString = JSON.stringify(team);
+        if (team instanceof Array) {
+            let firstName = this.players.find((player) => player.id === team[0]).name;
+            let secondName = this.players.find((player) => player.id === team[1]).name;
+            return firstName + ' & ' + secondName
+        }
+        return this.players.find((player) => player.id === team).name
     }
 
     // Function for validating form

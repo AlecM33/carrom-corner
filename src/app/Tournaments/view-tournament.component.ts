@@ -147,7 +147,7 @@ export class ViewTournamentComponent implements OnInit {
     }
 
     // Function that simulates all tournament games for testing
-    /*simulate() {
+    simulate() {
         for (let game of this.games) {
             let rnd = this.getRandomIntInclusive(1, 2);
             let attribute = 'team' + rnd;
@@ -157,7 +157,7 @@ export class ViewTournamentComponent implements OnInit {
             
             });
         }
-    }*/
+    }
 
     // Goes through the list of games for the tournament and calculates player wins, losses, and differential
     calculateRecords() {

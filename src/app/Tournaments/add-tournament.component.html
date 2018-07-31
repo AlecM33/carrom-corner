@@ -3,7 +3,7 @@
     <h2 *ngIf="tournyType === 'doubles'">New Doubles Tournament</h2>
     <form class="form-horizontal" (ngSubmit)="tournamentValidator()">
         <div class='next-button'>
-            <button type="submit" class="btn btn-success btn-xs">Create</button>
+            <button type="submit" class="main-buttons create-button">Create</button>
         </div>
         <div class='validation-notices'>
             <div id="error" *ngIf="!nameBlank && nameForbidden" class="alert alert-danger">
@@ -32,8 +32,8 @@
             <input id="checkbox2" type="radio" value="Double" name="winner" [(ngModel)]="robinType" /> Double
         </div>
     </form>
-    <div class='add-all-button'>
-        <button (click)="addAll()" class="btn btn-warning btn-xs">+ Add All Players</button>
+    <div>
+        <button (click)="addAll()" class="main-buttons add-all-button">+ Add All Players</button>
     </div>
     
         <div class="addPlayersList">

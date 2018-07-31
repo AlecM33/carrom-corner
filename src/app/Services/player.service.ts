@@ -13,29 +13,7 @@ making calls to the database */
 export class PlayerService {
 
 
-    public players: Player[];
-
     constructor(private http: HttpClient, private elo_adjuster: EloService) {
-    }
-
-    convertTeamToName(team) {
-        let teamString = JSON.stringify(team);
-        if (team instanceof Array) {
-            let firstName = this.players.find((player) => player.id === team[0]).name;
-            let secondName = this.players.find((player) => player.id === team[1]).name;
-            return firstName + ' & ' + secondName
-        }
-        return this.players.find((player) => player.id === team).name
-    }
-
-    convertToName(team) {
-        let teamString = JSON.stringify(team);
-        if (team instanceof Array) {
-            let firstName = this.players.find((player) => player.id === team[0]).name;
-            let secondName = this.players.find((player) => player.id === team[1]).name;
-            return firstName + ' & ' + secondName
-        }
-        return this.players.find((player) => player.id === team).name
     }
 
     // Takes an observable and creates player objects from the data observed
@@ -61,11 +39,7 @@ export class PlayerService {
 
     // Sends a GET request to the database for all players
     getPlayers(): Observable<Player[]>{
-        if(this.players !== undefined && this.players.length > 0){
-            return Observable.of(this.players);
-        } else {
-            return this.http.get('http://localhost:3000/players').map(this.populateWithPlayers);
-        }
+        return this.http.get('http://localhost:3000/players').map(this.populateWithPlayers);
     }
 
     getKFactor(player, singles): Number {
