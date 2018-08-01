@@ -46,7 +46,7 @@ export class PlayerService {
         let gamesPlayed;
         if (singles) {
             if (player.singlesPlayed <= 10) {
-                return 64;
+                return 128;
             }
             else if (player.singlesPlayed > 10 && player.singlesPlayed < 30) {
                 return 32;
@@ -55,7 +55,7 @@ export class PlayerService {
             }
         } else {
             if (player.doublesPlayed <= 10) {
-                return 64;
+                return 128;
             }
             else if (player.doublesPlayed > 10 && player.doublesPlayed < 30) {
                 return 32;
