@@ -87,7 +87,7 @@ export class AddPlayoffGameComponent implements OnInit{
         let loser1 = this.players.find((player) => player.id == game.team2[0]);
         let loser2 = this.players.find((player) => player.id == game.team2[1]);
      
-        let newElos = this._playerService.getNewDoublesElos(winner1, winner2, loser1, loser2);
+        let newElos = this.elo_adjuster.getNewDoublesElos(winner1, winner2, loser1, loser2);
 
         this._playerService.updatePlayer(winner1.id, winner1.elo, newElos[0], winner1.wins + 1, winner1.losses, winner1.totalDiff + game.differential, winner1.singlesPlayed, winner1.doublesPlayed + 1).subscribe();
         this._playerService.updatePlayer(winner2.id, winner2.elo, newElos[1], winner2.wins + 1, winner2.losses, winner2.totalDiff + game.differential, winner2.singlesPlayed, winner2.doublesPlayed + 1).subscribe();
@@ -101,8 +101,8 @@ export class AddPlayoffGameComponent implements OnInit{
         let loser = this.players.find((player) => player.id == game.team2);
 
         // Determines the severity of elo fluctuation based on the games played by each player
-        let winningKFactor = this._playerService.getKFactor(winner, true);
-        let losingKFactor = this._playerService.getKFactor(loser, true);
+        let winningKFactor = this.elo_adjuster.getKFactor(winner, true);
+        let losingKFactor = this.elo_adjuster.getKFactor(loser, true);
 
         let newWinnerElo = this.elo_adjuster.calculateNewElo(winner.elo, 1, this.elo_adjuster.calculateExpScore(winner.elo, loser.elo), winningKFactor);
         let newLoserElo = this.elo_adjuster.calculateNewElo(loser.elo, 0, this.elo_adjuster.calculateExpScore(loser.elo, winner.elo), losingKFactor);  

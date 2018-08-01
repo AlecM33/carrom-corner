@@ -1,9 +1,11 @@
 <div class='roster-page'>
-    <h2 *ngIf="tournyType === 'singles'">New Singles Tournament</h2>
-    <h2 *ngIf="tournyType === 'doubles'">New Doubles Tournament</h2>
     <form class="form-horizontal" (ngSubmit)="tournamentValidator()">
-        <div class='next-button'>
-            <button type="submit" class="main-buttons create-button">Create</button>
+        <div class="tourny-create-header">
+            <h2 *ngIf="tournyType === 'singles'">New Singles Tournament</h2>
+            <h2 *ngIf="tournyType === 'doubles'">New Doubles Tournament</h2>
+            <div class='next-button'>
+                <button type="submit" class="main-buttons create-button">Create</button>
+            </div>
         </div>
         <div class='validation-notices'>
             <div id="error" *ngIf="!nameBlank && nameForbidden" class="alert alert-danger">
@@ -27,7 +29,7 @@
             <input id="name" type="text" name="name" [(ngModel)]="tournamentName"/>
         </div>
         <div>
-            <label>Single or double round robin?</label>
+            <label class="robin-label">Single or double round robin?</label>
             <input id="checkbox1" type="radio" value="Single" name="winner" [(ngModel)]="robinType" /> Single
             <input id="checkbox2" type="radio" value="Double" name="winner" [(ngModel)]="robinType" /> Double
         </div>

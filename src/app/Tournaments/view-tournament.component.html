@@ -21,10 +21,10 @@
         <table class='table table-dark pool-table'>
             <thead>
                 <th *ngIf="playoffsBegan"></th>
-                <th></th>
-                <th>Wins</th>
-                <th>Losses</th>
-                <th>Coin +/-</th>
+                <th id="player-name"></th>
+                <th class="number-header">Wins</th>
+                <th class="number-header">Losses</th>
+                <th class="number-header">Coin +/-</th>
             </thead>
             <tbody>
                 <tr *ngFor="let team of pool">

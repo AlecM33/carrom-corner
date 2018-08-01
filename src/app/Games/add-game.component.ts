@@ -90,7 +90,7 @@ export class AddGameComponent implements OnInit{
             loser1 = this.players.find((player) => player.id == this.currentGame[0].team1[0]);
             loser2 = this.players.find((player) => player.id == this.currentGame[0].team1[1]);
         }
-        let newElos = this._playerService.getNewDoublesElos(winner1, winner2, loser1, loser2);
+        let newElos = this.elo_adjuster.getNewDoublesElos(winner1, winner2, loser1, loser2);
         this._playerService.updatePlayer(winner1.id, winner1.elo, newElos[0], winner1.wins + 1, winner1.losses, winner1.totalDiff + this.currentGame[0].differential, winner1.singlesPlayed, winner1.doublesPlayed + 1).subscribe();
         this._playerService.updatePlayer(winner2.id, winner2.elo, newElos[1], winner2.wins + 1, winner2.losses, winner2.totalDiff + this.currentGame[0].differential, winner2.singlesPlayed, winner2.doublesPlayed + 1).subscribe();
         this._playerService.updatePlayer(loser1.id, loser1.elo, newElos[2], loser1.wins, loser1.losses + 1, loser1.totalDiff - this.currentGame[0].differential, loser1.singlesPlayed, loser1.doublesPlayed + 1).subscribe();
@@ -107,8 +107,8 @@ export class AddGameComponent implements OnInit{
         } else {
             loser = this.players.find((player) => player.id == this.currentGame[0].team1);
         }
-        let winningKFactor = this._playerService.getKFactor(winner, true);
-        let losingKFactor = this._playerService.getKFactor(loser, true);
+        let winningKFactor = this.elo_adjuster.getKFactor(winner, true);
+        let losingKFactor = this.elo_adjuster.getKFactor(loser, true);
         let newWinnerElo = this.elo_adjuster.calculateNewElo(winner.elo, 1, this.elo_adjuster.calculateExpScore(winner.elo, loser.elo), winningKFactor);
         let newLoserElo = this.elo_adjuster.calculateNewElo(loser.elo, 0, this.elo_adjuster.calculateExpScore(loser.elo, winner.elo), losingKFactor);  
         this._playerService.updatePlayer(winner.id, newWinnerElo, winner.doublesElo, winner.wins + 1, winner.losses, winner.totalDiff + this.currentGame[0].differential, winner.singlesPlayed + 1, winner.doublesPlayed).subscribe();

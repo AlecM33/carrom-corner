@@ -1,5 +1,22 @@
 /* You can add global styles to this file, and also import other style files */
 
+@media (max-width: 700px) {
+    .navbar-content {
+        display: flex;
+        flex-direction: column;
+        margin: 0 auto;
+    }
+}
+
+@media (min-width: 701px) {
+    .navbar-content {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+    }
+}
+
+
 html, body {
     margin-bottom: 3%;
     text-align: center;
@@ -15,6 +32,22 @@ html {
 .app-title {
     color: white;
     font-size: 25px;
+}
+
+.thank-you {
+    text-align: left;
+}
+
+#sig {
+    text-align: right;
+    margin-right: 20px;
+}
+
+.app-navbar p {
+    margin: 0;
+    color: gold;
+    font-style: italic;
+    font-size: 10px;
 }
 
 .nav-links {
@@ -41,6 +74,7 @@ input#name {
 h2 {
     font-size: 30px;
     padding: 20px;
+    display: flex;
 }
 
 .winner {
@@ -86,9 +120,10 @@ h2 {
 }
 
 .bracket-box {
+    box-shadow: -2px 3px 3px rgb(61, 60, 60);
     text-align: left;
     background-color: #343a40;
-    min-height: 70px;
+    height: 70px;
     width: 180px;
     margin: 30px;
     font-size: 11px;
@@ -96,9 +131,10 @@ h2 {
 }
 
 .bracket-box-play-in {
+    box-shadow: -2px 3px 3px rgb(61, 60, 60);
     text-align: left;
     background-color: #343a40;
-    min-height: 70px;
+    height: 70px;
     width: 180px;
     margin: 10px 30px 10px;
     font-size: 11px;
@@ -143,7 +179,6 @@ label {
 .add-all-button {
     background-color: rgb(8, 150, 8);
     border-bottom: 2px solid rgb(3, 95, 3);
-    height: 40px;
 }
 
 .end-button {
@@ -190,7 +225,21 @@ label {
 .pool-table {
     border: 2px solid gold;
     border-radius: 3px;
-    width: 350px;
+    width: 500px;
+    table-layout: fixed;
+}
+
+#player-name {
+    width: 100px;
+}
+
+.number-header {
+    width: 50px;
+}
+
+.pool-table td {
+    overflow-x: hidden;
+    text-overflow: ellipsis;
 }
 
 #error {
@@ -209,15 +258,31 @@ label {
     padding: 15px;
 }
 
+.tourny-create-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.robin-label {
+    margin: 0 10px;
+}
+
 .next-button button {
     width: 100px;
 }
 
 .app-navbar {
+    display: flex;
+    justify-content: space-between;
     box-shadow: -3px 4px 10px 2px rgb(71, 71, 71);
     border: 1px solid rgb(247, 211, 6);
     border-radius: 5px;
     margin-bottom: 25px;
+}
+
+.navbar-content {
+    align-items: center;
 }
 
 .app-table {
@@ -459,7 +524,7 @@ img#trophy {
 }
 
 .results-table {
-    width: 70%;
+    width: 50%;
     margin-bottom: 15px;
     margin: 0 auto;
     padding: 10px;
@@ -485,16 +550,23 @@ img#trophy {
     padding: 0;
 }
 
-.bracket-box p{
+.bracket-box p, .bracket-box-play-in p, .bracket-box-winner p{
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    word-wrap: break-word;
+    text-overflow: ellipsis;
     color: white;
-    display: flex;
+    display: block;
     justify-content: space-between;
 }
 
-.bracket-box-play-in p{
-    color: white;
+.bracket-half {
+    height: 50%;
     display: flex;
+    flex-direction: row;
     justify-content: space-between;
+    align-items: center;
 }
 
 
@@ -759,6 +831,16 @@ td {
 
 #advance-button {
     height: 20px;
+    border: 1px solid gold;
+    border-radius: 2px;
+    color: gold;
+    background-color: black;
+    cursor: pointer;
+}
+
+#advance-button:hover, #advance-button:active, #advance-button:focus {
+    border: 2px solid gold;
+    outline: none;
 }
 
 
