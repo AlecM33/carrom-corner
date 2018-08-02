@@ -1,5 +1,5 @@
 <form (ngSubmit)="getPlayoffRoster()" #rosterForm="ngForm">
-    <button *ngIf="!disabled && !playoffsBegan" type="submit" class="main-buttons create-button">Begin Playoffs »</button>
+    <button *ngIf="!disabled && !playoffsBegan && !tournyFinished" type="submit" class="main-buttons create-button">Begin Playoffs »</button>
 </form>
 <div class='validation-notices'>
     <div id="error" *ngIf="rosterInvalid" class="alert alert-danger">
@@ -13,12 +13,12 @@
 </form>
 
 
-<button *ngIf="disabled" (click)="simulate()" class="btn btn-primary btn-lg">Sim Tournament »</button>
+<!--<button *ngIf="disabled" (click)="simulate()" class="btn btn-primary btn-lg">Sim Tournament »</button>-->
 <h2>Pools</h2>
 <div class='pools' *ngIf="idPools">
-    <div class='pool-view' *ngFor="let pool of idPools">
+    <div *ngFor="let pool of idPools">
         <h3>Pool {{getLetter(idPools.indexOf(pool))}}</h3>
-        <table class='table table-dark pool-table'>
+        <table class='table table-dark pool-table pool-view'>
             <thead>
                 <th *ngIf="playoffsBegan"></th>
                 <th id="player-name"></th>
@@ -39,8 +39,7 @@
     </div>
 </div>
 <div class="tourny-results-container">
-    <p class="playoff-prompt" *ngIf="!disabled">All games have been played! Start the playoffs!</p>
-    <div *ngIf="isDisabled()" class="unplayed-table">
+    <div class="unplayed-table">
         <h2>Games To Play</h2>
         <div class='tourny-table'>
             <table class='table table-dark'>

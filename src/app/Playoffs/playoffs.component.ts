@@ -27,6 +27,7 @@ export class PlayoffsComponent implements OnInit{
     public bracketSize = 0;
     public numberOfRounds = 0;
     public bracket = [];
+    public tournyType = 'singles'
     public playInRound = [];
     public playoffGames: Game[];
     public tournamentWinner: undefined;
@@ -45,6 +46,9 @@ export class PlayoffsComponent implements OnInit{
                 this.playoff = playoff;
                 this.bracket = playoff['bracket'];
                 this.playInRound = this.bracket.shift();
+                if (this.bracket[0][0] instanceof Array) {
+                    this.tournyType = 'doubles';
+                }
                 let notice = document.getElementById('notice');
                 notice.textContent = "";
                 this._gameService.getPlayoffGames(this.playoffId).subscribe((games) => {
@@ -61,6 +65,14 @@ export class PlayoffsComponent implements OnInit{
 
     endTournament() {
         this._tournyService.endTournament(this.playoffId, this.winner, this.convertToName(this.winner)).subscribe(() => this.router.navigateByUrl('/playoffs/' + this.playoffId + '/winner'));
+    }
+
+    viewGroupStage() {
+        let name;
+        this._tournyService.getTournament(this.playoff['tournamentId']).subscribe((tourny) => {
+            name = tourny['name'];
+            this.router.navigateByUrl('/tournaments/' + this.tournyType + '/' + name);
+        });
     }
 
     resetBracket() {

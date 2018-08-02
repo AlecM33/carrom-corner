@@ -1,5 +1,4 @@
 import { Player } from "../Players/player";
-import { Team } from "../Teams/team"
 
 export class Game {
     public id: number;

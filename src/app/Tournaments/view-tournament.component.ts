@@ -31,6 +31,7 @@ export class ViewTournamentComponent implements OnInit {
     public disabled = true;
     public numberOfPools = 0;
     public playoffsBegan = false;
+    public tournyFinished = true;
 
     public bracket = [];
     public tournyType = 'singles'
@@ -65,6 +66,7 @@ export class ViewTournamentComponent implements OnInit {
                     this.idPools = tournyRoster[0].pools;
                     this._tournyService.getTournament(this.tournyName).subscribe((tournament) => {
                         this.id = tournament[0].id;
+                        this.tournyFinished = (tournament[0].winner !== undefined);
                         this.tournySize = tournament[0].size;
                         this.getTournyGames();
                     });
@@ -162,7 +164,7 @@ export class ViewTournamentComponent implements OnInit {
     }
 
     // Function that simulates all tournament games for testing
-    simulate() {
+    /*simulate() {
         for (let game of this.games) {
             let rnd = this.getRandomIntInclusive(1, 2);
             let attribute = 'team' + rnd;
@@ -172,7 +174,7 @@ export class ViewTournamentComponent implements OnInit {
             
             });
         }
-    }
+    }*/
 
     // Goes through the list of games for the tournament and calculates player wins, losses, and differential
     calculateRecords() {

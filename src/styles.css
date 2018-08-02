@@ -16,6 +16,31 @@
     }
 }
 
+@media(min-width: 1001px) {
+    .played-table, .unplayed-table {
+        width: 500px;
+    }
+
+    .tourny-results-container {
+        flex-direction: row;
+    }
+    .pools {
+        width: 80%;
+    }
+}
+
+@media(max-width: 1000px) {
+    .played-table, .unplayed-table {
+        width: 100%;
+    }
+    .pools {
+        width: 100%;
+    }
+
+    .tourny-results-container {
+        flex-direction: column;
+    }
+}
 
 html, body {
     margin-bottom: 3%;
@@ -23,6 +48,7 @@ html, body {
     background-image: url("assets/images/purty_wood.png");
     background-color: rgba(155, 150, 150, 0.2) !important;
     background-blend-mode: color;
+    width: 100%;
 }
 
 html {
@@ -33,6 +59,7 @@ html {
     color: white;
     font-size: 25px;
 }
+
 
 .thank-you {
     text-align: left;
@@ -83,13 +110,6 @@ h2 {
     color: rgb(236, 208, 49);
     font-size: 60px;
 
-}
-
-.page-content {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    justify-content: center;
 }
 
 .winner-image {
@@ -155,8 +175,11 @@ label {
 
 .tourny-results-container {
     display: flex;
-    flex-direction: row;
     align-items: center;
+    justify-content: center;
+    animation: fadein 1s;
+    animation-fill-mode: backwards;
+    animation-delay: 0.4s;
 }
 
 #winner {
@@ -239,8 +262,7 @@ label {
 .pool-table {
     border: 2px solid gold;
     border-radius: 3px;
-    width: 369px;
-    table-layout: fixed;
+
 }
 
 #player-name {
@@ -512,6 +534,11 @@ img#trophy {
     animation-delay: 0.4s;
 }
 
+.page-content {
+    width: 90%;
+    margin: 0 auto;
+}
+
 .bracket-container {
     display: flex;
     flex-direction: row;
@@ -598,10 +625,13 @@ hr {
 
 .pools {
     flex-wrap: wrap;
-    width: 100%;
+    margin: 0 auto;
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: space-evenly;
+    animation: fadein 1s;
+    animation-fill-mode: backwards;
+    animation-delay: 0.4s;
 }
 .addPlayersList {
     width: 400px;
@@ -618,8 +648,9 @@ div {
 
 .pool-view {
     font-size: 0.7em;
-    min-width: 20%;
+    width: 100%;
 }
+
 .players-table td {
     width: 300px;
 }
@@ -756,7 +787,6 @@ div {
     max-height: 400px;
     overflow: auto;
     margin-bottom: 10%;
-    width: 600px;
     margin: 0 auto;
 }
 

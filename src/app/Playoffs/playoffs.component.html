@@ -1,73 +1,77 @@
-<div class='notice-container'>
-    <p id='notice'></p>
-</div>
-<div class="back-button">
-    <button class="main-buttons create-button" (click)='goBack()'>« Back</button>
-</div>
-<!--<h2>Playoffs</h2>-->
-<div class='button-set' *ngIf="!isOver">
-    <button class="main-buttons create-button" (click)='enterPlayoffResult()'>Enter Playoff Game Result</button>
-    <button class="main-buttons clear-button" (click)='resetBracket()'>Clear Changes</button>
-    <button class="main-buttons add-all-button" (click)='saveBracket()'>Save Bracket</button>
-    <button *ngIf="winner" class="main-buttons end-button" (click)='endTournament()'>End Tournament</button>
-</div>
-<!--<h2 class='playoff-prompt' *ngIf="tournamentWinner">This tournament is complete!</h2>-->
-<div *ngIf="bracket && playInRound" class='flex-container'>
-    <div class="bracket-container">
-        <div [ngClass]="{'play-in-box': playInRound.length > 0}" *ngIf="bracket">
-            <h3 *ngIf="playInRound.length > 0">Play-in Matches</h3>
-            <div *ngFor='let matchup of indexArray(playInRound.length / 2); let i = index;'>
-                <div class='bracket-box-play-in'>
+<div class="playoff-content">
+    <div class='notice-container'>
+        <p id='notice'></p>
+    </div>
+    <div class="back-button">
+        <button class="main-buttons create-button" (click)='goBack()'>« Back</button>
+        <button *ngIf="isOver" class="main-buttons create-button" (click)='viewGroupStage()'>View Group Stage</button>
+    </div>
+    <hr id="playoff-hr" />
+    <!--<h2>Playoffs</h2>-->
+    <div class='button-set' *ngIf="!isOver">
+        <button class="main-buttons create-button" (click)='enterPlayoffResult()'>Enter Playoff Game Result</button>
+        <button class="main-buttons clear-button" (click)='resetBracket()'>Clear Changes</button>
+        <button class="main-buttons add-all-button" (click)='saveBracket()'>Save Bracket</button>
+        <button *ngIf="winner" class="main-buttons end-button" (click)='endTournament()'>End Tournament</button>
+    </div>
+    <!--<h2 class='playoff-prompt' *ngIf="tournamentWinner">This tournament is complete!</h2>-->
+    <div *ngIf="bracket && playInRound" class='flex-container'>
+        <div class="bracket-container">
+            <div [ngClass]="{'play-in-box': playInRound.length > 0}" *ngIf="bracket">
+                <h3 *ngIf="playInRound.length > 0">Play-in Matches</h3>
+                <div *ngFor='let matchup of indexArray(playInRound.length / 2); let i = index;'>
+                    <div class='bracket-box-play-in'>
+                        <div class="bracket-half">
+                            <p>{{playInRound[2 * i].playoffSeed}} {{convertToName(playInRound[2 * i].team)}}</p> 
+                            <button id="advance-button" *ngIf="!isOver" (click)="advancePlayer(playInRound[2 * i], -1)">»</button>
+                        </div>
+                        <hr />
+                        <div class="bracket-half">
+                            <p>{{playInRound[2 * i + 1].playoffSeed}} {{convertToName(playInRound[2 * i + 1].team)}}</p> 
+                            <button id="advance-button" *ngIf="!isOver" (click)="advancePlayer(playInRound[2 * i + 1], -1)">»</button>
+                        </div>
+                        </div>
+                </div>
+            </div>
+            <div *ngFor='let round of bracket; let j = index' class='flex-column'>
+                <div class='bracket-box' *ngFor='let matchup of indexArray(round.length / 2); let i = index;'>
                     <div class="bracket-half">
-                        <p>{{playInRound[2 * i].playoffSeed}} {{convertToName(playInRound[2 * i].team)}}</p> 
-                        <button id="advance-button" *ngIf="!isOver" (click)="advancePlayer(playInRound[2 * i], -1)">»</button>
+                        <p *ngIf="!isEmpty(round[2 * i])">{{round[2 * i].playoffSeed}} {{convertToName(round[2 * i].team)}}</p> 
+                        <button id="advance-button" (click)="advancePlayer(round[2 * i], j)" *ngIf="!isEmpty(round[2 * i]) && !isEmpty(round[2 * i + 1]) && !isOver">»</button>
+                        <p *ngIf="isEmpty(round[2 * i])" class='empty-slot'></p>
                     </div>
                     <hr />
                     <div class="bracket-half">
-                        <p>{{playInRound[2 * i + 1].playoffSeed}} {{convertToName(playInRound[2 * i + 1].team)}}</p> 
-                        <button id="advance-button" *ngIf="!isOver" (click)="advancePlayer(playInRound[2 * i + 1], -1)">»</button>
+                        <p *ngIf="!isEmpty(round[(2 * i) + 1])">{{round[(2 * i) + 1].playoffSeed}} {{convertToName(round[(2 * i) + 1].team)}} </p> 
+                        <button id="advance-button" (click)="advancePlayer(round[2 * i + 1], j)" *ngIf="!isEmpty(round[2 * i + 1]) && !isEmpty(round[2 * i]) && !isOver">»</button>
+                        <p *ngIf="isEmpty(round[(2 * i) + 1])" class='empty-slot'></p>
                     </div>
-                    </div>
-            </div>
-        </div>
-        <div *ngFor='let round of bracket; let j = index' class='flex-column'>
-            <div class='bracket-box' *ngFor='let matchup of indexArray(round.length / 2); let i = index;'>
-                <div class="bracket-half">
-                    <p *ngIf="!isEmpty(round[2 * i])">{{round[2 * i].playoffSeed}} {{convertToName(round[2 * i].team)}}</p> 
-                    <button id="advance-button" (click)="advancePlayer(round[2 * i], j)" *ngIf="!isEmpty(round[2 * i]) && !isEmpty(round[2 * i + 1]) && !isOver">»</button>
-                    <p *ngIf="isEmpty(round[2 * i])" class='empty-slot'></p>
                 </div>
-                <hr />
-                <div class="bracket-half">
-                    <p *ngIf="!isEmpty(round[(2 * i) + 1])">{{round[(2 * i) + 1].playoffSeed}} {{convertToName(round[(2 * i) + 1].team)}} </p> 
-                    <button id="advance-button" (click)="advancePlayer(round[2 * i + 1], j)" *ngIf="!isEmpty(round[2 * i + 1]) && !isEmpty(round[2 * i]) && !isOver">»</button>
-                    <p *ngIf="isEmpty(round[(2 * i) + 1])" class='empty-slot'></p>
+            </div>
+            <div class='flex-column'>
+                <div class='bracket-box-winner'>
+                    <p *ngIf="tournamentWinner">{{convertToName(tournamentWinner)}}</p>
+                    <p *ngIf="winner && !tournamentWinner">{{convertToName(winner)}}</p>
+                    <p *ngIf="!winner && !tournamentWinner" class='empty-slot'></p>
+                    <img id="trophy" src='../../assets/images/trophy.png' width="20px" height="20px" />
                 </div>
             </div>
         </div>
-        <div class='flex-column'>
-            <div class='bracket-box-winner'>
-                <p *ngIf="tournamentWinner">{{convertToName(tournamentWinner)}}</p>
-                <p *ngIf="winner && !tournamentWinner">{{convertToName(winner)}}</p>
-                <p *ngIf="!winner && !tournamentWinner" class='empty-slot'></p>
-                <img id="trophy" src='../../assets/images/trophy.png' width="20px" height="20px" />
+        <hr id="playoff-hr" />
+        <div class="results-container">
+            <div class='table-responsive table-dark results-table'>
+                <h3>Playoff Game Results</h3>
+                <table *ngIf="playoffGames" class="playoff-games-table">
+                    <tr *ngFor="let game of playoffGames">
+                        <td class='result-winner'>W +{{game.differential}} </td>
+                        <td>{{convertToName(game.winner)}}</td>
+                        <td>vs.</td>
+                        <td class='result-loser'>L</td>
+                        <td>{{convertToName(game.team2)}}</td>
+                    </tr>
+                </table>
+                <p *ngIf="playoffGames && playoffGames.length == 0" class='playoff-prompt'>You haven't entered any playoff game results!</p>
             </div>
-        </div>
-    </div>
-    <hr id="playoff-hr" />
-    <div class="results-container">
-        <div class='table-responsive table-dark results-table'>
-            <h3>Playoff Game Results</h3>
-            <table *ngIf="playoffGames" class="playoff-games-table">
-                <tr *ngFor="let game of playoffGames">
-                    <td class='result-winner'>W +{{game.differential}} </td>
-                    <td>{{convertToName(game.winner)}}</td>
-                    <td>vs.</td>
-                    <td class='result-loser'>L</td>
-                    <td>{{convertToName(game.team2)}}</td>
-                </tr>
-            </table>
-            <p *ngIf="playoffGames && playoffGames.length == 0" class='playoff-prompt'>You haven't entered any playoff game results!</p>
         </div>
     </div>
 </div>
