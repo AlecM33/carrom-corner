@@ -23,7 +23,8 @@ export class ViewTournamentComponent implements OnInit {
     public players = [];
     public tournyName: string;
     public games = [];
-    public gamesToDisplay = [];
+    public unplayedGames = [];
+    public playedGames = [];
     public id: number;
     public records = [];
     public playoffPool = [];
@@ -74,8 +75,9 @@ export class ViewTournamentComponent implements OnInit {
     getTournyGames() {
         this._gameService.getGames(this.id).subscribe((games) => {
             this.games = games;
-            this.gamesToDisplay = this.games.filter((game) => game.winner === undefined);
-            this.gamesToDisplay.sort((a, b) => {
+            this.unplayedGames = this.games.filter((game) => game.winner === undefined);
+            this.playedGames = this.games.filter((game) => game.winner !== undefined);
+            this.unplayedGames.sort((a, b) => {
                 if (a.scheduleIndex >= b.scheduleIndex) {
                     return 1;
                 }
@@ -89,22 +91,35 @@ export class ViewTournamentComponent implements OnInit {
     }
 
     // Filters schedule based on user-specified string
-    filterGames(input) {
+    filterGames(input, list) {
         let matchingPlayers = this.players.filter((value) => 
             {
                 return value.name.toLowerCase().includes(input.toLowerCase())
             }
         );
-        this.gamesToDisplay = this.games.filter((game) => 
-            {
-                let matchingIds = [];
-                matchingPlayers.forEach((player) => matchingIds.push(player.id));
-                if (this.tournyType === 'doubles') {
-                    return (matchingIds.includes(game.team1[0]) || matchingIds.includes(game.team1[1]) || matchingIds.includes(game.team2[0]) || matchingIds.includes(game.team2[1])) && !game.winner;
+        if (list === 'unplayed') {
+            this.unplayedGames = this.games.filter((game) => 
+                {
+                    let matchingIds = [];
+                    matchingPlayers.forEach((player) => matchingIds.push(player.id));
+                    if (this.tournyType === 'doubles') {
+                        return (matchingIds.includes(game.team1[0]) || matchingIds.includes(game.team1[1]) || matchingIds.includes(game.team2[0]) || matchingIds.includes(game.team2[1])) && !game.winner;
+                    }
+                    return (matchingIds.includes(game.team1) || matchingIds.includes(game.team2)) && !game.winner;
                 }
-                return (matchingIds.includes(game.team1) || matchingIds.includes(game.team2)) && !game.winner;
-            }
-        ); 
+            ); 
+        } else {
+             this.playedGames = this.games.filter((game) => 
+                {
+                    let matchingIds = [];
+                    matchingPlayers.forEach((player) => matchingIds.push(player.id));
+                    if (this.tournyType === 'doubles') {
+                        return (matchingIds.includes(game.team1[0]) || matchingIds.includes(game.team1[1]) || matchingIds.includes(game.team2[0]) || matchingIds.includes(game.team2[1])) && game.winner;
+                    }
+                    return (matchingIds.includes(game.team1) || matchingIds.includes(game.team2)) && game.winner;
+                }
+            ); 
+        }
     }
 
     isDisabled() {

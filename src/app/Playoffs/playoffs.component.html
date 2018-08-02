@@ -14,7 +14,7 @@
 <!--<h2 class='playoff-prompt' *ngIf="tournamentWinner">This tournament is complete!</h2>-->
 <div *ngIf="bracket && playInRound" class='flex-container'>
     <div class="bracket-container">
-        <div class="play-in-box" *ngIf="bracket">
+        <div [ngClass]="{'play-in-box': playInRound.length > 0}" *ngIf="bracket">
             <h3 *ngIf="playInRound.length > 0">Play-in Matches</h3>
             <div *ngFor='let matchup of indexArray(playInRound.length / 2); let i = index;'>
                 <div class='bracket-box-play-in'>

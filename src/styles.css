@@ -74,7 +74,9 @@ input#name {
 h2 {
     font-size: 30px;
     padding: 20px;
+    font-weight: bolder;
     display: flex;
+    justify-content: center;
 }
 
 .winner {
@@ -151,6 +153,18 @@ label {
     font-size: 20px;
 }
 
+.tourny-results-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+#winner {
+    font-size: 12px;
+    color: rgb(59, 184, 59);
+    font-weight: bold;
+}
+
 .add-player h3 {
     text-align: left;
 }
@@ -160,7 +174,7 @@ label {
     border-radius: 5px;
     cursor: pointer;
     color: white;
-    padding: 8px;
+    padding: 10px 15px;
     font-size: 12px;
     margin: 10px;
     display: inline-block;
@@ -225,18 +239,13 @@ label {
 .pool-table {
     border: 2px solid gold;
     border-radius: 3px;
-    width: 500px;
+    width: 369px;
     table-layout: fixed;
 }
 
 #player-name {
-    width: 100px;
+    width: 150px;
 }
-
-.number-header {
-    width: 50px;
-}
-
 .pool-table td {
     overflow-x: hidden;
     text-overflow: ellipsis;
@@ -445,6 +454,7 @@ img#trophy {
 .player-header-container {
     display: flex;
     flex-direction: row;
+    justify-content: center;
 }
 
 .player-header-text {
@@ -524,7 +534,7 @@ img#trophy {
 }
 
 .results-table {
-    width: 50%;
+    width: 600px;
     margin-bottom: 15px;
     margin: 0 auto;
     padding: 10px;
@@ -746,7 +756,7 @@ div {
     max-height: 400px;
     overflow: auto;
     margin-bottom: 10%;
-    width: 70%;
+    width: 600px;
     margin: 0 auto;
 }
 

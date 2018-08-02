@@ -9,7 +9,6 @@ import { Player } from '../Players/player';
 import { TournamentService } from '../Services/tournament.service';
 import { Observable } from 'rxjs/Observable';
 import { Tournament } from './tournament';
-import { Team } from '../Teams/team';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { Pool } from '../Pools/pool';
 import { Game } from '../Games/game';

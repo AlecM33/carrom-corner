@@ -1,5 +1,5 @@
 <form (ngSubmit)="getPlayoffRoster()" #rosterForm="ngForm">
-    <button *ngIf="!disabled && !playoffsBegan" type="submit" class="btn btn-primary btn-lg playoff-button">Begin Playoffs »</button>
+    <button *ngIf="!disabled && !playoffsBegan" type="submit" class="main-buttons create-button">Begin Playoffs »</button>
 </form>
 <div class='validation-notices'>
     <div id="error" *ngIf="rosterInvalid" class="alert alert-danger">
@@ -9,7 +9,7 @@
 <form *ngIf="playoffsBegan" (ngSubmit)="playoffValidation()" #gameForm="ngForm">
         <h3 *ngIf="playoffsBegan">Select the players that advance to the playoffs!</h3>
         <h3 *ngIf="playoffsBegan">{{playoffPool.length}} players</h3>
-        <button type="submit" class="btn btn-primary btn-lg playoff-button">Go!</button>
+        <button type="submit" class="main-buttons create-button">Go!</button>
 </form>
 
 
@@ -38,21 +38,42 @@
         </table>
     </div>
 </div>
-    <h2>Games To Play</h2>
-    <div *ngIf="isDisabled()" class='tourny-table'>
-        <table class='table table-dark'>
-            <thead>
-                <th>Games</th>
-                <th><input #filter type="text" id="gameFilter" (keyup)="filterGames(filter.value)" placeholder="Search for games..." /></th>
-            </thead>
-            <tbody >
-                <tr *ngFor="let game of gamesToDisplay">
-                    <td>{{convertToName(game.team1)}} vs. {{convertToName(game.team2)}} </td>
-                    <td>
-                        <button (click)="viewGame(game)" class="btn btn-primary btn-xs">Enter Result</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+<div class="tourny-results-container">
     <p class="playoff-prompt" *ngIf="!disabled">All games have been played! Start the playoffs!</p>
+    <div *ngIf="isDisabled()" class="unplayed-table">
+        <h2>Games To Play</h2>
+        <div class='tourny-table'>
+            <table class='table table-dark'>
+                <thead>
+                    <th>Games</th>
+                    <th><input #filter type="text" id="gameFilter" (keyup)="filterGames(filter.value, 'unplayed')" placeholder="Search for games..." /></th>
+                </thead>
+                <tbody >
+                    <tr *ngFor="let game of unplayedGames">
+                        <td>{{convertToName(game.team1)}} vs. {{convertToName(game.team2)}} </td>
+                        <td>
+                            <button (click)="viewGame(game)" class="btn btn-primary btn-xs">Enter Result</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="played-table">
+        <h2>Played Games</h2>
+        <div class='tourny-table'>
+            <table class='table table-dark'>
+                <thead>
+                    <th>Games</th>
+                    <th><input #filter type="text" id="gameFilter" (keyup)="filterGames(filter.value, 'played')" placeholder="Search for games..." /></th>
+                </thead>
+                <tbody >
+                    <tr *ngFor="let game of playedGames">
+                        <td>{{convertToName(game.team1)}} vs. {{convertToName(game.team2)}} </td>
+                        <td><label id="winner">Winner: </label> {{convertToName(game.winner)}} +{{game.differential}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

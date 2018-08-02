@@ -1,6 +1,5 @@
 import { Player } from "../Players/player";
 import { Game } from "../Games/game";
-import { Team } from "../Teams/team";
 
 export class Tournament {
     
