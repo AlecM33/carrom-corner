@@ -107,18 +107,19 @@ export class ViewTournamentComponent implements OnInit {
                     if (this.tournyType === 'doubles') {
                         return (matchingIds.includes(game.team1[0]) || matchingIds.includes(game.team1[1]) || matchingIds.includes(game.team2[0]) || matchingIds.includes(game.team2[1])) && !game.winner;
                     }
-                    return (matchingIds.includes(game.team1) || matchingIds.includes(game.team2)) && !game.winner;
+                    return ((matchingIds.includes(game.team1) || matchingIds.includes(game.team2))) && !game.winner;
                 }
             ); 
         } else {
+            console.log('here');
              this.playedGames = this.games.filter((game) => 
                 {
                     let matchingIds = [];
                     matchingPlayers.forEach((player) => matchingIds.push(player.id));
                     if (this.tournyType === 'doubles') {
-                        return (matchingIds.includes(game.team1[0]) || matchingIds.includes(game.team1[1]) || matchingIds.includes(game.team2[0]) || matchingIds.includes(game.team2[1])) && game.winner;
+                        return (matchingIds.includes((game.team1[0]) || matchingIds.includes(game.team1[1]) || matchingIds.includes(game.team2[0]) || matchingIds.includes(game.team2[1]))) && game.winner;
                     }
-                    return (matchingIds.includes(game.team1) || matchingIds.includes(game.team2)) && game.winner;
+                    return ((matchingIds.includes(game.team1) || matchingIds.includes(game.team2))) && game.winner;
                 }
             ); 
         }
@@ -164,7 +165,7 @@ export class ViewTournamentComponent implements OnInit {
     }
 
     // Function that simulates all tournament games for testing
-    /*simulate() {
+    simulate() {
         for (let game of this.games) {
             let rnd = this.getRandomIntInclusive(1, 2);
             let attribute = 'team' + rnd;
@@ -174,11 +175,11 @@ export class ViewTournamentComponent implements OnInit {
             
             });
         }
-    }*/
+    }
 
     // Goes through the list of games for the tournament and calculates player wins, losses, and differential
     calculateRecords() {
-        for (let game of this.games) {
+        for (let game of this.playedGames) {
             if (game.winner) {
                 let winnerIndex = this.records.indexOf(this.records.find((record) => JSON.stringify(record.team) === JSON.stringify(game.winner)));
                 this.records[winnerIndex].wins += 1;

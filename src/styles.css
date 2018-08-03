@@ -20,6 +20,9 @@
     .played-table, .unplayed-table {
         width: 500px;
     }
+    .container-fluid {
+        width: 60%;
+    }
 
     .tourny-results-container {
         flex-direction: row;
@@ -34,6 +37,10 @@
         width: 100%;
     }
     .pools {
+        width: 100%;
+    }
+
+    .container-fluid {
         width: 100%;
     }
 
