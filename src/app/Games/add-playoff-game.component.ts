@@ -45,18 +45,22 @@ export class AddPlayoffGameComponent implements OnInit{
         this._playerService.getPlayers().subscribe((players) => {
             this.players = players;
             this.playoffId = this.active_route.snapshot.paramMap.get('id');
-            this._tournyService.getPlayoff(this.playoffId).subscribe((playoff) => {
-                this.playoff = playoff;
-                this.bracket = playoff['bracket'];
-                // extract players from the bracket
-                for (let round of this.bracket) {
-                    for (let i = 0; i < round.length; i++) {
-                        if (JSON.stringify(round[i]) !== '{}' && !this.playoffPool.includes(round[i].team)) {
-                            this.playoffPool.push(round[i].team);
-                        }
+            this.populateDropdowns();
+        });
+    }
+
+    populateDropdowns() {
+        this._tournyService.getPlayoff(this.playoffId).subscribe((playoff) => {
+            this.playoff = playoff;
+            this.bracket = playoff['bracket'];
+            // extract players from the bracket
+            for (let round of this.bracket) {
+                for (let i = 0; i < round.length; i++) {
+                    if (JSON.stringify(round[i]) !== '{}' && !this.playoffPool.includes(round[i].team)) {
+                        this.playoffPool.push(round[i].team);
                     }
                 }
-            });
+            }
         });
     }
 

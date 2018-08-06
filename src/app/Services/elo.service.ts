@@ -16,7 +16,6 @@ export class EloService {
     }
 
     transformRatings(rating) {
-        console.log(Math.pow(10, rating / 400));
         return Math.pow(10, rating / 400);
     }
 

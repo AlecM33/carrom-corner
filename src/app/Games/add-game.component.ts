@@ -7,6 +7,7 @@ import { TournamentService } from "../Services/tournament.service";
 import { ViewTournamentComponent } from "../Tournaments/view-tournament.component";
 import { EloService } from "../Services/elo.service";
 import { GameService } from "../Services/game.service";
+import { environment } from "environments/environment";
 
 @Component({
     templateUrl: "add-game.component.html"
@@ -45,16 +46,20 @@ export class AddGameComponent implements OnInit{
             this.gameId = this.active_route.snapshot.paramMap.get('id');
             this.tournyType = this.active_route.snapshot.paramMap.get('type');
             this.tournyName = this.active_route.snapshot.paramMap.get('name');
-            this.http.get('http://localhost:3000/games?id=' + this.gameId).subscribe((game) => {
-                this.currentGame = game;
-                if (this.tournyType === 'singles') {
-                    this.firstTeam = this.convertToName(this.currentGame[0].team1);
-                    this.secondTeam = this.convertToName(this.currentGame[0].team2);
-                } else {
-                    this.firstTeam = this.convertToName(this.currentGame[0].team1);
-                    this.secondTeam = this.convertToName(this.currentGame[0].team2);
-                }
-            });
+            this.getSelectedGame();
+        });
+    }
+
+    getSelectedGame() {
+        this.http.get(environment.api_url + '/games?id=' + this.gameId).subscribe((game) => {
+            this.currentGame = game;
+            if (this.tournyType === 'singles') {
+                this.firstTeam = this.convertToName(this.currentGame[0].team1);
+                this.secondTeam = this.convertToName(this.currentGame[0].team2);
+            } else {
+                this.firstTeam = this.convertToName(this.currentGame[0].team1);
+                this.secondTeam = this.convertToName(this.currentGame[0].team2);
+            }
         });
     }
 
@@ -127,7 +132,7 @@ export class AddGameComponent implements OnInit{
             winner = this.currentGame[0].team2;
         }
         this._gameService.updateGame(this.gameId, winner, this.scoreDifferential).subscribe(() => {
-            this.http.get('http://localhost:3000/games?id=' + this.gameId).subscribe((game) => {
+            this.http.get(environment.api_url + '/games?id=' + this.gameId).subscribe((game) => {
                 this.currentGame = game;
                 if (this.tournyType === 'doubles') {
                     this.patchDoublesPlayers();

@@ -13,7 +13,7 @@
 </form>
 
 
-<button *ngIf="disabled" (click)="simulate()" class="btn btn-primary btn-lg">Sim Tournament »</button>
+<!--<button *ngIf="disabled" (click)="simulate()" class="btn btn-primary btn-lg">Sim Tournament »</button>-->
 <h2>Pools</h2>
 <div class='pools' *ngIf="idPools">
     <div *ngFor="let pool of idPools">
@@ -61,7 +61,7 @@
     <div class="played-table">
         <h2>Played Games</h2>
         <div class='tourny-table'>
-            <table class='table table-dark'>
+            <table class='table table-dark tourny-table'>
                 <thead>
                     <th>Games</th>
                     <th><input #playedfilter type="text" class="gameFilter" (keyup)="filterGames(playedfilter.value, 'played')" placeholder="Search for games..." /></th>

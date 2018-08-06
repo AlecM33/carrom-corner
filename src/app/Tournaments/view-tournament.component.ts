@@ -10,6 +10,7 @@ import { Playoff } from "../Playoffs/playoff";
 import { BracketGraph } from "../Brackets/bracketgraph";
 import { BracketService } from "../Services/bracket.service";
 import { GameService } from "../Services/game.service";
+import { environment } from "environments/environment";
 
 @Component({
     selector: 'cr-tournyview',
@@ -61,7 +62,12 @@ export class ViewTournamentComponent implements OnInit {
         this._playerService.getPlayers().subscribe((players) => {
             this.players = players;
             this.tournyName = this.active_route.snapshot.paramMap.get('name');
-            this.http.get('http://localhost:3000/pools?tournyName=' + this.tournyName).subscribe((tournyRoster) => 
+            this.getTournyRoster();
+        });
+    }
+
+    getTournyRoster() {
+        this.http.get(environment.api_url + '/pools?tournyName=' + this.tournyName).subscribe((tournyRoster) => 
                 { 
                     this.idPools = tournyRoster[0].pools;
                     this._tournyService.getTournament(this.tournyName).subscribe((tournament) => {
@@ -71,7 +77,6 @@ export class ViewTournamentComponent implements OnInit {
                         this.getTournyGames();
                     });
             });
-        });
     }
 
     getTournyGames() {
@@ -111,7 +116,6 @@ export class ViewTournamentComponent implements OnInit {
                 }
             ); 
         } else {
-            console.log('here');
              this.playedGames = this.games.filter((game) => 
                 {
                     let matchingIds = [];
@@ -165,7 +169,7 @@ export class ViewTournamentComponent implements OnInit {
     }
 
     // Function that simulates all tournament games for testing
-    simulate() {
+    /*simulate() {
         for (let game of this.games) {
             let rnd = this.getRandomIntInclusive(1, 2);
             let attribute = 'team' + rnd;
@@ -175,7 +179,7 @@ export class ViewTournamentComponent implements OnInit {
             
             });
         }
-    }
+    }*/
 
     // Goes through the list of games for the tournament and calculates player wins, losses, and differential
     calculateRecords() {

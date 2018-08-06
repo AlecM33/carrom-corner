@@ -6,6 +6,7 @@ import { IfObservable } from "rxjs/observable/IfObservable";
 import { Observable } from "rxjs/Observable";
 import 'rxjs/add/observable/of';
 import { EloService } from "./elo.service";
+import { environment } from "environments/environment";
 
 /* This service provides useful methods in regards to manipulating player data and 
 making calls to the database */
@@ -39,11 +40,11 @@ export class PlayerService {
 
     // Sends a GET request to the database for all players
     getPlayers(): Observable<Player[]>{
-        return this.http.get('http://localhost:3000/players').map(this.populateWithPlayers);
+        return this.http.get(environment.api_url + '/players').map(this.populateWithPlayers);
     }
 
     updatePlayer(id, elo, doublesElo, wins, losses, totalDiff, singlesPlayed, doublesPlayed): Observable<any> {
-        return this.http.patch('http://localhost:3000/players/' + id,
+        return this.http.patch(environment.api_url + '/players/' + id,
         {
             "wins": wins,
             "losses": losses,
@@ -68,12 +69,12 @@ export class PlayerService {
                         "singlesPlayed": newPlayer.singlesPlayed,
                         "doublesPlayed": newPlayer.doublesPlayed
                       };
-        return this.http.post('http://localhost:3000/players', payload, httpOptions);
+        return this.http.post(environment.api_url + '/players', payload, httpOptions);
     }
 
     // Sends a DELETE request to remove the specified player
     deletePlayer(player) {
         const httpOptions = {headers: new HttpHeaders({ 'Content-Type': 'application/json' })};
-        return this.http.delete('http://localhost:3000/players/' + player['id'], httpOptions);
+        return this.http.delete(environment.api_url + '/players/' + player['id'], httpOptions);
     }
 }

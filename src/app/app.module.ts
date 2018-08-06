@@ -17,6 +17,7 @@ import { PlayoffsComponent } from './Playoffs/playoffs.component';
 import { AddPlayoffGameComponent } from './Games/add-playoff-game.component';
 import { WinnerComponent } from './Playoffs/winner.component';
 import { HomepageComponent } from './Homepage/homepage-component';
+import {NgbModule, NgbTooltip, NgbTooltipConfig} from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { HomepageComponent } from './Homepage/homepage-component';
     HttpModule,
     HttpClientModule,
     JsonpModule,
+    NgbModule,
     RouterModule.forRoot([
       { path: 'players/add', component: AddPlayerComponent },
       { path: 'players', component: PlayerListComponent},
@@ -46,7 +48,7 @@ import { HomepageComponent } from './Homepage/homepage-component';
     ]),
     CoreModule.forRoot()
   ],
-  providers: [],
+  providers: [ NgbTooltipConfig],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

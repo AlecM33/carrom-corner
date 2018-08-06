@@ -3,7 +3,7 @@
         <p id='notice'></p>
     </div>
     <div class="back-button">
-        <button class="main-buttons create-button" (click)='goBack()'>« Back</button>
+        <button class="main-buttons create-button" (click)='goBack()'>« Tournament List</button>
         <button *ngIf="isOver" class="main-buttons create-button" (click)='viewGroupStage()'>View Group Stage</button>
     </div>
     <hr id="playoff-hr" />
@@ -12,7 +12,8 @@
         <button class="main-buttons create-button" (click)='enterPlayoffResult()'>Enter Playoff Game Result</button>
         <button class="main-buttons clear-button" (click)='resetBracket()'>Clear Changes</button>
         <button class="main-buttons add-all-button" (click)='saveBracket()'>Save Bracket</button>
-        <button *ngIf="winner" class="main-buttons end-button" (click)='endTournament()'>End Tournament</button>
+        <div *ngIf="winner" id="endtourny"><button class="main-buttons end-button" (click)='endTournament()'>End Tournament</button></div>
+        <div *ngIf="!winner" id="endtourny" ngbTooltip="You must advance a player to the winner's box first." placement="right"><button class="main-buttons end-button" (click)='endTournament()' disabled>End Tournament</button></div>
     </div>
     <!--<h2 class='playoff-prompt' *ngIf="tournamentWinner">This tournament is complete!</h2>-->
     <div *ngIf="bracket && playInRound" class='flex-container'>

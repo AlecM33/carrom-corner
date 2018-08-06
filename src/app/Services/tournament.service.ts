@@ -7,6 +7,7 @@ import { Tournament } from "../Tournaments/tournament";
 import { Pool } from "../Pools/pool";
 import { Game } from "../Games/game";
 import { Playoff } from "../Playoffs/playoff";
+import { environment } from "environments/environment";
 
 @Injectable()
 export class TournamentService {
@@ -34,14 +35,14 @@ export class TournamentService {
 
     endTournament (id, winner, winnerName) {
         this.declarePlayoffWinner(id, winner).subscribe();
-        return this.http.patch('http://localhost:3000/tournaments/' + id,
+        return this.http.patch(environment.api_url + '/tournaments/' + id,
         {
             "winner": winnerName
         });
     }
 
     declarePlayoffWinner(id, winner) {
-        return this.http.patch('http://localhost:3000/playoffs/' + id,
+        return this.http.patch(environment.api_url + '/playoffs/' + id,
         {
             "winner": winner
         });
@@ -51,19 +52,19 @@ export class TournamentService {
         if (this.tournaments !== undefined && this.tournaments.length > 0) {
             return Observable.of(this.tournaments);
         } else {
-           return this.http.get('http://localhost:3000/tournaments').map(this.populateWithTournaments);
+           return this.http.get(environment.api_url + '/tournaments').map(this.populateWithTournaments);
         }
     }
 
     getTournament(name): Observable<Object>{
         if (typeof(name) == 'number') {
-            return this.http.get('http://localhost:3000/tournaments/' + name);
+            return this.http.get(environment.api_url + '/tournaments/' + name);
         }
-        return this.http.get('http://localhost:3000/tournaments?name=' + name);
+        return this.http.get(environment.api_url + '/tournaments?name=' + name);
     }
 
     getPlayoff(id): Observable<Object>{
-        return this.http.get('http://localhost:3000/playoffs/' + id);
+        return this.http.get(environment.api_url + '/playoffs/' + id);
     }
 
     
@@ -75,7 +76,7 @@ export class TournamentService {
                         "size": newTournament.size,
                         "teams": newTournament.teams,
                       }; 
-        return this.http.post('http://localhost:3000/tournaments', payload, httpOptions);
+        return this.http.post(environment.api_url + '/tournaments', payload, httpOptions);
     }
 
     addPool(newPool: Pool) {
@@ -85,7 +86,7 @@ export class TournamentService {
                         "pools": newPool.pools,
                         "tournyName": newPool.tournyName
                       }; 
-        return this.http.post('http://localhost:3000/pools', payload, httpOptions);
+        return this.http.post(environment.api_url + '/pools', payload, httpOptions);
     }
 
     addPlayoff(newPlayoff: Playoff) {
@@ -97,20 +98,20 @@ export class TournamentService {
                         "bracket": newPlayoff.bracket,
                         "winner": newPlayoff.winner
                       }; 
-        return this.http.post('http://localhost:3000/playoffs', payload, httpOptions);
+        return this.http.post(environment.api_url + '/playoffs', payload, httpOptions);
     }
 
     updatePlayoff(playoff: Object, bracket: Array<Object>, playInRound: Array<Object>) {
         let newBracket = Object.assign([], bracket);
         newBracket.unshift(playInRound);
-        return this.http.patch('http://localhost:3000/playoffs/' + playoff['id'],
+        return this.http.patch(environment.api_url + '/playoffs/' + playoff['id'],
         {
             "bracket": newBracket
         });
     }
 
     toggleDefined(id): Observable<any> {
-        return this.http.patch('http://localhost:3000/tournaments/' + id,
+        return this.http.patch(environment.api_url + '/tournaments/' + id,
         {
             "playoffDefined": true
         });
@@ -119,6 +120,6 @@ export class TournamentService {
     // NOTE: Also deletes corresponding pools, games, and playoffs. 
     deleteTournament(tournament, name) {
         const httpOptions = {headers: new HttpHeaders({ 'Content-Type': 'application/json' })};
-        return this.http.delete('http://localhost:3000/tournaments/' + tournament.id, httpOptions);
+        return this.http.delete(environment.api_url + '/tournaments/' + tournament.id, httpOptions);
     }
 }

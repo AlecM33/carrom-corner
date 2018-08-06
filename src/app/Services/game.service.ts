@@ -7,6 +7,7 @@ import { Tournament } from "../Tournaments/tournament";
 import { Pool } from "../Pools/pool";
 import { Game } from "../Games/game";
 import { Playoff } from "../Playoffs/playoff";
+import { environment } from "environments/environment";
 
 @Injectable()
 export class GameService {
@@ -33,11 +34,11 @@ export class GameService {
     }
 
     getGames(id): Observable<Game[]> {
-        return this.http.get('http://localhost:3000/games?tournamentId=' + id + '&playoff=false').map(this.populateWithGames);
+        return this.http.get(environment.api_url + '/games?tournamentId=' + id + '&playoff=false').map(this.populateWithGames);
     }
 
     getPlayoffGames(id): Observable<Game[]> {
-        return this.http.get('http://localhost:3000/games?tournamentId=' + id + '&playoff=true').map(this.populateWithGames);
+        return this.http.get(environment.api_url + '/games?tournamentId=' + id + '&playoff=true').map(this.populateWithGames);
     }
     
     addPool(newPool: Pool) {
@@ -47,7 +48,7 @@ export class GameService {
                         "pools": newPool.pools,
                         "tournyName": newPool.tournyName
                       }; 
-        return this.http.post('http://localhost:3000/pools', payload, httpOptions);
+        return this.http.post(environment.api_url + '/pools', payload, httpOptions);
     }
 
     addGame(newGame: Game) {
@@ -61,11 +62,11 @@ export class GameService {
                         "winner": newGame.winner,
                         "differential": newGame.differential
                       }; 
-        return this.http.post('http://localhost:3000/games', payload, httpOptions);
+        return this.http.post(environment.api_url + '/games', payload, httpOptions);
     }
 
     updateGame(id, winner, differential): Observable<any> {
-        return this.http.patch('http://localhost:3000/games/' + id,
+        return this.http.patch(environment.api_url + '/games/' + id,
         {
             "winner": winner,
             "differential": differential

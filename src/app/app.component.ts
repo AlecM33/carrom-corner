@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { PlayerService } from './Services/player.service';
 import { Player } from './Players/player';
 import { TournamentService } from './Services/tournament.service';
+import { environment } from "environments/environment";
 
 @Component({
   selector: 'app-root',

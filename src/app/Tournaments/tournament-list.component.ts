@@ -31,14 +31,20 @@ export class TournamentListComponent implements OnInit {
   }
 
   delete(tournament) {
-    if(confirm('Delete this bracket?')) {
-      this.tournaments = [];
-      this._tournyService.deleteTournament(tournament, tournament.name).do(() => {
-          this._tournyService.getTournaments().subscribe((tournaments) => {
-            this.tournaments = tournaments;
-          })
-      }).subscribe();
-    }
+    swal({
+      title: "Delete Tournament",
+      text: "Are you sure you wish to delete this tournament? You will lose all associated data.",
+      buttons: [true, true],
+    }).then((wantsToSave) => {
+        if (wantsToSave) {
+          this.tournaments = [];
+          this._tournyService.deleteTournament(tournament, tournament.name).do(() => {
+              this._tournyService.getTournaments().subscribe((tournaments) => {
+                this.tournaments = tournaments;
+              })
+          }).subscribe();
+        }
+      });
   }
 
   viewTournament(tournament) {

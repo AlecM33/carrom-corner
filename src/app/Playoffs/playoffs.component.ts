@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import { PlayerService } from "../Services/player.service";
 import { TournamentService } from "../Services/tournament.service";
 import { HttpClient } from "@angular/common/http";
@@ -7,9 +7,14 @@ import { BracketService } from "../Services/bracket.service";
 import { Player } from "../Players/player";
 import { Game } from "../Games/game";
 import { GameService } from "../Services/game.service";
+import {NgbModule, NgbTooltipConfig, NgbTooltip} from '@ng-bootstrap/ng-bootstrap';
+import * as _swal from 'sweetalert';
+import { SweetAlert } from 'sweetalert/typings/core';
+import { environment } from "environments/environment";
+const swal: SweetAlert = _swal as any;
 
 @Component({
-    templateUrl: 'playoffs.component.html'
+    templateUrl: 'playoffs.component.html',
 })
 export class PlayoffsComponent implements OnInit{
 
@@ -17,7 +22,8 @@ export class PlayoffsComponent implements OnInit{
                 private _tournyService: TournamentService, 
                 private http: HttpClient, private router: Router, 
                 private active_route: ActivatedRoute,
-                private _gameService: GameService) {
+                private _gameService: GameService, 
+                private tooltipConfig: NgbTooltipConfig) {
     }
 
     public players: Player[];
@@ -34,36 +40,44 @@ export class PlayoffsComponent implements OnInit{
 
     public isOver = true;
 
-    
-
     ngOnInit() {
         this._playerService.getPlayers().subscribe((players) => {
             this.players = players;
             this.playoffId = this.active_route.snapshot.paramMap.get('id');
-            this._tournyService.getPlayoff(this.playoffId).subscribe((playoff) => {
-                this.tournamentWinner = playoff['winner'];
-                this.isOver = this.tournamentWinner;
-                this.playoff = playoff;
-                this.bracket = playoff['bracket'];
-                this.playInRound = this.bracket.shift();
-                if (this.bracket[0][0] instanceof Array) {
-                    this.tournyType = 'doubles';
-                }
-                let notice = document.getElementById('notice');
-                notice.textContent = "";
-                this._gameService.getPlayoffGames(this.playoffId).subscribe((games) => {
-                    this.playoffGames = games;
-                });
-            });
+            this.constructPlayoff();
         });
         
     }
+
+    constructPlayoff() {
+        this._tournyService.getPlayoff(this.playoffId).subscribe((playoff) => {
+            this.tournamentWinner = playoff['winner'];
+            this.isOver = this.tournamentWinner;
+            this.playoff = playoff;
+            this.bracket = playoff['bracket'];
+            this.playInRound = this.bracket.shift();
+            if (this.bracket[0][0] instanceof Array) {
+                this.tournyType = 'doubles';
+            }
+            let notice = document.getElementById('notice');
+            notice.textContent = "";
+            this.getPlayoffGames();
+        });
+    }
+
+    getPlayoffGames() {
+        this._gameService.getPlayoffGames(this.playoffId).subscribe((games) => {
+            this.playoffGames = games;
+        });
+    }
+
 
     goBack() {
         this.router.navigateByUrl('/tournaments');
     }
 
     endTournament() {
+        this.saveBracket();
         this._tournyService.endTournament(this.playoffId, this.winner, this.convertToName(this.winner)).subscribe(() => this.router.navigateByUrl('/playoffs/' + this.playoffId + '/winner'));
     }
 
@@ -85,7 +99,20 @@ export class PlayoffsComponent implements OnInit{
     }
 
     saveBracket() {
-        if(confirm('Save the current bracket?')) {
+        if (!this.winner) {
+            swal({
+                title: "Save Bracket",
+                text: "Save the bracket in its current state?",
+                buttons: [true, true],
+            }).then((wantsToSave) => {
+                if (wantsToSave) {
+                    this._tournyService.updatePlayoff(this.playoff, this.bracket, this.playInRound).subscribe(() => {
+                        let notice = document.getElementById('notice');
+                        notice.textContent = "Bracket Successfully Saved \u2713"
+                    });
+                }
+            });
+        } else {
             this._tournyService.updatePlayoff(this.playoff, this.bracket, this.playInRound).subscribe(() => {
                 let notice = document.getElementById('notice');
                 notice.textContent = "Bracket Successfully Saved \u2713"
