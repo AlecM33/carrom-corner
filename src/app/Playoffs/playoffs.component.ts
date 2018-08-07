@@ -11,6 +11,7 @@ import {NgbModule, NgbTooltipConfig, NgbTooltip} from '@ng-bootstrap/ng-bootstra
 import * as _swal from 'sweetalert';
 import { SweetAlert } from 'sweetalert/typings/core';
 import { environment } from "environments/environment";
+import { EloService } from "../Services/elo.service";
 const swal: SweetAlert = _swal as any;
 
 @Component({
@@ -23,7 +24,8 @@ export class PlayoffsComponent implements OnInit{
                 private http: HttpClient, private router: Router, 
                 private active_route: ActivatedRoute,
                 private _gameService: GameService, 
-                private tooltipConfig: NgbTooltipConfig) {
+                private tooltipConfig: NgbTooltipConfig,
+                private elo_adjuster: EloService) {
     }
 
     public players: Player[];
@@ -36,7 +38,15 @@ export class PlayoffsComponent implements OnInit{
     public tournyType = 'singles'
     public playInRound = [];
     public playoffGames: Game[];
-    public tournamentWinner: undefined;
+    public newPlayoffGames = [];
+    public tournamentWinner: any;
+    public scoreDifferential: number;
+    public round: number;
+
+    public modalOpen = false;
+    public validator: any;
+    public modalWinner: any;
+    public modalLoser: any;
 
     public isOver = true;
 
@@ -89,44 +99,101 @@ export class PlayoffsComponent implements OnInit{
         });
     }
 
+    // Updates player database with results from entered doubles game
+    patchDoublesPlayers(game) {
+        let winner1 = this.players.find((player) => player.id == game.winner[0]);
+        let winner2 = this.players.find((player) => player.id == game.winner[1]);
+        let loser1 = this.players.find((player) => player.id == game.team2[0]);
+        let loser2 = this.players.find((player) => player.id == game.team2[1]);
+     
+        let newElos = this.elo_adjuster.getNewDoublesElos(winner1, winner2, loser1, loser2);
+
+        this._playerService.updatePlayer(winner1.id, winner1.elo, newElos[0], winner1.wins + 1, winner1.losses, winner1.totalDiff + game.differential, winner1.singlesPlayed, winner1.doublesPlayed + 1).subscribe();
+        this._playerService.updatePlayer(winner2.id, winner2.elo, newElos[1], winner2.wins + 1, winner2.losses, winner2.totalDiff + game.differential, winner2.singlesPlayed, winner2.doublesPlayed + 1).subscribe();
+        this._playerService.updatePlayer(loser1.id, loser1.elo, newElos[2], loser1.wins, loser1.losses + 1, loser1.totalDiff - game.differential, loser1.singlesPlayed, loser1.doublesPlayed + 1).subscribe();
+        this._playerService.updatePlayer(loser2.id, loser2.elo, newElos[3], loser2.wins, loser2.losses + 1, loser2.totalDiff - game.differential, loser2.singlesPlayed, loser2.doublesPlayed + 1).subscribe();
+    }
+
+    // Updates player database with results from entered singles game
+    patchSinglesPlayers(game) {
+        let winner = this.players.find((player) => player.id == game.winner);
+        let loser = this.players.find((player) => player.id == game.team2);
+
+        // Determines the severity of elo fluctuation based on the games played by each player
+        let winningKFactor = this.elo_adjuster.getKFactor(winner, true);
+        let losingKFactor = this.elo_adjuster.getKFactor(loser, true);
+
+        let newWinnerElo = this.elo_adjuster.calculateNewElo(winner.elo, 1, this.elo_adjuster.calculateExpScore(winner.elo, loser.elo), winningKFactor);
+        let newLoserElo = this.elo_adjuster.calculateNewElo(loser.elo, 0, this.elo_adjuster.calculateExpScore(loser.elo, winner.elo), losingKFactor);  
+
+        this._playerService.updatePlayer(winner.id, newWinnerElo, winner.doublesElo, winner.wins + 1, winner.losses, winner.totalDiff + game.differential, winner.singlesPlayed + 1, winner.doublesPlayed).subscribe();
+        this._playerService.updatePlayer(loser.id, newLoserElo, loser.doublesElo, loser.wins, loser.losses + 1, loser.totalDiff - game.differential, loser.singlesPlayed + 1, loser.doublesPlayed).subscribe();
+    }
+
+    // Submits game form, patches database, adds game to the database
+    submitGame() {
+        let playoffGame = new Game(undefined, true, parseInt(this.playoffId), undefined, this.modalWinner.team, this.modalLoser.team, this.modalWinner.team, this.scoreDifferential);
+        this.newPlayoffGames.push(playoffGame);
+        this.closeModal();
+    }
+    
     resetBracket() {
-        this._tournyService.getPlayoff(this.playoffId).subscribe((playoff) => {
-            this.playoff = playoff;
-            this.bracket = playoff['bracket'];
-            this.playInRound = this.bracket.shift();
-            this.winner = undefined;
+        swal({
+            title: "Revert Changes",
+            text: "Are you sure you wish to clear your changes? This will also delete any games you entered since your last save.",
+            buttons: [true, true],
+        }).then((wantsToSave) => {
+            if (wantsToSave) {
+                this._tournyService.getPlayoff(this.playoffId).subscribe((playoff) => {
+                    this.playoff = playoff;
+                    this.bracket = playoff['bracket'];
+                    this.playInRound = this.bracket.shift();
+                    this.winner = undefined;
+                    this.newPlayoffGames = [];
+                    this.getPlayoffGames();
+                });
+            }
         });
     }
 
     saveBracket() {
-        if (!this.winner) {
-            swal({
-                title: "Save Bracket",
-                text: "Save the bracket in its current state?",
-                buttons: [true, true],
-            }).then((wantsToSave) => {
-                if (wantsToSave) {
-                    this._tournyService.updatePlayoff(this.playoff, this.bracket, this.playInRound).subscribe(() => {
-                        let notice = document.getElementById('notice');
-                        notice.textContent = "Bracket Successfully Saved \u2713"
+        swal({
+            title: "Save Bracket",
+            text: "Save the bracket in its current state?",
+            buttons: [true, true],
+        }).then((wantsToSave) => {
+            if (wantsToSave) {
+                for (let game of this.newPlayoffGames) {
+                    if (game.winner instanceof Array) {
+                        this.patchDoublesPlayers(game);
+                    } else {
+                        this.patchSinglesPlayers(game);
+                    }
+                    this._gameService.addGame(game).subscribe(() => {
+                        this.getPlayoffGames();
+                        this.newPlayoffGames = [];
                     });
                 }
-            });
-        } else {
-            this._tournyService.updatePlayoff(this.playoff, this.bracket, this.playInRound).subscribe(() => {
-                let notice = document.getElementById('notice');
-                notice.textContent = "Bracket Successfully Saved \u2713"
-            });
-        }
+                this._tournyService.updatePlayoff(this.playoff, this.bracket, this.playInRound).subscribe(() => {
+                    let notice = document.getElementById('notice');
+                    notice.textContent = "Bracket Successfully Saved \u2713"
+                });
+            }
+        });
     }
 
     enterPlayoffResult() {
         this.router.navigateByUrl('/playoffs/' + this.playoffId + '/enter_result');
     }
 
-    advancePlayer(player, round) {
-        if (round === -1) {
-            let openSpotNumber = Math.ceil((this.playInRound.indexOf(player) + 1) / 2);
+    closeModal() {
+        this.modalOpen = false;
+    }
+
+    advancePlayer() {
+        this.submitGame();
+        if (this.round === -1) {
+            let openSpotNumber = Math.ceil((this.playInRound.indexOf(this.modalWinner) + 1) / 2);
             let openSpotCount = 0;
             let i = 0;
             while (openSpotCount < openSpotNumber) {
@@ -135,13 +202,20 @@ export class PlayoffsComponent implements OnInit{
                 }
                 i ++;
             }
-            this.bracket[0][i - 1] = player;
-        } else if (this.bracket[round].length === 2) {
-            this.winner = player.team;
+            this.bracket[0][i - 1] = this.modalWinner;
+        } else if (this.bracket[this.round].length === 2) {
+            this.winner = this.modalWinner.team;
         } else {
-            let openSpot = Math.floor(this.bracket[round].indexOf(player) / 2);
-            this.bracket[round + 1][openSpot] = player;
+            let openSpot = Math.floor(this.bracket[this.round].indexOf(this.modalWinner) / 2);
+            this.bracket[this.round + 1][openSpot] = this.modalWinner;
         }
+    }
+
+    openModal(winner, loser, round) {
+        this.modalLoser = loser;
+        this.modalWinner = winner;
+        this.round = round;
+        this.modalOpen = true;
     }
 
     isEmpty(obj) {
