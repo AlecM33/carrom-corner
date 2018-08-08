@@ -926,6 +926,7 @@ div {
 
 .tourny-table {
     opacity: 0;
+    border: 1px solid black;
     -webkit-animation: fadein 0.7s;
     -moz-animation: fadein 0.7s;
     animation: fadein 0.7s;
