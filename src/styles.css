@@ -17,6 +17,9 @@
     .modal-content {
         width: 100%;
     }
+    .validation-notices {
+        flex-direction: column;
+    }
 }
 
 @media (min-width: 701px) {
@@ -35,7 +38,25 @@
     .modal-content {
         width: 50%;
     }
+
+    .roster-list {
+        width: 400px;
+        margin: 0 auto;
+    }
 }
+
+@media(min-width: 851px){
+    .addPlayersList {
+        flex-direction: row;
+    }
+}
+
+@media(max-width: 850px){
+    .addPlayersList {
+        flex-direction: column;
+    }
+}
+
 
 @media(min-width: 1001px) {
     .played-table, .unplayed-table {
@@ -77,10 +98,6 @@ html, body {
     background-color: rgba(155, 150, 150, 0.2) !important;
     background-blend-mode: color;
     width: 100%;
-}
-
-html {
-    overflow-y: scroll;
 }
 
 .app-title {
@@ -236,8 +253,7 @@ label {
 
 .tourny-results-container {
     display: flex;
-    align-items: center;
-    justify-content: center;
+    justify-content: space-evenly;
     animation: fadein 1s;
     animation-fill-mode: backwards;
     animation-delay: 0.4s;
@@ -338,11 +354,11 @@ label {
 }
 
 .swal-overlay {
-    background-color: rgba(152, 154, 153, 0.45);
+    background-color: rgba(49, 49, 49, 0.45);
 }
 
 .swal-modal {
-    background-color: rgba(69, 73, 70, 1);
+    background-color: rgb(50, 51, 50);
     border: 1px solid gold;
     color: white;
 }
@@ -478,8 +494,13 @@ label {
     animation-delay: 0.2s;
     animation-fill-mode: forwards;
     height: 350px;
-    width: 380px;
     overflow-y: scroll;  
+}
+
+.addPlayersList {
+    display: flex;
+    margin: 0 auto;
+    justify-content: space-evenly;
 }
 
 .flex-column-play-in {
@@ -765,10 +786,6 @@ hr {
     animation-fill-mode: backwards;
     animation-delay: 0.4s;
 }
-.addPlayersList {
-    width: 400px;
-    display: inline-table;
-}
 
 text {
     font-size: 12px;
@@ -915,9 +932,8 @@ div {
     animation-delay: 0.2s;
     animation-fill-mode: forwards;
     font-size: 13px;
-    min-height: 400px;
-    max-height: 400px;
-    overflow: auto;
+    height: 400px;
+    overflow-y: scroll;
     margin-bottom: 10%;
     margin: 0 auto;
 }

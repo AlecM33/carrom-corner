@@ -16,6 +16,7 @@ import { environment } from "environments/environment";
 export class AddGameComponent implements OnInit{
     
     winningTeam: string;
+    validator: string;
     scoreDifferential: number;
     gameId: string; 
     currentGame: Object;
@@ -29,6 +30,7 @@ export class AddGameComponent implements OnInit{
     teamsBlank = false;
     scoreBlank = false;
     scoreInvalid = false;
+    validatorBlank = false;
 
     constructor (   
                 public _playerService: PlayerService, 
@@ -77,8 +79,9 @@ export class AddGameComponent implements OnInit{
     validateGame() {
         this.teamsBlank = this.winningTeam === undefined;
         this.scoreBlank = this.scoreDifferential === undefined;
+        this.validatorBlank = this.validator === undefined;
         this.scoreInvalid = this.scoreDifferential < 1 || this.scoreDifferential > 8;
-        if (!this.teamsBlank && !this.scoreBlank && !this.scoreInvalid) {
+        if (!this.teamsBlank && !this.scoreBlank && !this.validatorBlank && !this.scoreInvalid) {
             this.submitGame();
         }
     }
@@ -125,13 +128,18 @@ export class AddGameComponent implements OnInit{
 
     // user submits form for game result
     submitGame() {
-        let winner;
+        let winner, validator;
         if (this.winningTeam === 'team1') {
             winner = this.currentGame[0].team1;
         } else {
             winner = this.currentGame[0].team2;
         }
-        this._gameService.updateGame(this.gameId, winner, this.scoreDifferential).subscribe(() => {
+        if (this.validator === 'team1') {
+            validator = this.currentGame[0].team1;
+        } else {
+            validator = this.currentGame[0].team2;
+        }
+        this._gameService.updateGame(this.gameId, winner, this.scoreDifferential, validator).subscribe(() => {
             this.http.get(environment.api_url + '/games?id=' + this.gameId).subscribe((game) => {
                 this.currentGame = game;
                 if (this.tournyType === 'doubles') {

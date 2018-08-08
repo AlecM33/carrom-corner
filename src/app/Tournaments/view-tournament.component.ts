@@ -30,9 +30,9 @@ export class ViewTournamentComponent implements OnInit {
     public records = [];
     public playoffPool = [];
     public disabled = true;
+    public selecting = false;
     public numberOfPools = 0;
-    public playoffsBegan = false;
-    public tournyFinished = true;
+    public playoffsBegan: boolean;
 
     public bracket = [];
     public tournyType = 'singles'
@@ -72,7 +72,7 @@ export class ViewTournamentComponent implements OnInit {
                     this.idPools = tournyRoster[0].pools;
                     this._tournyService.getTournament(this.tournyName).subscribe((tournament) => {
                         this.id = tournament[0].id;
-                        this.tournyFinished = (tournament[0].winner !== undefined);
+                        this.playoffsBegan = tournament[0]['playoffDefined'];
                         this.tournySize = tournament[0].size;
                         this.getTournyGames();
                     });
@@ -282,6 +282,7 @@ export class ViewTournamentComponent implements OnInit {
 
     getPlayoffRoster() {
         this.playoffsBegan = true;
+        this.selecting = true;
     }
 
     playoffValidation() {
@@ -307,7 +308,7 @@ export class ViewTournamentComponent implements OnInit {
                 playInSpots.push(this.treeLevels[1].indexOf(spot));
             }
         }
-        this._tournyService.addPlayoff(new Playoff(this.id, this.id, playInSpots, this.treeLevels, undefined)).subscribe(() =>
+        this._tournyService.addPlayoff(new Playoff(this.id, this.id, playInSpots, this.treeLevels, undefined, false)).subscribe(() =>
         {
             this._tournyService.toggleDefined(this.id).subscribe(() => {
                 this.router.navigateByUrl('/playoffs/' + this.id);

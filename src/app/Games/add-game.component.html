@@ -3,6 +3,9 @@
             <div id="error" *ngIf="teamsBlank" class="alert alert-danger">
                 You must select a winner.
             </div>
+            <div id="error" *ngIf="validatorBlank" class="alert alert-danger">
+                You must select a validator.
+            </div>
             <div id="error" *ngIf="scoreInvalid" class="alert alert-danger">
                 The coin differential must be a number between 1 and 8 inclusive.
             </div>
@@ -18,6 +21,15 @@
             </div>
             <div class="radio-container second">
                 <input type="radio" value="team2" name="winner" [(ngModel)]="winningTeam" /> <label>{{secondTeam}}</label>
+                <span class="radio-button"></span>
+            </div>
+            <h3 id="who-won">Who Validated the Queen?</h3>
+            <div class="radio-container first">
+                <input type="radio" value="team1" name="validator" [(ngModel)]="validator" /> <label>{{firstTeam}}</label>
+                <span class="radio-button"></span>
+            </div>
+            <div class="radio-container second">
+                <input type="radio" value="team2" name="validator" [(ngModel)]="validator" /> <label>{{secondTeam}}</label>
                 <span class="radio-button"></span>
             </div>
             <div>

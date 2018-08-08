@@ -42,13 +42,16 @@ export class PlayoffsComponent implements OnInit{
     public tournamentWinner: any;
     public scoreDifferential: number;
     public round: number;
+    public isOver = true;
 
+    // variables related to modal for playoff game result entry
     public modalOpen = false;
     public validator: any;
     public modalWinner: any;
     public modalLoser: any;
-
-    public isOver = true;
+    validatorBlank = false;
+    scoreBlank = false;
+    scoreInvalid = false;
 
     ngOnInit() {
         this._playerService.getPlayers().subscribe((players) => {
@@ -62,7 +65,7 @@ export class PlayoffsComponent implements OnInit{
     constructPlayoff() {
         this._tournyService.getPlayoff(this.playoffId).subscribe((playoff) => {
             this.tournamentWinner = playoff['winner'];
-            this.isOver = this.tournamentWinner;
+            this.isOver = playoff['ended'];
             this.playoff = playoff;
             this.bracket = playoff['bracket'];
             this.playInRound = this.bracket.shift();
@@ -87,8 +90,11 @@ export class PlayoffsComponent implements OnInit{
     }
 
     endTournament() {
-        this.saveBracket();
-        this._tournyService.endTournament(this.playoffId, this.winner, this.convertToName(this.winner)).subscribe(() => this.router.navigateByUrl('/playoffs/' + this.playoffId + '/winner'));
+        this.playoff['ended'] = true;
+        if (this.newPlayoffGames.length > 0) {
+            this.saveBracket();
+        }
+        this._tournyService.endTournament(this.playoffId, this.tournamentWinner, this.convertToName(this.tournamentWinner)).subscribe(() => this.router.navigateByUrl('/playoffs/' + this.playoffId + '/winner'));
     }
 
     viewGroupStage() {
@@ -130,9 +136,25 @@ export class PlayoffsComponent implements OnInit{
         this._playerService.updatePlayer(loser.id, newLoserElo, loser.doublesElo, loser.wins, loser.losses + 1, loser.totalDiff - game.differential, loser.singlesPlayed + 1, loser.doublesPlayed).subscribe();
     }
 
+    // Function for validating form
+    validateGame() {
+        this.validatorBlank = this.validator === undefined;
+        this.scoreBlank = this.scoreDifferential === undefined;
+        this.scoreInvalid = this.scoreDifferential < 1 || this.scoreDifferential > 8;
+        if (!this.validatorBlank && !this.scoreBlank && !this.scoreInvalid) {
+            this.advancePlayer();
+        }
+    }
+
     // Submits game form, patches database, adds game to the database
     submitGame() {
-        let playoffGame = new Game(undefined, true, parseInt(this.playoffId), undefined, this.modalWinner.team, this.modalLoser.team, this.modalWinner.team, this.scoreDifferential);
+        let validatingPlayer;
+        if (this.validator === 'team1') {
+            validatingPlayer = this.modalWinner.team;
+        } else {
+            validatingPlayer = this.modalLoser.team;
+        }
+        let playoffGame = new Game(undefined, true, parseInt(this.playoffId), undefined, this.modalWinner.team, this.modalLoser.team, this.modalWinner.team, this.scoreDifferential, validatingPlayer);
         this.newPlayoffGames.push(playoffGame);
         this.closeModal();
     }
@@ -148,7 +170,7 @@ export class PlayoffsComponent implements OnInit{
                     this.playoff = playoff;
                     this.bracket = playoff['bracket'];
                     this.playInRound = this.bracket.shift();
-                    this.winner = undefined;
+                    this.tournamentWinner = playoff['winner'];
                     this.newPlayoffGames = [];
                     this.getPlayoffGames();
                 });
@@ -163,6 +185,9 @@ export class PlayoffsComponent implements OnInit{
             buttons: [true, true],
         }).then((wantsToSave) => {
             if (wantsToSave) {
+                if (this.tournamentWinner) {
+                    this.playoff['winner'] = this.tournamentWinner;
+                }
                 for (let game of this.newPlayoffGames) {
                     if (game.winner instanceof Array) {
                         this.patchDoublesPlayers(game);
@@ -182,12 +207,12 @@ export class PlayoffsComponent implements OnInit{
         });
     }
 
-    enterPlayoffResult() {
-        this.router.navigateByUrl('/playoffs/' + this.playoffId + '/enter_result');
-    }
-
     closeModal() {
         this.modalOpen = false;
+        this.validatorBlank = false;
+        this.scoreBlank = false;
+        this.scoreInvalid = false;
+        this.scoreDifferential = undefined;
     }
 
     advancePlayer() {
@@ -204,7 +229,7 @@ export class PlayoffsComponent implements OnInit{
             }
             this.bracket[0][i - 1] = this.modalWinner;
         } else if (this.bracket[this.round].length === 2) {
-            this.winner = this.modalWinner.team;
+            this.tournamentWinner = this.modalWinner.team;
         } else {
             let openSpot = Math.floor(this.bracket[this.round].indexOf(this.modalWinner) / 2);
             this.bracket[this.round + 1][openSpot] = this.modalWinner;

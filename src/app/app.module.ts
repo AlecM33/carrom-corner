@@ -14,7 +14,6 @@ import { TournamentListComponent } from './Tournaments/tournament-list.component
 import { ViewTournamentComponent } from './Tournaments/view-tournament.component';
 import { AddGameComponent } from './Games/add-game.component';
 import { PlayoffsComponent } from './Playoffs/playoffs.component';
-import { AddPlayoffGameComponent } from './Games/add-playoff-game.component';
 import { WinnerComponent } from './Playoffs/winner.component';
 import { HomepageComponent } from './Homepage/homepage-component';
 import {NgbModule, NgbTooltip, NgbTooltipConfig} from '@ng-bootstrap/ng-bootstrap';
@@ -23,7 +22,7 @@ import {NgbModule, NgbTooltip, NgbTooltipConfig} from '@ng-bootstrap/ng-bootstra
   declarations: [
     AppComponent, PlayerListComponent, AddPlayerComponent, AddTournamentComponent, 
     TournamentListComponent, ViewTournamentComponent, AddGameComponent, PlayoffsComponent, 
-    AddPlayoffGameComponent, WinnerComponent, HomepageComponent
+    WinnerComponent, HomepageComponent
   ],
   imports: [
     FormsModule,
@@ -42,7 +41,6 @@ import {NgbModule, NgbTooltip, NgbTooltipConfig} from '@ng-bootstrap/ng-bootstra
       { path: 'tournaments/:type/:name', component: ViewTournamentComponent},
       { path: ':name/:type/games/:id/enter_result', component: AddGameComponent},
       { path: 'playoffs/:id', component: PlayoffsComponent},
-      { path: 'playoffs/:id/enter_result', component: AddPlayoffGameComponent},
       { path: 'playoffs/:id/winner', component: WinnerComponent},
       { path: '', component: HomepageComponent}
     ]),

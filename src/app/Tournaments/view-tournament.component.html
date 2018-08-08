@@ -1,14 +1,14 @@
 <form (ngSubmit)="getPlayoffRoster()" #rosterForm="ngForm">
-    <button *ngIf="!disabled && !playoffsBegan && !tournyFinished" type="submit" class="main-buttons create-button">Begin Playoffs »</button>
+    <button *ngIf="!disabled && !playoffsBegan" type="submit" class="main-buttons create-button">Begin Playoffs »</button>
 </form>
 <div class='validation-notices'>
     <div id="error" *ngIf="rosterInvalid" class="alert alert-danger">
             You must advance at least 2 players or teams to the playoffs.
     </div>
 </div>
-<form *ngIf="playoffsBegan" (ngSubmit)="playoffValidation()" #gameForm="ngForm">
-        <h3 *ngIf="playoffsBegan">Select the players that advance to the playoffs!</h3>
-        <h3 *ngIf="playoffsBegan">{{playoffPool.length}} players</h3>
+<form *ngIf="selecting" (ngSubmit)="playoffValidation()" #gameForm="ngForm">
+        <h3>Select the players that advance to the playoffs!</h3>
+        <h3>{{playoffPool.length}} players</h3>
         <button type="submit" class="main-buttons create-button">Go!</button>
 </form>
 
@@ -20,7 +20,7 @@
         <h3>Pool {{getLetter(idPools.indexOf(pool))}}</h3>
         <table class='table table-dark pool-table pool-view'>
             <thead>
-                <th *ngIf="playoffsBegan"></th>
+                <th *ngIf="selecting"></th>
                 <th id="player-name"></th>
                 <th class="number-header">Wins</th>
                 <th class="number-header">Losses</th>
@@ -28,7 +28,7 @@
             </thead>
             <tbody>
                 <tr *ngFor="let team of pool">
-                    <td *ngIf="playoffsBegan"><input type="checkbox" (click)="addToPlayoffs(team)"/></td>
+                    <td *ngIf="selecting"><input type="checkbox" (click)="addToPlayoffs(team)"/></td>
                     <td>{{convertToName(team)}}</td>
                     <td>{{findWins(team)}}</td>
                     <td>{{findLosses(team)}}</td>

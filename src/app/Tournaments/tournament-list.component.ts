@@ -33,7 +33,7 @@ export class TournamentListComponent implements OnInit {
   delete(tournament) {
     swal({
       title: "Delete Tournament",
-      text: "Are you sure you wish to delete this tournament? You will lose all associated data.",
+      text: "Are you sure you wish to delete this tournament? You will lose all associated game results. Player stats resulting from the tournament will be preserved.",
       buttons: [true, true],
     }).then((wantsToSave) => {
         if (wantsToSave) {

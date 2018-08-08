@@ -1,13 +1,24 @@
 <div *ngIf="modalOpen" id="playoffModal" class="result-modal">
     <div class="modal-content">
-       <form class='add-player' (ngSubmit)="advancePlayer()" #playoffForm="ngForm">
+       <form class='add-player' (ngSubmit)="validateGame()" #playoffForm="ngForm">
+            <div class='validation-notices'>
+                <div id="error" *ngIf="validatorBlank" class="alert alert-danger">
+                    You must select a validator.
+                </div>
+                <div id="error" *ngIf="scoreInvalid" class="alert alert-danger">
+                    The coin differential must be a number between 1 and 8 inclusive.
+                </div>
+                <div id="error" *ngIf="scoreBlank" class="alert alert-danger">
+                    The coin differential cannot be blank.
+                </div>
+            </div>
             <h3 id="who-won">Advancing {{convertToName(modalWinner.team)}} <br><br> Who Validated the Queen?</h3>
             <div class="radio-container first">
-                <input type="radio" value="team1" name="winner" [(ngModel)]="validator" /> <label>{{convertToName(modalWinner.team)}}</label>
+                <input type="radio" value="team1" name="validator" [(ngModel)]="validator" /> <label>{{convertToName(modalWinner.team)}}</label>
                 <span class="radio-button"></span>
             </div>
             <div class="radio-container second">
-                <input type="radio" value="team2" name="winner" [(ngModel)]="validator" /> <label>{{convertToName(modalLoser.team)}}</label>
+                <input type="radio" value="team2" name="validator" [(ngModel)]="validator" /> <label>{{convertToName(modalLoser.team)}}</label>
                 <span class="radio-button"></span>
             </div>
             <div>
@@ -16,7 +27,7 @@
             </div>
             <div>
                 <input class='main-buttons create-button' type="submit" value="Enter Result"/>
-                <button class="main-buttons clear-button" (click)='closeModal()'>Cancel</button>
+                <button type="button" class="main-buttons clear-button" (click)='closeModal()'>Cancel</button>
             </div>
         </form>
     </div>
@@ -27,16 +38,15 @@
     </div>
     <div class="back-button">
         <button class="main-buttons create-button" (click)='goBack()'>« Tournament List</button>
-        <button *ngIf="isOver" class="main-buttons create-button" (click)='viewGroupStage()'>View Group Stage</button>
+        <button class="main-buttons create-button" (click)='viewGroupStage()'>View Group Stage</button>
     </div>
     <hr id="playoff-hr" />
     <!--<h2>Playoffs</h2>-->
     <div class='button-set' *ngIf="!isOver">
-        <button class="main-buttons create-button" (click)='enterPlayoffResult()'>Enter Playoff Game Result</button>
         <button class="main-buttons clear-button" (click)='resetBracket()'>Clear Changes</button>
         <button class="main-buttons add-all-button" (click)='saveBracket()'>Save Bracket</button>
-        <div *ngIf="winner" id="endtourny"><button class="main-buttons end-button" (click)='endTournament()'>End Tournament</button></div>
-        <div *ngIf="!winner" id="endtourny" ngbTooltip="You must advance a player to the winner's box first." placement="right"><button class="main-buttons end-button" (click)='endTournament()' disabled>End Tournament</button></div>
+        <div *ngIf="tournamentWinner" id="endtourny"><button class="main-buttons end-button" (click)='endTournament()'>End Tournament</button></div>
+        <div *ngIf="!tournamentWinner" id="endtourny" ngbTooltip="You must advance a player to the winner's box first." placement="right"><button class="main-buttons end-button" (click)='endTournament()' disabled>End Tournament</button></div>
     </div>
     <!--<h2 class='playoff-prompt' *ngIf="tournamentWinner">This tournament is complete!</h2>-->
     <div *ngIf="bracket && playInRound" class='flex-container'>
@@ -75,8 +85,7 @@
             <div class='flex-column'>
                 <div class='bracket-box-winner'>
                     <p *ngIf="tournamentWinner">{{convertToName(tournamentWinner)}}</p>
-                    <p *ngIf="winner && !tournamentWinner">{{convertToName(winner)}}</p>
-                    <p *ngIf="!winner && !tournamentWinner" class='empty-slot'></p>
+                    <p *ngIf="!tournamentWinner" class='empty-slot'></p>
                     <img id="trophy" src='../../assets/images/trophy.png' width="20px" height="20px" />
                 </div>
             </div>

@@ -44,7 +44,8 @@ export class TournamentService {
     declarePlayoffWinner(id, winner) {
         return this.http.patch(environment.api_url + '/playoffs/' + id,
         {
-            "winner": winner
+            "winner": winner,
+            "ended": true
         });
     }
 
@@ -96,7 +97,8 @@ export class TournamentService {
                         "tournamentId": newPlayoff.tournamentId,
                         "playInSpots": newPlayoff.playInSpots,
                         "bracket": newPlayoff.bracket,
-                        "winner": newPlayoff.winner
+                        "winner": newPlayoff.winner,
+                        "ended": newPlayoff.ended
                       }; 
         return this.http.post(environment.api_url + '/playoffs', payload, httpOptions);
     }
@@ -106,7 +108,9 @@ export class TournamentService {
         newBracket.unshift(playInRound);
         return this.http.patch(environment.api_url + '/playoffs/' + playoff['id'],
         {
-            "bracket": newBracket
+            "bracket": newBracket,
+            "winner": playoff['winner'],
+            "ended": playoff['ended']
         });
     }
 

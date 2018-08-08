@@ -37,8 +37,8 @@
     <div>
         <button (click)="addAll()" class="main-buttons add-all-button">+ Add All Players</button>
     </div>
-    
-        <div class="addPlayersList">
+    <div class="addPlayersList">
+        <div>
             <h3>Player Pool</h3>
             <div class='roster-list'>
                 <table class="table-responsive table-dark players-table">
@@ -53,7 +53,7 @@
                 </table>
             </div>
         </div>
-        <div class="addPlayersList">
+        <div>
             <h3>Current Roster: {{playersInTourny.size}} players</h3>
             <div class='roster-list'>
                 <table class="table-responsive table-dark players-table">
@@ -66,5 +66,5 @@
                 </table>
             </div>
         </div>
-    
+    </div>
 </div>

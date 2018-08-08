@@ -27,7 +27,8 @@ export class GameService {
                         piece['team1'], 
                         piece['team2'], 
                         piece['winner'], 
-                        piece['differential']
+                        piece['differential'],
+                        piece['validator']
                     ));
         }
         return games;
@@ -60,16 +61,18 @@ export class GameService {
                         "team1": newGame.team1,
                         "team2": newGame.team2,
                         "winner": newGame.winner,
-                        "differential": newGame.differential
+                        "differential": newGame.differential,
+                        "validator": newGame.validator
                       }; 
         return this.http.post(environment.api_url + '/games', payload, httpOptions);
     }
 
-    updateGame(id, winner, differential): Observable<any> {
+    updateGame(id, winner, differential, validator): Observable<any> {
         return this.http.patch(environment.api_url + '/games/' + id,
         {
             "winner": winner,
-            "differential": differential
+            "differential": differential,
+            "validator": validator
         });
     }
 }
