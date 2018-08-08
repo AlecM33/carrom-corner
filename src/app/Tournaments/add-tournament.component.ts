@@ -251,7 +251,7 @@ export class AddTournamentComponent implements OnInit {
                 while (i < pool.length) {
                     let rnd = this.getRandomIntInclusive(0, this.scheduleIndices.length - 1);
                     let removedIndex = this.scheduleIndices.splice(rnd, 1)[0];
-                    let newGame = new Game(undefined, false, this.id, removedIndex, pool[j], pool[i], undefined, 0);
+                    let newGame = new Game(undefined, false, this.id, removedIndex, pool[j], pool[i], undefined, 0, undefined);
                     this._gameService.addGame(newGame).subscribe();
                     i++;
                 }
