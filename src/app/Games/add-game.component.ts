@@ -8,6 +8,7 @@ import { ViewTournamentComponent } from "../Tournaments/view-tournament.componen
 import { EloService } from "../Services/elo.service";
 import { GameService } from "../Services/game.service";
 import { environment } from "environments/environment";
+import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 
 @Component({
     templateUrl: "add-game.component.html"

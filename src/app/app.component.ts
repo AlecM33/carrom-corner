@@ -3,6 +3,7 @@ import { PlayerService } from './Services/player.service';
 import { Player } from './Players/player';
 import { TournamentService } from './Services/tournament.service';
 import { environment } from "environments/environment";
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-root',

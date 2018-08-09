@@ -11,6 +11,7 @@ import { BracketGraph } from "../Brackets/bracketgraph";
 import { BracketService } from "../Services/bracket.service";
 import { GameService } from "../Services/game.service";
 import { environment } from "environments/environment";
+import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 
 @Component({
     selector: 'cr-tournyview',

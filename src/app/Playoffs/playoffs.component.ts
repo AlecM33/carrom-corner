@@ -12,6 +12,7 @@ import * as _swal from 'sweetalert';
 import { SweetAlert } from 'sweetalert/typings/core';
 import { environment } from "environments/environment";
 import { EloService } from "../Services/elo.service";
+import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 const swal: SweetAlert = _swal as any;
 
 @Component({
@@ -19,13 +20,13 @@ const swal: SweetAlert = _swal as any;
 })
 export class PlayoffsComponent implements OnInit{
 
-    constructor(private _playerService: PlayerService, 
-                private _tournyService: TournamentService, 
-                private http: HttpClient, private router: Router, 
-                private active_route: ActivatedRoute,
-                private _gameService: GameService, 
-                private tooltipConfig: NgbTooltipConfig,
-                private elo_adjuster: EloService) {
+    constructor(public _playerService: PlayerService, 
+                public _tournyService: TournamentService, 
+                public http: HttpClient, public router: Router, 
+                public active_route: ActivatedRoute,
+                public _gameService: GameService, 
+                public tooltipConfig: NgbTooltipConfig,
+                public elo_adjuster: EloService) {
     }
 
     public players: Player[];
@@ -54,6 +55,7 @@ export class PlayoffsComponent implements OnInit{
     scoreInvalid = false;
 
     ngOnInit() {
+        console.log('initialized');
         this._playerService.getPlayers().subscribe((players) => {
             this.players = players;
             this.playoffId = this.active_route.snapshot.paramMap.get('id');
@@ -69,11 +71,9 @@ export class PlayoffsComponent implements OnInit{
             this.playoff = playoff;
             this.bracket = playoff['bracket'];
             this.playInRound = this.bracket.shift();
-            if (this.bracket[0][0] instanceof Array) {
+            if (this.bracket[0][0].team instanceof Array) {
                 this.tournyType = 'doubles';
             }
-            let notice = document.getElementById('notice');
-            notice.textContent = "";
             this.getPlayoffGames();
         });
     }
@@ -155,6 +155,7 @@ export class PlayoffsComponent implements OnInit{
             validatingPlayer = this.modalLoser.team;
         }
         let playoffGame = new Game(undefined, true, parseInt(this.playoffId), undefined, this.modalWinner.team, this.modalLoser.team, this.modalWinner.team, this.scoreDifferential, validatingPlayer);
+        console.log(playoffGame);
         this.newPlayoffGames.push(playoffGame);
         this.closeModal();
     }
