@@ -42,13 +42,13 @@ export class ViewTournamentComponent implements OnInit {
     rosterInvalid = false;
 
     constructor (
-                    private _playerService: PlayerService, 
-                    private http: HttpClient, 
-                    private active_route: ActivatedRoute, 
-                    private router: Router, 
-                    private _tournyService: TournamentService, 
-                    private _bracketService: BracketService,
-                    private _gameService: GameService
+                    public _playerService: PlayerService, 
+                    public http: HttpClient, 
+                    public active_route: ActivatedRoute, 
+                    public router: Router, 
+                    public _tournyService: TournamentService, 
+                    public _bracketService: BracketService,
+                    public _gameService: GameService
                 ) {
     }
 

@@ -55,7 +55,6 @@ export class PlayoffsComponent implements OnInit{
     scoreInvalid = false;
 
     ngOnInit() {
-        console.log('initialized');
         this._playerService.getPlayers().subscribe((players) => {
             this.players = players;
             this.playoffId = this.active_route.snapshot.paramMap.get('id');
@@ -216,9 +215,12 @@ export class PlayoffsComponent implements OnInit{
         this.scoreDifferential = undefined;
     }
 
-    advancePlayer() {
+    advancePlayer = () => {
         this.submitGame();
         if (this.round === -1) {
+            console.log(this.bracket);
+            console.log(this.playInRound);
+            console.log(this.modalWinner);
             let openSpotNumber = Math.ceil((this.playInRound.indexOf(this.modalWinner) + 1) / 2);
             let openSpotCount = 0;
             let i = 0;
@@ -228,6 +230,7 @@ export class PlayoffsComponent implements OnInit{
                 }
                 i ++;
             }
+            console.log(i);
             this.bracket[0][i - 1] = this.modalWinner;
         } else if (this.bracket[this.round].length === 2) {
             this.tournamentWinner = this.modalWinner.team;

@@ -125,5 +125,31 @@ describe('PlayoffsComponent', () => {
     expect(component.newPlayoffGames[0]['team1']).toEqual(3);
     expect(component.newPlayoffGames[0]['team2']).toEqual(4);
     expect(component.newPlayoffGames[0]['winner']).toEqual(3);
-});
+  });
+
+  it ('should advance a player out of the play-in round to the correct bracket spot', () => {
+    let submitSpy = spyOn(component, 'submitGame').and.callFake(function(){});
+    component.playoff = {'playInSpots': [1]}
+    component.round = -1;
+    component.modalWinner = {'team': 5};
+    component.playInRound = [component.modalWinner, {'team': 6}];
+    component.bracket = [[{'team': 1}, {}, {'team': 3}, {'team': 4}], [{}, {}]];
+
+    component.advancePlayer();
+    expect(component.bracket).toEqual([[{'team': 1}, {'team': 5}, {'team': 3}, {'team': 4}], [{}, {}]]);
+  });
+
+  it ('should advance a player out of a round to the correct bracket spot', () => {
+    let submitSpy = spyOn(component, 'submitGame').and.callFake(function(){});
+    component.playoff = {'playInSpots': [1]}
+    component.round = 0;
+    component.modalWinner = {'team': 4};
+    component.playInRound = [{'team': 5}, {'team': 6}];
+    component.bracket = [[{'team': 1}, {}, {'team': 3}, component.modalWinner], [{}, {}]];
+
+    component.advancePlayer();
+    expect(component.bracket).toEqual([[{'team': 1}, {}, {'team': 3}, {'team': 4}], [{}, {'team': 4}]]);
+  });
+
+
 });
