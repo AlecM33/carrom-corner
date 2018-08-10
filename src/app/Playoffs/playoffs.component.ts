@@ -154,7 +154,6 @@ export class PlayoffsComponent implements OnInit{
             validatingPlayer = this.modalLoser.team;
         }
         let playoffGame = new Game(undefined, true, parseInt(this.playoffId), undefined, this.modalWinner.team, this.modalLoser.team, this.modalWinner.team, this.scoreDifferential, validatingPlayer);
-        console.log(playoffGame);
         this.newPlayoffGames.push(playoffGame);
         this.closeModal();
     }
@@ -218,9 +217,6 @@ export class PlayoffsComponent implements OnInit{
     advancePlayer = () => {
         this.submitGame();
         if (this.round === -1) {
-            console.log(this.bracket);
-            console.log(this.playInRound);
-            console.log(this.modalWinner);
             let openSpotNumber = Math.ceil((this.playInRound.indexOf(this.modalWinner) + 1) / 2);
             let openSpotCount = 0;
             let i = 0;
@@ -230,7 +226,6 @@ export class PlayoffsComponent implements OnInit{
                 }
                 i ++;
             }
-            console.log(i);
             this.bracket[0][i - 1] = this.modalWinner;
         } else if (this.bracket[this.round].length === 2) {
             this.tournamentWinner = this.modalWinner.team;
