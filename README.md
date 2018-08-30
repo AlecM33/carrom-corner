@@ -2,7 +2,7 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.7.1.
 
-To run the application, first install json-server. After this, you'll need two command windows. In one, start the server with 
+In its current state, the application makes mock REST calls to a .json file using a service called json-server. I would recommend readig the docs on this service if you run into any problems manipulating the .json file as a database. To run the application, first install json-server. After this, you'll need two command windows. In one, start the server with 
 
 `json-server db.json`
 
