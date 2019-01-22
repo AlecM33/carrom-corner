@@ -26,7 +26,8 @@
     "fs": "0.0.1-security",
     "rxjs": "^5.5.6",
     "sweetalert": "^2.1.0",
-    "zone.js": "^0.8.19"
+    "zone.js": "^0.8.19",
+    "typescript": "~2.5.3"
   },
   "devDependencies": {
     "@angular/cli": "~1.7.1",
