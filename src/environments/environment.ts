@@ -6,5 +6,5 @@
 
 export const environment = {
   production: false,
-  api_url: "https://carrom-backend.herokuapp.com/"
+  api_url: "https://carrom-backend.herokuapp.com"
 };
