@@ -1,16 +1,16 @@
-import { Injectable } from "@angular/core";
-import { BracketGraph } from "../Brackets/bracketgraph";
-import { BracketNode } from "../Brackets/bracketnode";
-import { split } from "ts-node";
-import { ChildTeams } from "../Brackets/childteams";
+import { Injectable } from '@angular/core';
+import { BracketGraph } from '../Brackets/bracketgraph';
+import { BracketNode } from '../Brackets/bracketnode';
+import { split } from 'ts-node';
+import { ChildTeams } from '../Brackets/childteams';
 
 /* This service provides relevant methods for constructing a tournament bracket with a variable number of players */
-@Injectable() 
+@Injectable()
 export class BracketService {
 
 
     generateBracket(playerList: Object[]): BracketGraph {
-        let bracketGraph = new BracketGraph();
+        const bracketGraph = new BracketGraph();
         bracketGraph.winnerNode = this.generateNode(undefined, playerList);
         return bracketGraph;
     }
@@ -19,11 +19,11 @@ export class BracketService {
         if (playerList.length < 1) {
             return undefined;
         }
-        let node = new BracketNode();
+        const node = new BracketNode();
         node.winner = playerList[0];
         node.parent = parentNode;
         if (playerList.length > 1) {
-            let children = this.splitChildPlayers(playerList);
+            const children = this.splitChildPlayers(playerList);
             node.childA = this.generateNode(node, children.subtreeA);
             node.childB = this.generateNode(node, children.subtreeB);
         }
@@ -33,11 +33,11 @@ export class BracketService {
     getNodesAtLevel(root: BracketNode, depth, nodes) {
         if (depth === 0) {
             if (root.isLeaf()) {
-                let playerRecord = root.winner;
+                const playerRecord = root.winner;
                 playerRecord['parent'] = root.parent.winner['team'];
                 nodes.push(playerRecord);
             } else {
-                nodes.push({})
+                nodes.push({});
             }
         } else {
             if (root.childA !== undefined) {
@@ -54,8 +54,8 @@ export class BracketService {
         if (node === undefined) {
             return 0;
         }
-        let aDepth = this.getTreeDepth(node.childA);
-        let bDepth = this.getTreeDepth(node.childB);
+        const aDepth = this.getTreeDepth(node.childA);
+        const bDepth = this.getTreeDepth(node.childB);
         if (aDepth < bDepth) {
             return 1 + aDepth;
         } else {
@@ -64,26 +64,23 @@ export class BracketService {
     }
 
     splitChildPlayers(playerList: Object[]): ChildTeams {
-        let output = new ChildTeams(); 
+        const output = new ChildTeams();
         let aWeight = 0;
         let bWeight = 0;
         for (let i = 0; i < playerList.length; i++) {
-            let player = playerList.find((player) => playerList.indexOf(player) == i);
-            let playerWeight = playerList.length - i;
-
+            const player = playerList.find((player) => playerList.indexOf(player) === i);
+            const playerWeight = playerList.length - i;
             if (aWeight < bWeight) {
-				output.subtreeA.push(player);
-				aWeight += playerWeight;
-				
-			} else if (aWeight > bWeight) {
-				output.subtreeB.push(player);
-				bWeight += playerWeight;
-				
-			} else {
-				// Ties break towards (a).
-				output.subtreeA.push(player);
-				aWeight += playerWeight;
-			}
+              output.subtreeA.push(player);
+              aWeight += playerWeight;
+            } else if (aWeight > bWeight) {
+              output.subtreeB.push(player);
+              bWeight += playerWeight;
+            } else {
+              // Ties break towards (a).
+              output.subtreeA.push(player);
+              aWeight += playerWeight;
+            }
         }
         return output;
     }

@@ -1,8 +1,5 @@
-import { Player } from "../Players/player";
-import { Game } from "../Games/game";
-
 export class Tournament {
-    
+
     public id: number;
     playoffDefined: boolean;
     public winner: any;
@@ -12,7 +9,7 @@ export class Tournament {
     public teams: any[];
 
     constructor(
-        id: number, 
+        id: number,
         playoffDefined: boolean,
         winner: any,
         name: string,
@@ -21,7 +18,7 @@ export class Tournament {
         teams: any[]) {
 
             this.id = id;
-            this.playoffDefined = playoffDefined
+            this.playoffDefined = playoffDefined;
             this.winner = winner;
             this.name = name;
             this.singles = singles;

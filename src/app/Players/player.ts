@@ -1,6 +1,4 @@
-import { PercentPipe } from "@angular/common";
-
-// The player model 
+// The player model
 export class Player {
 
     public id: number;
@@ -16,11 +14,11 @@ export class Player {
 
     constructor(id: number,
                 name: string,
-                nickname: string='',
+                nickname: string = '',
                 elo: number,
-                doublesElo: number, 
-                wins: number=0,
-                losses: number=0,
+                doublesElo: number,
+                wins: number = 0,
+                losses: number = 0,
                 totalDiff: number,
                 singlesPlayed: number,
                 doublesPlayed: number) {
@@ -35,6 +33,5 @@ export class Player {
         this.totalDiff = totalDiff;
         this.singlesPlayed = singlesPlayed;
         this.doublesPlayed = doublesPlayed;
-    
     }
 }

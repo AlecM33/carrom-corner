@@ -1,4 +1,4 @@
-import { BracketNode } from "./bracketnode";
+import { BracketNode } from './bracketnode';
 
 export class BracketGraph {
     public winnerNode: BracketNode;

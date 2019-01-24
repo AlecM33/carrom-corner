@@ -1,11 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Player } from './player';
-import { HttpModule, JsonpModule } from '@angular/http';
 import { PlayerService } from '../Services/player.service';
-import { AppComponent } from '../app.component';
-import { Observable } from 'rxjs/Observable';
 import { HttpClient } from '@angular/common/http';
-import { Config } from 'protractor';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/do';
 
@@ -40,15 +35,15 @@ export class PlayerListComponent implements OnInit {
           this.players = players;
           this.sortablePlayers = this.players.filter((player) => player.singlesPlayed > 0 || player.doublesPlayed > 0);
           this.newPlayers = this.players.filter((player) => player.singlesPlayed === 0 && player.doublesPlayed === 0);
-        })
+        });
       }).subscribe();
   }
 
-  // Sorts players by an average of their singles and doubles elo 
+  // Sorts players by an average of their singles and doubles elo
   sortPlayers() {
     this.sortablePlayers.sort((a, b) => {
-      let aAvg = (a.elo + a.doublesElo) / 2;
-      let bAvg = (b.elo + b.doublesElo) / 2;
+      const aAvg = (a.elo + a.doublesElo) / 2;
+      const bAvg = (b.elo + b.doublesElo) / 2;
       if (b.gamesPlayed === 0) {
         return 1;
       } else if (aAvg > bAvg) {
@@ -62,6 +57,6 @@ export class PlayerListComponent implements OnInit {
       } else {
         return 1;
       }
-    })
-  } 
+    });
+  }
 }
