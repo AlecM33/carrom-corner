@@ -3,8 +3,7 @@ import { PlayoffsComponent } from './playoffs.component';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { TournamentService } from '../Services/tournament.service';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms'
-import { Mock } from 'protractor/built/driverProviders';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PlayerService } from '../Services/player.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient, HttpHandler } from '@angular/common/http';
@@ -12,7 +11,6 @@ import { NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
 import { GameService } from '../Services/game.service';
 import { EloService } from '../Services/elo.service';
 import Spy = jasmine.Spy;
-import { Game } from '../Games/game';
 
 
 @Injectable()
@@ -22,7 +20,7 @@ class MockTournyService {
             'winner': 2,
             'ended': true,
             'bracket': [[{'team': [1, 2]}, {'team': [3, 4]}], [{'team': [5, 6]}, {'team': [7, 8]}]]
-        })
+        });
     }
 }
 
@@ -39,7 +37,7 @@ class MockActivatedRoute {
         return '1';
       }
     }
-  }
+  };
 }
 
 @Injectable()
@@ -72,7 +70,7 @@ describe('PlayoffsComponent', () => {
         PlayoffsComponent
       ],
       imports: [FormsModule, ReactiveFormsModule],
-      providers: [{provide: TournamentService, useClass: MockTournyService},  
+      providers: [{provide: TournamentService, useClass: MockTournyService},
                   {provide: PlayerService, useClass: MockPlayerService},
                 {provide: ActivatedRoute, useClass: MockActivatedRoute},
                 {provide: Router, useClass: MockRouter},
@@ -86,9 +84,9 @@ describe('PlayoffsComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(PlayoffsComponent);
     component = fixture.componentInstance;
-    getPlayoffGamesSpy = spyOn(component, 'getPlayoffGames').and.callFake(function() {return{}});
+    getPlayoffGamesSpy = spyOn(component, 'getPlayoffGames').and.callFake(function() {return{};});
     playerServiceSpy = spyOn(component._playerService, 'getPlayers').and.callThrough();
-    constructPlayoffsSpy = spyOn(component, 'constructPlayoff')
+    constructPlayoffsSpy = spyOn(component, 'constructPlayoff');
     fixture.detectChanges();
   });
 
@@ -111,8 +109,8 @@ describe('PlayoffsComponent', () => {
   });
 
   it ('should submit a game', () => {
-    component.validator = "team2";
-    component.playoffId = "1";
+    component.validator = 'team2';
+    component.playoffId = '1';
     component.scoreDifferential = 2;
     component.newPlayoffGames = [];
     component.modalWinner = {'team': 3};
@@ -128,8 +126,8 @@ describe('PlayoffsComponent', () => {
   });
 
   it ('should advance a player out of the play-in round to the correct bracket spot', () => {
-    let submitSpy = spyOn(component, 'submitGame').and.callFake(function(){});
-    component.playoff = {'playInSpots': [1]}
+    const submitSpy = spyOn(component, 'submitGame').and.callFake(function() {});
+    component.playoff = {'playInSpots': [1]};
     component.round = -1;
     component.modalWinner = {'team': 5};
     component.playInRound = [component.modalWinner, {'team': 6}];
@@ -140,8 +138,8 @@ describe('PlayoffsComponent', () => {
   });
 
   it ('should advance a player out of a round to the correct bracket spot', () => {
-    let submitSpy = spyOn(component, 'submitGame').and.callFake(function(){});
-    component.playoff = {'playInSpots': [1]}
+    const submitSpy = spyOn(component, 'submitGame').and.callFake(function() {});
+    component.playoff = {'playInSpots': [1]};
     component.round = 0;
     component.modalWinner = {'team': 4};
     component.playInRound = [{'team': 5}, {'team': 6}];

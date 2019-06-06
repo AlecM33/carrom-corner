@@ -10,9 +10,6 @@ export class BracketNode {
     }
 
     public isLeaf() {
-        if ((this.childA === undefined) && this.childB === undefined) {
-            return true;
-        }
-        return false;
+      return this.childA === undefined && this.childB === undefined;
     }
 }

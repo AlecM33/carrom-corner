@@ -1,10 +1,10 @@
-import { NgModule, Optional, SkipSelf } from "@angular/core";
-import { PlayerService } from "./Services/player.service";
-import { ModuleWithProviders } from "@angular/compiler/src/core";
-import { TournamentService } from "./Services/tournament.service";
-import { BracketService } from "./Services/bracket.service";
-import { EloService } from "./Services/elo.service";
-import { GameService } from "./Services/game.service";
+import { NgModule, Optional, SkipSelf } from '@angular/core';
+import { PlayerService } from './Services/player.service';
+import { ModuleWithProviders } from '@angular/compiler/src/core';
+import { TournamentService } from './Services/tournament.service';
+import { BracketService } from './Services/bracket.service';
+import { EloService } from './Services/elo.service';
+import { GameService } from './Services/game.service';
 
 @NgModule({
     providers: [PlayerService, TournamentService, BracketService, EloService, GameService]
