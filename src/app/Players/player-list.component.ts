@@ -1,11 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Player } from './player';
-import { HttpModule, JsonpModule } from '@angular/http';
 import { PlayerService } from '../Services/player.service';
-import { AppComponent } from '../app.component';
-import { Observable } from 'rxjs/Observable';
 import { HttpClient } from '@angular/common/http';
-import { Config } from 'protractor';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/do';
 
@@ -38,13 +33,13 @@ export class PlayerListComponent implements OnInit {
       this._playerService.deletePlayer(player).do(() => {
         this._playerService.getPlayers().subscribe((players) => {
           this.players = players;
-          this.sortablePlayers = this.players.filter((player) => player.singlesPlayed > 0 || player.doublesPlayed > 0);
-          this.newPlayers = this.players.filter((player) => player.singlesPlayed === 0 && player.doublesPlayed === 0);
-        })
+          this.sortablePlayers = this.players.filter((eachPlayer) => eachPlayer.singlesPlayed > 0 || eachPlayer.doublesPlayed > 0);
+          this.newPlayers = this.players.filter((eachPlayer) => eachPlayer.singlesPlayed === 0 && eachPlayer.doublesPlayed === 0);
+        });
       }).subscribe();
   }
 
-  // Sorts players by an average of their singles and doubles elo 
+  // Sorts players by an average of their singles and doubles elo
   sortPlayers() {
     this.sortablePlayers.sort((a, b) => {
       let aAvg = (a.elo + a.doublesElo) / 2;
