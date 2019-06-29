@@ -17,8 +17,8 @@
 <h2>Pools</h2>
 <div class='pools' *ngIf="idPools">
     <div *ngFor="let pool of idPools">
-        <h3>Pool {{getLetter(idPools.indexOf(pool))}}</h3>
-        <table class='table table-dark pool-table pool-view'>
+        <h2>{{getLetter(idPools.indexOf(pool))}}</h2>
+        <table class='table table-dark'>
             <thead>
                 <th *ngIf="selecting"></th>
                 <th id="player-name"></th>

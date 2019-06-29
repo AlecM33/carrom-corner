@@ -1,54 +1,49 @@
 
-    
-<div class='player-header-container'>
-    <div class="player-header-text">
-        <h2 class="player-list-header">Anteil Carrom Playerbase</h2>
-        <h3 class="player-list-subheader">* Rankings are determined by an average of singles and doubles elo</h3>
-    </div>
-    <div class="add-btn-container">
-        <button class='main-buttons add-all-button' [routerLink]="['/players/add']">Add a player</button>
-    </div>
+
+<div class="player-header-container">
+  <h2 class="player-list-header">Players</h2>
+  <div class="add-player-container">
+    <a class="link" [routerLink]="['/players/add']">+ Add a player</a>
+  </div>
 </div>
-<div class='table-responsive table-dark app-table'>
-    <table class='table'>
-        <thead>
-            <tr>
-                <th>Office Rank *</th>
-                <th>Name</th>
-                <th>Singles Elo</th>
-                <th>Doubles Elo</th>
-                <th>Wins</th>
-                <th>Losses</th>
-                <th>Winrate</th>
-                <th>Avg Coin +/-</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor='let player of sortablePlayers'>
-                <td>{{sortablePlayers.indexOf(player) + 1}}</td>
-                <td *ngIf="!player.nickname">{{player.name}}</td>
-                <td *ngIf="player.nickname">{{player.nickname}}</td>
-                <td>{{player.elo | number: '1.0-0'}}</td>
-                <td>{{player.doublesElo | number: '1.0-0'}}</td>
-                <td>{{player.wins}}</td>
-                <td>{{player.losses}}</td>
-                <td>{{player.wins / (player.singlesPlayed + player.doublesPlayed) | percent}}</td>
-                <td>{{player.totalDiff / (player.singlesPlayed + player.doublesPlayed) | number: '1.1-2'}}</td>
-                <td><button (click)='delete(player)' id='list-button' class='btn btn-danger btn-xs'>Delete</button></td>
-            </tr>
-            <tr *ngFor='let player of newPlayers'>
-                <td>-</td>
-                <td *ngIf="!player.nickname">{{player.name}}</td>
-                <td *ngIf="player.nickname">{{player.nickname}}</td>
-                <td>{{player.elo | number: '1.0-0'}}</td>
-                <td>{{player.doublesElo | number: '1.0-0'}}</td>
-                <td>{{player.wins}}</td>
-                <td>{{player.losses}}</td>
-                <td class="in-progress">N/A</td>
-                <td class='in-progress'>N/A</td>
-                <td><button (click)='delete(player)' id='list-button' class='btn btn-danger btn-xs'>Delete</button></td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+<table class='table table-dark app-table'>
+  <thead>
+  <tr>
+    <th>Office Rank *</th>
+    <th>Name</th>
+    <th>Singles Elo</th>
+    <th>Doubles Elo</th>
+    <th>Wins</th>
+    <th>Losses</th>
+    <th>Winrate</th>
+    <th>Avg Coin +/-</th>
+    <th></th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor='let player of sortablePlayers'>
+    <td>{{sortablePlayers.indexOf(player) + 1}}</td>
+    <td *ngIf="!player.nickname">{{player.name}}</td>
+    <td *ngIf="player.nickname">{{player.nickname}}</td>
+    <td>{{player.elo | number: '1.0-0'}}</td>
+    <td>{{player.doublesElo | number: '1.0-0'}}</td>
+    <td>{{player.wins}}</td>
+    <td>{{player.losses}}</td>
+    <td>{{player.wins / (player.singlesPlayed + player.doublesPlayed) | percent}}</td>
+    <td>{{player.totalDiff / (player.singlesPlayed + player.doublesPlayed) | number: '1.1-2'}}</td>
+    <td><a href="/" (click)='delete($event, player)' class='link'>Delete</a></td>
+  </tr>
+  <tr *ngFor='let player of newPlayers'>
+    <td>-</td>
+    <td *ngIf="!player.nickname">{{player.name}}</td>
+    <td *ngIf="player.nickname">{{player.nickname}}</td>
+    <td>{{player.elo | number: '1.0-0'}}</td>
+    <td>{{player.doublesElo | number: '1.0-0'}}</td>
+    <td>{{player.wins}}</td>
+    <td>{{player.losses}}</td>
+    <td class="in-progress">N/A</td>
+    <td class='in-progress'>N/A</td>
+    <td><a href="/" (click)='delete($event, player)' class='link'>Delete</a></td>
+  </tr>
+  </tbody>
+</table>

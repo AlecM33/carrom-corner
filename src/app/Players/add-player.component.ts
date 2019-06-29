@@ -39,7 +39,7 @@ export class AddPlayerComponent implements OnInit {
     checkNameUniqueness() {
         if (this.newPlayerName) {
             for (const player of this.players) {
-                if (player.name.toLowerCase() === this.newPlayerName.toLowerCase()) {
+                if (player.name.toString().toLowerCase() === this.newPlayerName.toString().toLowerCase()) {
                     return true;
                 }
             }
