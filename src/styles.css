@@ -145,12 +145,8 @@ input#name {
   text-decoration: none;
 }
 
-h2 {
-  font-size: 30px;
-  padding: 20px;
-  font-weight: bolder;
-  display: flex;
-  justify-content: center;
+h3 {
+
 }
 
 .winner {
@@ -417,6 +413,15 @@ label {
 #player-name {
   width: 150px;
 }
+
+.pool-table {
+  cursor: pointer;
+}
+
+.pool-table:hover {
+  box-shadow: 0 0 5px #f7e5c5;
+}
+
 .pool-table td {
   overflow-x: hidden;
   text-overflow: ellipsis;
@@ -661,8 +666,19 @@ img#trophy {
 }
 
 h2 {
+  display: flex;
+  padding: 0;
+  font-size: 30px;
+  color: #f7e5c5;
+  font-weight: normal;
+  justify-content: left;
+}
+
+h3 {
+  display: flex;
   padding: 0;
   color: #f7e5c5;
+  font-size: 20px;
   font-weight: normal;
   justify-content: left;
 }

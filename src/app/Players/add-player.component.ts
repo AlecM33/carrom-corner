@@ -37,7 +37,7 @@ export class AddPlayerComponent implements OnInit {
 
     // checks database for duplicate names
     checkNameUniqueness() {
-        if (this.newPlayerName) {
+        if (this.players && this.newPlayerName) {
             for (const player of this.players) {
                 if (player.name.toString().toLowerCase() === this.newPlayerName.toString().toLowerCase()) {
                     return true;
@@ -49,7 +49,7 @@ export class AddPlayerComponent implements OnInit {
 
     // Function for adding a new player to the database when user submits
     onSubmit() {
-        const newPlayer = new Player(undefined, this.newPlayerName, this.newPlayerNickname, 1200, 1200, 0, 0, 0, 0, 0);
+        const newPlayer = new Player(undefined, this.newPlayerName, this.newPlayerNickname, 1200, 1200, 0, 0, 0, 0, 0, 0);
         this._playerService.addPlayer(newPlayer).subscribe(() => {
             this.router.navigateByUrl('/players');
         });

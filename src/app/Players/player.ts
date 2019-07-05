@@ -12,6 +12,7 @@ export class Player {
     public totalDiff: number;
     public singlesPlayed: number;
     public doublesPlayed: number;
+    public tournamentWins: number;
 
     constructor(id: number,
                 name: string,
@@ -22,7 +23,8 @@ export class Player {
                 losses: number = 0,
                 totalDiff: number,
                 singlesPlayed: number,
-                doublesPlayed: number) {
+                doublesPlayed: number,
+                tournamentWins: number) {
 
         this.id = id;
         this.name = name;
@@ -34,6 +36,7 @@ export class Player {
         this.totalDiff = totalDiff;
         this.singlesPlayed = singlesPlayed;
         this.doublesPlayed = doublesPlayed;
+        this.tournamentWins = tournamentWins;
 
     }
 }

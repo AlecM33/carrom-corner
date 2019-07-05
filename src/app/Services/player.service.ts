@@ -16,21 +16,23 @@ export class PlayerService {
     }
 
     // Takes an observable and creates player objects from the data observed
-    populateWithPlayers(ob: any[]): Player[] {
+    populateWithPlayers(retrievedPlayers: any[]): Player[] {
         const players = [];
 
-        for (const piece of ob) {
+        for (const jsonPlayers of retrievedPlayers) {
             players.push(new Player(
-                                    piece['id'],
-                                    piece['name'],
-                                    piece['nickname'],
-                                    piece['elo'],
-                                    piece['doublesElo'],
-                                    piece['wins'],
-                                    piece['losses'],
-                                    piece['totalDiff'],
-                                    piece['singlesPlayed'],
-                                    piece['doublesPlayed'])
+                                    jsonPlayers['id'],
+                                    jsonPlayers['name'],
+                                    jsonPlayers['nickname'],
+                                    jsonPlayers['elo'],
+                                    jsonPlayers['doubles_elo'],
+                                    jsonPlayers['wins'],
+                                    jsonPlayers['losses'],
+                                    jsonPlayers['total_diff'],
+                                    jsonPlayers['singles_played'],
+                                    jsonPlayers['doubles_played'],
+                                    jsonPlayers['tournament_wins']
+                                    )
                                 );
         }
         return players;
@@ -38,7 +40,10 @@ export class PlayerService {
 
     // Sends a GET request to the database for all players
     getPlayers(): Observable<Player[]> {
-        return this.http.get(environment.api_url + '/players').map(this.populateWithPlayers);
+        return this.http.request('get', '/api/players/get', {
+        headers: {
+          'Content-Type': 'application/json'}
+        }).map(this.populateWithPlayers);
     }
 
     updatePlayer(id, elo, doublesElo, wins, losses, totalDiff, singlesPlayed, doublesPlayed): Observable<any> {
@@ -60,14 +65,19 @@ export class PlayerService {
         const payload = { 'name': newPlayer.name,
                         'nickname': newPlayer.nickname,
                         'elo': newPlayer.elo,
-                        'doublesElo': newPlayer.doublesElo,
+                        'doubles_elo': newPlayer.doublesElo,
                         'wins': newPlayer.wins,
                         'losses': newPlayer.losses,
-                        'totalDiff': newPlayer.totalDiff,
-                        'singlesPlayed': newPlayer.singlesPlayed,
-                        'doublesPlayed': newPlayer.doublesPlayed
+                        'total_diff': newPlayer.totalDiff,
+                        'singles_played': newPlayer.singlesPlayed,
+                        'doubles_played': newPlayer.doublesPlayed,
+                        'tournament_wins': newPlayer.tournamentWins
                       };
-        return this.http.post(environment.api_url + '/players', payload, httpOptions);
+        return this.http.request('post', '/api/players/post', {
+          body: payload,
+          headers: {
+            'Content-Type': 'application/json'}
+        });
     }
 
     // Sends a DELETE request to remove the specified player
