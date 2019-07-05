@@ -2,6 +2,17 @@
 <div>
   <nav class='navbar navbar-lg navbar-dark bg-dark app-navbar'>
     <div class="navbar-content">
+      <svg height="60" width="60">
+        <circle class="striker" cx="30" cy="30" r="30" fill="#f7e5c5" />
+        <circle class="striker" cx="30" cy="30" r="22" stroke="darkgreen" stroke-width="1" fill="#f7e5c5" />
+        <circle class="striker" cx="30" cy="30" r="20" stroke="darkgreen" stroke-width="1" fill="#f7e5c5" />
+        <circle class="striker" cx="30" cy="30" r="18" stroke="darkgreen" stroke-width="1" fill="#f7e5c5" />
+        <circle class="striker" cx="30" cy="30" r="10" stroke="red" stroke-width="1" fill="#f7e5c5" />
+        <circle class="striker" cx="30" cy="30" r="8" stroke="red" stroke-width="1" fill="#f7e5c5" />
+        <circle class="striker" cx="30" cy="30" r="6" stroke="red" stroke-width="1" fill="#f7e5c5" />
+        <circle class="striker" cx="30" cy="30" r="4" stroke="red" stroke-width="1" fill="#f7e5c5" />
+        <circle class="striker" cx="30" cy="30" r="2" stroke="red" stroke-width="1" fill="#f7e5c5" />
+      </svg>
       <a href="" class='navbar-brand app-title'>{{ title }}</a>
       <ul class='nav navbar-nav navbar-expand'>
         <li class='nav-links'>
@@ -16,15 +27,10 @@
         <button class='main-buttons create-button' [routerLink]="['/tournament/doubles/new']">+ Create A Doubles Tournament</button>
       </span>
     </div>
-    <div class="thank-you">
-      <p> To Anteil - thank you for a great first internship. </p>
-      <p>Your intern, now and forever,</p>
-      <p id="sig">Alec</p>
-    </div>
   </nav>
 </div>
 <div class='page-content'>
-    <router-outlet></router-outlet>
+  <router-outlet></router-outlet>
 </div>
 
 

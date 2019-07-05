@@ -15,10 +15,11 @@
 
 <!--<button *ngIf="disabled" (click)="simulate()" class="btn btn-primary btn-lg">Sim Tournament »</button>-->
 <h2>Pools</h2>
+<h3>Click on a pool to view details about it.</h3>
 <div class='pools' *ngIf="idPools">
     <div *ngFor="let pool of idPools">
-        <h3>Pool {{getLetter(idPools.indexOf(pool))}}</h3>
-        <table class='table table-dark pool-table pool-view'>
+        <h2>{{getLetter(idPools.indexOf(pool))}}</h2>
+        <table class='table table-dark pool-table'>
             <thead>
                 <th *ngIf="selecting"></th>
                 <th id="player-name"></th>
@@ -36,43 +37,5 @@
                 </tr>
             </tbody>
         </table>
-    </div>
-</div>
-<div class="tourny-results-container">
-    <div class="unplayed-table">
-        <h2>Games To Play</h2>
-        <div class='tourny-table'>
-            <table class='table table-dark'>
-                <thead>
-                    <th>Games</th>
-                    <th><input #unplayedfilter type="text" class="gameFilter" (keyup)="filterGames(unplayedfilter.value, 'unplayed')" placeholder="Search for games..." /></th>
-                </thead>
-                <tbody >
-                    <tr *ngFor="let game of unplayedGames">
-                        <td>{{convertToName(game.team1)}} vs. {{convertToName(game.team2)}} </td>
-                        <td>
-                            <button (click)="viewGame(game)" class="btn btn-primary btn-xs">Enter Result</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div class="played-table">
-        <h2>Played Games</h2>
-        <div class='tourny-table'>
-            <table class='table table-dark tourny-table'>
-                <thead>
-                    <th>Games</th>
-                    <th><input #playedfilter type="text" class="gameFilter" (keyup)="filterGames(playedfilter.value, 'played')" placeholder="Search for games..." /></th>
-                </thead>
-                <tbody >
-                    <tr *ngFor="let game of playedGames">
-                        <td>{{convertToName(game.team1)}} vs. {{convertToName(game.team2)}} </td>
-                        <td><label id="winner">Winner: </label> {{convertToName(game.winner)}} +{{game.differential}}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
     </div>
 </div>

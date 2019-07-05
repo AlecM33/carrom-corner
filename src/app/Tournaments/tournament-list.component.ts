@@ -1,6 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { Tournament } from './tournament';
+import { HttpModule, JsonpModule } from '@angular/http';
 import { TournamentService } from '../Services/tournament.service';
+import { AppComponent } from '../app.component';
+import { Observable } from 'rxjs/Observable';
 import { HttpClient } from '@angular/common/http';
+import { Config } from 'protractor';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/do';
 import { Router } from '@angular/router';
@@ -21,32 +26,35 @@ export class TournamentListComponent implements OnInit {
     return this._tournyService.getPlayoff(id) !== undefined;
   }
 
-  viewPlayoff(id) {
+  viewPlayoff(e, id) {
+    e.preventDefault();
     this.router.navigateByUrl('/playoffs/' + id);
   }
 
-  delete(tournament) {
+  delete(e, tournament) {
+    e.preventDefault();
     swal({
-      title: 'Delete Tournament',
-      text: 'Are you sure you wish to delete this tournament? You will lose all associated game results. Player stats resulting from the tournament will be preserved.',
+      title: "Delete Tournament",
+      text: "Are you sure you wish to delete this tournament? You will lose all associated game results. Player stats resulting from the tournament will be preserved.",
       buttons: [true, true],
     }).then((wantsToSave) => {
-        if (wantsToSave) {
-          this.tournaments = [];
-          this._tournyService.deleteTournament(tournament, tournament.name).do(() => {
-              this._tournyService.getTournaments().subscribe((tournaments) => {
-                this.tournaments = tournaments;
-              });
-          }).subscribe();
-        }
-      });
+      if (wantsToSave) {
+        this.tournaments = [];
+        this._tournyService.deleteTournament(tournament, tournament.name).do(() => {
+          this._tournyService.getTournaments().subscribe((tournaments) => {
+            this.tournaments = tournaments;
+          })
+        }).subscribe();
+      }
+    });
   }
 
-  viewTournament(tournament) {
+  viewTournament(e, tournament) {
+    e.preventDefault();
     if (tournament.singles) {
       this.router.navigateByUrl('/tournaments/singles/' + tournament.name);
     } else {
-      this.router.navigateByUrl('/tournaments/doubles/' + tournament.name);
+      this.router.navigateByUrl('/tournaments/doubles/' + tournament.name)
     }
   }
 
