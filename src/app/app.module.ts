@@ -18,13 +18,12 @@ import { WinnerComponent } from './Playoffs/winner.component';
 import { HomepageComponent } from './Homepage/homepage-component';
 import {NgbModule, NgbTooltip, NgbTooltipConfig} from '@ng-bootstrap/ng-bootstrap';
 import { ViewPoolComponent } from './Pools/view-pool/view-pool.component';
-import { RoundRobinComponent } from './Pools/round-robin/round-robin.component';
 
 @NgModule({
   declarations: [
     AppComponent, PlayerListComponent, AddPlayerComponent, AddTournamentComponent,
     TournamentListComponent, ViewTournamentComponent, AddGameComponent, PlayoffsComponent,
-    WinnerComponent, HomepageComponent, ViewPoolComponent, RoundRobinComponent
+    WinnerComponent, HomepageComponent, ViewPoolComponent
   ],
   imports: [
     FormsModule,
