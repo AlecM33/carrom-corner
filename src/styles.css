@@ -133,6 +133,20 @@ html, body {
   justify-content: left;
 }
 
+.app-btn {
+  cursor: pointer;
+  padding: 10px;
+  background: transparent;
+  border: 1px solid #f7e5c5;
+  font-size: 15px;
+  color: #f7e5c5;
+}
+
+.app-btn:hover {
+  transform: scale(1.05);
+  background-color: rgba(133, 133, 133, 0.3);
+}
+
 input#name {
 }
 
@@ -451,7 +465,7 @@ label {
   padding: 15px;
 }
 
-.roster-page input[type=text] {
+input[type=text] {
   background-color: transparent;
   border: 1px solid #f7e5c5;
   caret-color: #f7e5c5;
@@ -459,6 +473,20 @@ label {
   color: #f7e5c5;
   padding: 10px;
   width: 400px;
+}
+
+#add-player-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#add-player-form .add-player-form-content {
+  text-align: left;
+}
+
+#add-player-form input[type=text] {
+  margin-bottom: 0.5em;
 }
 
 input[type=text]:hover {
@@ -521,7 +549,7 @@ input[type=text]:hover {
   display: flex;
   justify-content: space-between;
   border-bottom: 1px solid #f7e5c5;
-  margin-bottom: 25px;
+  margin-bottom: 4em;
 }
 
 .navbar-content {
@@ -880,10 +908,6 @@ text {
   font-size: 12px;
 }
 
-div {
-  padding: 5px;
-}
-
 .players-table td {
   width: 300px;
 }
@@ -899,7 +923,6 @@ div {
 .add-player-container {
   display: flex;
   justify-content: flex-start;
-  margin-bottom: 0.5em;
   margin-left: 2em;
 }
 

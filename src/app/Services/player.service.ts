@@ -60,7 +60,7 @@ export class PlayerService {
     }
 
     // Sends a POST request to add a player to the database
-    addPlayer(newPlayer) {
+    addPlayer(newPlayer): Observable<Object> {
         const httpOptions = {headers: new HttpHeaders({ 'Content-Type': 'application/json' })};
         const payload = { 'name': newPlayer.name,
                         'nickname': newPlayer.nickname,
@@ -76,13 +76,17 @@ export class PlayerService {
         return this.http.request('post', '/api/players/post', {
           body: payload,
           headers: {
-            'Content-Type': 'application/json'}
+            'Content-Type': 'application/json'
+          }
         });
     }
 
     // Sends a DELETE request to remove the specified player
-    deletePlayer(player) {
-        const httpOptions = {headers: new HttpHeaders({ 'Content-Type': 'application/json' })};
-        return this.http.delete(environment.api_url + '/players/' + player['id'], httpOptions);
+    deletePlayer(player): Observable<Object> {
+        return this.http.delete('/api/players/delete/' + player.id, {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
     }
 }
