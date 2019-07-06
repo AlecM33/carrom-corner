@@ -493,7 +493,12 @@ input[type=text]:hover {
   background-color: rgba(133, 133, 133, 0.3);
 }
 
-.robin-choice-single, .robin-choice-double {
+.tournament-parameters {
+  display: flex;
+  flex-direction: row;
+}
+
+.robin-choice-single, .robin-choice-double, .round-choice-one, .round-choice-two {
   border: 1px solid #f7e5c5;
   padding: 10px 15px 10px 15px;
   font-size: 20px;
@@ -501,24 +506,31 @@ input[type=text]:hover {
   cursor: pointer;
 }
 
+.choice-container {
+  margin: 1em 3em 1em 0;
+}
+
 .selected {
   background-color: #f7e5c5;
   color: #343a40;
 }
 
-.robin-container div:nth-child(1) {
+.robin-container div:nth-child(1), .round-container div:nth-child(1) {
   border-top-left-radius: 7px;
   border-bottom-left-radius: 7px;
+  width: 125px;
 }
 
-.robin-container div:nth-child(2) {
+.robin-container div:nth-child(2), .round-container div:nth-child(2) {
   border-top-right-radius: 7px;
   border-bottom-right-radius: 7px;
+  width: 125px;
 }
 
-.robin-container {
+.robin-container, .round-container {
   display: flex;
-  margin-bottom: 3em;
+  margin-top: 1em;
+  margin-bottom: 2em;
 }
 
 .tourny-create-header {

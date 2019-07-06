@@ -5,9 +5,10 @@ import { TournamentService } from './Services/tournament.service';
 import { BracketService } from './Services/bracket.service';
 import { EloService } from './Services/elo.service';
 import { GameService } from './Services/game.service';
+import {TournamentSetupService} from './Services/tournament-setup.service';
 
 @NgModule({
-    providers: [PlayerService, TournamentService, BracketService, EloService, GameService]
+    providers: [PlayerService, TournamentService, BracketService, EloService, GameService, TournamentSetupService]
 })
 export class CoreModule {
     constructor (@Optional() @SkipSelf() parentModule: CoreModule) {

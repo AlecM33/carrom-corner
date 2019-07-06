@@ -9,7 +9,7 @@ const connection = require('./db');
 router.post('/singles/post', function(req, res) {
   const tournament_info = req.body;
   const query = 'INSERT INTO singles_tournaments VALUES (NULL, ?, false, NULL, ?, 1, ?);';
-  const filter = [tournament_info.name, tournament_info.size, tournament_info.numberOfRounds];
+  const filter = [tournament_info.name, tournament_info.size, tournament_info.rounds];
   connection.query(query, filter, function(err, result) {
     if (err) throw err;
     else {
@@ -22,13 +22,13 @@ router.post('/singles/post', function(req, res) {
 router.post('/doubles/post', function(req, res) {
   const tournament_info = req.body;
   const query = 'INSERT INTO doubles_tournaments VALUES (NULL, ?, false, NULL, NULL, ?, 1, ?);';
-  const filter = [tournament_info.name, tournament_info.size, tournament_info.numberOfRounds];
+  const filter = [tournament_info.name, tournament_info.size, tournament_info.rounds];
   connection.query(query, filter, function(err, result) {
     if (err) throw err;
     else {
       return res.status(200).send(JSON.stringify(result));
     }
-  })
+  });
 });
 
 // GET all singles tournaments

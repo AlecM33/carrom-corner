@@ -16,6 +16,7 @@ import { GameService } from '../Services/game.service';
 import { reduceEachTrailingCommentRange } from 'typescript';
 import {DoublesTournament} from './doubles-tournament';
 import {SinglesTournament} from './singles-tournament';
+import {TournamentSetupService} from '../Services/tournament-setup.service';
 
 
 /* Component for creating a singles tournament. Includes functions for presenting setup parameters
@@ -29,7 +30,8 @@ export class AddTournamentComponent implements OnInit {
               private http: HttpClient,
               private router: Router,
               public active_route: ActivatedRoute,
-              private _gameService: GameService) {
+              private _gameService: GameService,
+              private _setupService: TournamentSetupService) {
   }
 
   public playersInTourny = new Set<Player>();
@@ -42,6 +44,7 @@ export class AddTournamentComponent implements OnInit {
   public tournament: any;
   public numberOfRounds = 1;
   public robinType = 'Single';
+  public oneRound = true;
   public singleRoundRobin = true;
   public generatedPools = [];
   public scheduleIndices = [];
@@ -108,22 +111,31 @@ export class AddTournamentComponent implements OnInit {
   removePlayer(currentPlayer: Player) {
     this.playersInTourny.delete(currentPlayer);
     this.playersToAdd.add(currentPlayer);
-    let index = this.teamIds.findIndex((id) => id == currentPlayer.id);
+    const index = this.teamIds.findIndex((id) => id === currentPlayer.id);
     this.teamIds.splice(index, 1);
+  }
+
+  createDoublesData(insertId) {
+    this._setupService.createDoublesRounds(this.numberOfRounds, this.playersInTourny.size / 2, insertId);
+  }
+
+  createSinglesData(insertId: number) {
+    this._setupService.createSinglesRounds(this.numberOfRounds, this.playersInTourny.size, insertId);
+    //this.createSinglesPools();
+    //this.createSinglesGames();
   }
 
   // Creates a tournament object and calls the tournament service to add to the database
   createTourny() {
     if (this.tournyType === 'doubles') {
-      this.generateTeams();
       this.tournament = new DoublesTournament(this.tournamentName, this.playersInTourny.size / 2, this.numberOfRounds);
-      this._tournyService.addDoublesTournament(this.tournament).subscribe(() => this.router.navigateByUrl('/tournaments'));
-
+      this._tournyService.addDoublesTournament(this.tournament).subscribe((result: any) => {
+        this.createDoublesData(result.insertId);
+      });
     } else {
       this.tournament  = new SinglesTournament(this.tournamentName, this.playersInTourny.size, this.numberOfRounds);
-      this._tournyService.addSinglesTournament(this.tournament).subscribe(() => {
-        //this.generatePools();
-        this.router.navigateByUrl('/tournaments');
+      this._tournyService.addSinglesTournament(this.tournament).subscribe((result: any) => {
+        this.createSinglesData(result.insertId);
       });
     }
   }
@@ -155,6 +167,15 @@ export class AddTournamentComponent implements OnInit {
     this.robinType = "Double";
     this.singleRoundRobin = false;
     console.log(this.robinType);
+  }
+
+  changeRoundNumber() {
+    if (this.numberOfRounds === 1) {
+      this.numberOfRounds++;
+    } else {
+      this.numberOfRounds --;
+    }
+    this.oneRound = !this.oneRound;
   }
 
   // After generating balanced pools, rations remaining players among created pools
