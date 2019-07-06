@@ -3,8 +3,9 @@
   "version": "0.2.0",
   "license": "MIT",
   "scripts": {
-    "ng": "ng",
+    "local": "ng serve --proxy-config proxy.conf.json",
     "start": "node server.js",
+    "startbg": "node server.js &",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
