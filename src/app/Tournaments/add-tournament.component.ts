@@ -121,7 +121,10 @@ export class AddTournamentComponent implements OnInit {
 
     } else {
       this.tournament  = new SinglesTournament(this.tournamentName, this.playersInTourny.size, this.numberOfRounds);
-      this._tournyService.addSinglesTournament(this.tournament).subscribe(() => this.router.navigateByUrl('/tournaments'));
+      this._tournyService.addSinglesTournament(this.tournament).subscribe(() => {
+        //this.generatePools();
+        this.router.navigateByUrl('/tournaments');
+      });
     }
   }
 
