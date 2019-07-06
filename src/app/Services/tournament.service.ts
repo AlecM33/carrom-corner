@@ -5,6 +5,8 @@ import { Tournament } from '../Tournaments/tournament';
 import { Pool } from '../Pools/pool';
 import { Playoff } from '../Playoffs/playoff';
 import { environment } from 'environments/environment';
+import {SinglesTournament} from '../Tournaments/singles-tournament';
+import {DoublesTournament} from '../Tournaments/doubles-tournament';
 
 @Injectable()
 export class TournamentService {
@@ -13,22 +15,32 @@ export class TournamentService {
 
     tournaments: Tournament[];
 
-    populateWithTournaments(ob: any[]): Tournament[] {
+    populateWithSinglesTournaments(response: any[]): SinglesTournament[] {
         const tournaments = [];
-        for (const piece of ob) {
-            tournaments.push(
-                new Tournament(
-                                piece['id'],
-                                piece['playoffDefined'],
-                                piece['winner'],
-                                piece['name'],
-                                piece['singles'],
-                                piece['size'],
-                                piece['teams']
-                            ));
+        for (const jsonTourny of response) {
+          const retrievedTourny = new SinglesTournament(jsonTourny['name'], jsonTourny['size'], jsonTourny['rounds']);
+          retrievedTourny.id = jsonTourny['id'];
+          retrievedTourny.playoffsStarted = jsonTourny['playoffs_started'];
+          retrievedTourny.winner = jsonTourny['winner'];
+          retrievedTourny.currentRound = jsonTourny['current_round'];
+          tournaments.push(retrievedTourny);
         }
         return tournaments;
     }
+
+  populateWithDoublesTournaments(response: any[]): DoublesTournament[] {
+      const tournaments = [];
+      for (const jsonTourny of response) {
+        const retrievedTourny = new DoublesTournament(jsonTourny['name'], jsonTourny['size'], jsonTourny['rounds']);
+        retrievedTourny.id = jsonTourny['id'];
+        retrievedTourny.playoffsStarted = jsonTourny['playoffs_started'];
+        retrievedTourny.winner1 = jsonTourny['winner1'];
+        retrievedTourny.winner2 = jsonTourny['winner2'];
+        retrievedTourny.currentRound = jsonTourny['current_round'];
+        tournaments.push(retrievedTourny);
+      }
+      return tournaments;
+  }
 
     endTournament (id, winner, winnerName) {
         this.declarePlayoffWinner(id, winner).subscribe();
@@ -46,12 +58,18 @@ export class TournamentService {
         });
     }
 
-    getTournaments(): Observable<Tournament[]> {
-        if (this.tournaments !== undefined && this.tournaments.length > 0) {
-            return Observable.of(this.tournaments);
-        } else {
-           return this.http.get(environment.api_url + '/tournaments').map(this.populateWithTournaments);
-        }
+    getSinglesTournaments(): Observable<SinglesTournament[]> {
+      return this.http.request('get', '/api/tournaments/singles/get', {
+        headers: {
+          'Content-Type': 'application/json'}
+      }).map(this.populateWithSinglesTournaments);
+    }
+
+    getDoublesTournaments(): Observable<DoublesTournament[]> {
+      return this.http.request('get', '/api/tournaments/doubles/get', {
+        headers: {
+          'Content-Type': 'application/json'}
+      }).map(this.populateWithDoublesTournaments);
     }
 
     getTournament(name): Observable<Object> {
@@ -65,17 +83,31 @@ export class TournamentService {
         return this.http.get(environment.api_url + '/playoffs/' + id);
     }
 
-
-    addTournament(newTournament: Tournament) {
-        const httpOptions = {headers: new HttpHeaders({ 'Content-Type': 'application/json' })};
+    addSinglesTournament(newTournament: SinglesTournament): Observable<Object> {
         const payload = { 'name': newTournament.name,
-                        'playoffDefined': newTournament.playoffDefined,
-                        'singles': newTournament.singles,
-                        'size': newTournament.size,
-                        'teams': newTournament.teams,
-                      };
-        return this.http.post(environment.api_url + '/tournaments', payload, httpOptions);
+                          'size': newTournament.size,
+                          'rounds': newTournament.rounds
+                        };
+        return this.http.request('post', '/api/tournaments/singles/post', {
+          body: payload,
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
     }
+
+  addDoublesTournament(newTournament: DoublesTournament) {
+      const payload = { 'name': newTournament.name,
+        'size': newTournament.size,
+        'rounds': newTournament.rounds
+      };
+      return this.http.request('post', '/api/tournaments/doubles/post', {
+        body: payload,
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+  }
 
     addPool(newPool: Pool) {
         const httpOptions = {headers: new HttpHeaders({ 'Content-Type': 'application/json' })};

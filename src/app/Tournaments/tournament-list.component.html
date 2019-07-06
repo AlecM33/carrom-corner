@@ -1,9 +1,8 @@
-<h2 class="tourny-list-header">Tournaments</h2>
+<h2 class="tourny-list-header">Singles Tournaments</h2>
 <table class='table table-dark app-table'>
   <thead>
   <tr>
     <th>Tournament Name</th>
-    <th>Singles/Doubles</th>
     <th>Players</th>
     <th>Winner</th>
     <th></th>
@@ -11,16 +10,38 @@
   </tr>
   </thead>
   <tbody>
-  <tr *ngFor='let tournament of tournaments'>
+  <tr *ngFor='let tournament of singlesTournaments'>
     <td>{{tournament.name}}</td>
-    <td *ngIf='tournament.singles == true'>Singles</td>
-    <td *ngIf='tournament.singles == false'>Doubles</td>
     <td>{{tournament.size}}</td>
     <td *ngIf="tournament.winner">{{tournament.winner}}</td>
     <td class='in-progress' *ngIf="!tournament.winner">In progress...</td>
     <td><a href="/" (click)='delete($event, tournament)' class='link'>Delete</a></td>
-    <td *ngIf="tournament.playoffDefined"><a href="/" (click)='viewPlayoff($event, tournament.id)' class='link'>View</a></td>
-    <td *ngIf="!tournament.playoffDefined"><a href="/" (click)='viewTournament($event, tournament)' class='link'>View</a></td>
+    <td *ngIf="tournament.playoffsStarted"><a href="/" (click)='viewPlayoff($event, tournament.id)' class='link'>View</a></td>
+    <td *ngIf="!tournament.playoffsStarted"><a href="/" (click)='viewTournament($event, tournament)' class='link'>View</a></td>
+  </tr>
+  </tbody>
+</table>
+
+<h2 class="tourny-list-header">Doubles Tournaments</h2>
+<table class='table table-dark app-table'>
+  <thead>
+  <tr>
+    <th>Tournament Name</th>
+    <th>Teams</th>
+    <th>Winner</th>
+    <th></th>
+    <th></th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor='let tournament of doublesTournaments'>
+    <td>{{tournament.name}}</td>
+    <td>{{tournament.size}}</td>
+    <td *ngIf="tournament.winner1">{{tournament.winner1}} and {{tournament.winner2}}</td>
+    <td class='in-progress' *ngIf="!tournament.winner">In progress...</td>
+    <td><a href="/" (click)='delete($event, tournament)' class='link'>Delete</a></td>
+    <td *ngIf="tournament.playoffsStarted"><a href="/" (click)='viewPlayoff($event, tournament.id)' class='link'>View</a></td>
+    <td *ngIf="!tournament.playoffsStarted"><a href="/" (click)='viewTournament($event, tournament)' class='link'>View</a></td>
   </tr>
   </tbody>
 </table>

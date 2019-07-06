@@ -9,6 +9,8 @@ import { Config } from 'protractor';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/do';
 import { Router } from '@angular/router';
+import {SinglesTournament} from './singles-tournament';
+import {DoublesTournament} from './doubles-tournament';
 
 @Component({
   selector: 'cr-tournaments',
@@ -17,7 +19,8 @@ import { Router } from '@angular/router';
 
 export class TournamentListComponent implements OnInit {
 
-  public tournaments = [];
+  public singlesTournaments: SinglesTournament[];
+  public doublesTournaments: DoublesTournament[];
 
   constructor(public _tournyService: TournamentService, private http: HttpClient, private router: Router) {
   }
@@ -31,23 +34,23 @@ export class TournamentListComponent implements OnInit {
     this.router.navigateByUrl('/playoffs/' + id);
   }
 
-  delete(e, tournament) {
-    e.preventDefault();
-    swal({
-      title: "Delete Tournament",
-      text: "Are you sure you wish to delete this tournament? You will lose all associated game results. Player stats resulting from the tournament will be preserved.",
-      buttons: [true, true],
-    }).then((wantsToSave) => {
-      if (wantsToSave) {
-        this.tournaments = [];
-        this._tournyService.deleteTournament(tournament, tournament.name).do(() => {
-          this._tournyService.getTournaments().subscribe((tournaments) => {
-            this.tournaments = tournaments;
-          })
-        }).subscribe();
-      }
-    });
-  }
+  // delete(e, tournament) {
+  //   e.preventDefault();
+  //   swal({
+  //     title: "Delete Tournament",
+  //     text: "Are you sure you wish to delete this tournament? You will lose all associated game results. Player stats resulting from the tournament will be preserved.",
+  //     buttons: [true, true],
+  //   }).then((wantsToSave) => {
+  //     if (wantsToSave) {
+  //       this.tournaments = [];
+  //       this._tournyService.deleteTournament(tournament, tournament.name).do(() => {
+  //         this._tournyService.getTournaments().subscribe((tournaments) => {
+  //           this.tournaments = tournaments;
+  //         })
+  //       }).subscribe();
+  //     }
+  //   });
+  // }
 
   viewTournament(e, tournament) {
     e.preventDefault();
@@ -59,8 +62,11 @@ export class TournamentListComponent implements OnInit {
   }
 
   ngOnInit() {
-    this._tournyService.getTournaments().subscribe((tournaments) => {
-      this.tournaments = tournaments;
+    this._tournyService.getSinglesTournaments().subscribe((tournaments) => {
+      this.singlesTournaments = tournaments;
+    });
+    this._tournyService.getDoublesTournaments().subscribe((tournaments) => {
+      this.doublesTournaments = tournaments;
     });
   }
 }
