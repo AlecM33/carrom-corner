@@ -29,11 +29,10 @@ router.get('/get', function(req, res) {
   })
 });
 
-//DELETE player
-router.delete('/delete/:player_id', function(req, res) {
-  const player_id = parseInt(req.params.player_id);
-  const query = 'DELETE FROM players WHERE id = ?';
-  const filter = [player_id]
+// GET a specific player
+router.get('/get/:player_id', function(req, res) {
+  const query = 'SELECT * FROM players WHERE id = ?';
+  const filter = [parseInt(req.params.player_id)];
   connection.query(query, filter, function(err, result) {
     if (err) throw err;
     else {
@@ -41,5 +40,44 @@ router.delete('/delete/:player_id', function(req, res) {
     }
   })
 });
+
+//DELETE player
+router.delete('/delete/:player_id', function(req, res) {
+  const player_id = parseInt(req.params.player_id);
+  const query = 'DELETE FROM players WHERE id = ?';
+  const filter = [player_id];
+  connection.query(query, filter, function(err, result) {
+    if (err) throw err;
+    else {
+      return res.status(200).send(JSON.stringify(result));
+    }
+  })
+});
+
+// //UPDATE player singles game
+// router.update('/update/singles/:player_id', function(req, res) {
+//   const player_id = parseInt(req.params.player_id);
+//   const query = 'UPDATE players SET (name = ?, nickname = ?';
+//   const filter = [player_id]
+//   connection.query(query, filter, function(err, result) {
+//     if (err) throw err;
+//     else {
+//       return res.status(200).send(JSON.stringify(result));
+//     }
+//   })
+// });
+//
+// //UPDATE player doubles game
+// router.update('/update/doubles/:player_id', function(req, res) {
+//   const player_id = parseInt(req.params.player_id);
+//   const query = 'UPDATE players SET (name = ?, nickname = ?';
+//   const filter = [player_id]
+//   connection.query(query, filter, function(err, result) {
+//     if (err) throw err;
+//     else {
+//       return res.status(200).send(JSON.stringify(result));
+//     }
+//   })
+// });
 
 module.exports = router;

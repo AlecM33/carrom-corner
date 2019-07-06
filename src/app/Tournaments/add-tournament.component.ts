@@ -14,6 +14,8 @@ import { Pool } from '../Pools/pool';
 import { Game } from '../Games/game';
 import { GameService } from '../Services/game.service';
 import { reduceEachTrailingCommentRange } from 'typescript';
+import {DoublesTournament} from './doubles-tournament';
+import {SinglesTournament} from './singles-tournament';
 
 
 /* Component for creating a singles tournament. Includes functions for presenting setup parameters
@@ -37,8 +39,8 @@ export class AddTournamentComponent implements OnInit {
   public tournyType = 'singles';
   public maxSize: number;
   public players = [];
-  public tournaments: Tournament[];
-  public tournament: Tournament;
+  public tournament: any;
+  public numberOfRounds = 1;
   public robinType = 'Single';
   public singleRoundRobin = true;
   public generatedPools = [];
@@ -61,8 +63,6 @@ export class AddTournamentComponent implements OnInit {
         this.tournyType = this.active_route.snapshot.paramMap.get('type');
       }
     });
-
-    this._tournyService.getTournaments().subscribe((tournaments) => this.tournaments = tournaments);
 
     this._playerService.getPlayers().subscribe((players) => {
       this.players = players;
@@ -89,22 +89,12 @@ export class AddTournamentComponent implements OnInit {
     } else {
       this.rosterUneven = false;
     }
-    this.nameForbidden = this.checkTournyName();
     this.rosterForbidden = this.playersInTourny.size < 2;
-    if (!this.nameForbidden && !this.rosterForbidden && !this.nameBlank && !this.rosterUneven) {
+    if (!this.rosterForbidden && !this.nameBlank && !this.rosterUneven) {
       this.createTourny();
     } else {
       this.errorPresent = true;
     }
-  }
-
-  checkTournyName() {
-    for (let tournament of this.tournaments) {
-      if (this.tournamentName && tournament.name.toLowerCase() === this.tournamentName.toLowerCase()) {
-        return true;
-      }
-    }
-    return false;
   }
 
   // Adds player to current working roster
@@ -126,34 +116,12 @@ export class AddTournamentComponent implements OnInit {
   createTourny() {
     if (this.tournyType === 'doubles') {
       this.generateTeams();
-      this.tournament = new Tournament(undefined, false, undefined, this.tournamentName, false, this.playersInTourny.size / 2, this.doublesTeamIds);
-      this._tournyService.addTournament(this.tournament).subscribe(() => {
-        this._tournyService.getTournament(this.tournament.name).subscribe((tournament) => {
-          this.id = tournament[0].id;
-          if (this.tournament.size >= 8) {
-            this.generatePools(this.doublesTeamIds);
-            this.generateSchedule(this.generatedPools);
-          } else {
-            this.generateSchedule([this.doublesTeamIds]);
-            this.addPool([this.doublesTeamIds]);
-          }
-        });
-      });
-    } else {
-      this.tournament = new Tournament(undefined, false, undefined, this.tournamentName, true, this.playersInTourny.size, this.teamIds);
-      this._tournyService.addTournament(this.tournament).subscribe(() => {
-        this._tournyService.getTournament(this.tournament.name).subscribe((tournament) => {
-          this.id = tournament[0].id;
-          if (this.tournament.size >= 8) {
-            this.generatePools(this.teamIds);
-            this.generateSchedule(this.generatedPools);
+      this.tournament = new DoublesTournament(this.tournamentName, this.playersInTourny.size / 2, this.numberOfRounds);
+      this._tournyService.addDoublesTournament(this.tournament).subscribe(() => this.router.navigateByUrl('/tournaments'));
 
-          } else {
-            this.generateSchedule([this.teamIds]);
-            this.addPool([this.teamIds]);
-          }
-        });
-      });
+    } else {
+      this.tournament  = new SinglesTournament(this.tournamentName, this.playersInTourny.size, this.numberOfRounds);
+      this._tournyService.addSinglesTournament(this.tournament).subscribe(() => this.router.navigateByUrl('/tournaments'));
     }
   }
 
