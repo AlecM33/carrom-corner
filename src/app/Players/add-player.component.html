@@ -9,12 +9,14 @@
         Player name or nickname is invalid. Valid names/nicknames can have letters, numbers, and spaces.
     </div>
 </div>
-<form class='add-player' (ngSubmit)="validatePlayer()" #playerForm="ngForm">
-    <label>Full Name:</label>
+<form id="add-player-form" (ngSubmit)="validatePlayer()" #playerForm="ngForm">
+  <div class="add-player-form-content">
+    <h2>Full Name:</h2>
     <input type="text" name="name" [(ngModel)]="newPlayerName" />
-    <label>Nickname (optional):</label>
+    <h2>Nickname (optional):</h2>
     <input type="text" name="nickname" [(ngModel)]="newPlayerNickname" />
     <div>
-        <input class='btn btn-primary' type="submit" value="Add this player"/>
+        <input class='app-btn' type="submit" value="Add this player"/>
     </div>
+  </div>
 </form>

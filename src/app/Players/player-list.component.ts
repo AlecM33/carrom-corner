@@ -41,7 +41,7 @@ export class PlayerListComponent implements OnInit {
         this.players = players;
         this.sortablePlayers = this.players.filter((player) => player.singlesPlayed > 0 || player.doublesPlayed > 0);
         this.newPlayers = this.players.filter((player) => player.singlesPlayed === 0 && player.doublesPlayed === 0);
-      })
+      });
     }).subscribe();
   }
 
