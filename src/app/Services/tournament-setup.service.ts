@@ -6,6 +6,10 @@ import {DoublesRound} from '../Rounds/doubles-round';
 import {forkJoin} from 'rxjs/observable/forkJoin';
 import {SinglesPool} from '../Pools/singles-pool';
 import {DoublesPool} from '../Pools/doubles-pool';
+import {Player} from '../Players/player';
+import {SinglesPoolPlacement} from '../Pools/singles-pool-placement';
+import {DoublesPoolPlacement} from '../Pools/doubles-pool-placement';
+import {Team} from '../Teams/team';
 
 @Injectable()
 export class TournamentSetupService {
@@ -48,17 +52,16 @@ export class TournamentSetupService {
     });
   }
 
-  createSinglesPools(roundId: number, size: number): Observable<Object[]> {
-    let optimalGroupSize = 0;
-    if (size <= 16) {
-      optimalGroupSize = 4;
-    } else if (size > 16 && size < 24) {
-      optimalGroupSize = 5;
-    } else {
-      optimalGroupSize = 6;
-    }
+  postTeams(teams) {
     const observablesArray: Observable<Object>[] = [];
-    const sameSizePools = Math.floor(size / optimalGroupSize);
+    for (const team of teams) {
+      observablesArray.push(this.addTeam(team));
+    }
+    return forkJoin(...observablesArray);
+  }
+
+  createSinglesPools(roundId: number, sameSizePools: number): Observable<Object[]> {
+    const observablesArray: Observable<Object>[] = [];
     for (let i = 0; i < sameSizePools; i++) {
       const newPool = new SinglesPool(roundId, i + 1);
       observablesArray.push(this.addSinglesPool(newPool));
@@ -79,17 +82,8 @@ export class TournamentSetupService {
     });
   }
 
-  createDoublesPools(roundId: number, size: number) {
-    let optimalGroupSize = 0;
-    if (size <= 16) {
-      optimalGroupSize = 4;
-    } else if (size > 16 && size < 24) {
-      optimalGroupSize = 5;
-    } else {
-      optimalGroupSize = 6;
-    }
+  createDoublesPools(roundId: number, sameSizePools: number) {
     const observablesArray: Observable<Object>[] = [];
-    const sameSizePools = Math.floor(size / optimalGroupSize);
     for (let i = 0; i < sameSizePools; i++) {
       const newPool = new DoublesPool(roundId, i + 1);
       observablesArray.push(this.addDoublesPool(newPool));
@@ -103,6 +97,131 @@ export class TournamentSetupService {
       'number': pool.number
     };
     return this.http.request('post', '/api/pools/doubles/post', {
+      body: payload,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+  }
+
+  // Gets a random integer in the specified range (inclusive)
+  getRandomIntInclusive(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  // After generating balanced pools, rations remaining players among created pools
+  distributeSinglesLeftovers(poolDistribution: SinglesPoolPlacement[], players: Player[], leftovers: number, response: any[]): SinglesPoolPlacement[] {
+    let i = 0;
+    let j = 0;
+    while (i < leftovers) {
+      // leftovers are greater than the number of pools available
+      if (j === response.length) {
+        j = 0;
+      }
+      const rnd = this.getRandomIntInclusive(0, players.length - 1);
+      const removedPlayer = players.splice(rnd, 1)[0];
+      const newPlacement = new SinglesPoolPlacement(response[j].insertId, removedPlayer.id);
+      poolDistribution.push(newPlacement);
+      i ++;
+      j ++;
+    }
+    return poolDistribution;
+  }
+
+  // After generating balanced pools, rations remaining players among created pools
+  distributeDoublesLeftovers(poolDistribution: DoublesPoolPlacement[], teams: Team[], leftovers: number, response: any[]): DoublesPoolPlacement[] {
+    let i = 0;
+    let j = 0;
+    while (i < leftovers) {
+      // leftovers are greater than the number of pools available
+      if (j === response.length) {
+        j = 0;
+      }
+      const rnd = this.getRandomIntInclusive(0, teams.length - 1);
+      const removedTeam = teams.splice(rnd, 1)[0];
+      const newPlacement = new DoublesPoolPlacement(response[j].insertId, removedTeam.id);
+      poolDistribution.push(newPlacement);
+      i ++;
+      j ++;
+    }
+    return poolDistribution;
+  }
+
+  createSinglesPoolPlacements(response: any[], players: Player[], groupSize: number): Observable<Object> {
+    let poolDistribution: SinglesPoolPlacement[] = [];
+    const leftovers = players.length % groupSize;
+    for (const insertedPool of response) {
+      for (let i = 0; i < groupSize; i++) {
+        const rnd = this.getRandomIntInclusive(0, players.length - 1);
+        const removedPlayer = players.splice(rnd, 1)[0];
+        const newPlacement = new SinglesPoolPlacement(insertedPool.insertId, removedPlayer.id);
+        poolDistribution.push(newPlacement);
+      }
+      if (leftovers > 0) {
+        poolDistribution = this.distributeSinglesLeftovers(poolDistribution, players, leftovers, response);
+      }
+    }
+    return this.addSinglesPoolPlacements(poolDistribution);
+  }
+
+  addSinglesPoolPlacements(poolPlacements: SinglesPoolPlacement[]): Observable<Object> {
+    const nestedPayload = {};
+    for (let i = 0; i < poolPlacements.length; i++) {
+      nestedPayload[i] = {
+        'poolId': poolPlacements[i].poolId,
+        'playerId': poolPlacements[i].playerId
+      };
+    }
+    return this.http.request('post', '/api/pool_placements/singles/post', {
+      body: nestedPayload,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+  }
+
+  createDoublesPoolPlacements(response: any[], teams: Team[], groupSize: number): Observable<Object> {
+    let poolDistribution: DoublesPoolPlacement[] = [];
+    const leftovers = teams.length % groupSize;
+    for (const insertedPool of response) {
+      for (let i = 0; i < groupSize; i++) {
+        const rnd = this.getRandomIntInclusive(0, teams.length - 1);
+        const removedTeam = teams.splice(rnd, 1)[0];
+        const newPlacement = new DoublesPoolPlacement(insertedPool.insertId, removedTeam.id);
+        poolDistribution.push(newPlacement);
+      }
+      if (leftovers > 0) {
+        poolDistribution = this.distributeDoublesLeftovers(poolDistribution, teams, leftovers, response);
+      }
+    }
+    return this.addDoublesPoolPlacements(poolDistribution);
+  }
+
+  addDoublesPoolPlacements(poolPlacements: DoublesPoolPlacement[]): Observable<Object> {
+    const nestedPayload = {};
+    for (let i = 0; i < poolPlacements.length; i++) {
+      nestedPayload[i] = {
+        'poolId': poolPlacements[i].poolId,
+        'teamId': poolPlacements[i].teamId
+      };
+    }
+    return this.http.request('post', '/api/pool_placements/doubles/post', {
+      body: nestedPayload,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+  }
+
+  addTeam(team: Team) {
+    const payload = {
+      'tournamentId': team.tournamentId,
+      'player1Id': team.player1Id,
+      'player2Id': team.player2Id
+    };
+    return this.http.request('post', '/api/teams/post', {
       body: payload,
       headers: {
         'Content-Type': 'application/json'
