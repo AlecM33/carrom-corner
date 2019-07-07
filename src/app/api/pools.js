@@ -6,7 +6,7 @@ const connection = require('./db');
 // POST singles pool
 router.post('/singles/post', function(req, res) {
   const pool_info = req.body;
-  const query = 'INSERT INTO singles_pools VALUES (NULL, ?, ?);';
+  const query = 'INSERT INTO Singles_Pools VALUES (NULL, ?, ?);';
   const filter = [pool_info.roundId, pool_info.number];
   connection.query(query, filter, function(err, result) {
     if (err) throw err;
@@ -20,7 +20,7 @@ router.post('/singles/post', function(req, res) {
 // POST doubles pool
 router.post('/doubles/post', function(req, res) {
   const pool_info = req.body;
-  const query = 'INSERT INTO doubles_pools VALUES (NULL, ?, ?);';
+  const query = 'INSERT INTO Doubles_Pools VALUES (NULL, ?, ?);';
   const filter = [pool_info.roundId, pool_info.number];
   connection.query(query, filter, function(err, result) {
     if (err) throw err;
@@ -33,7 +33,7 @@ router.post('/doubles/post', function(req, res) {
 
 // GET pools for a singles round
 router.get('/get/singles/:round_id', function(req, res) {
-  const query = 'SELECT * FROM singles_pools WHERE round_id = ?';
+  const query = 'SELECT * FROM Singles_Pools WHERE round_id = ?';
   const filter = [parseInt(req.params.round_id)];
   connection.query(query, filter, function(err, result) {
     if (err) throw err;
@@ -45,7 +45,7 @@ router.get('/get/singles/:round_id', function(req, res) {
 
 // GET pools for a doubles round
 router.get('/get/doubles/:round_id', function(req, res) {
-  const query = 'SELECT * FROM doubles_pools WHERE round_id = ?';
+  const query = 'SELECT * FROM Doubles_Pools WHERE round_id = ?';
   const filter = [parseInt(req.params.round_id)];
   connection.query(query, filter, function(err, result) {
     if (err) throw err;

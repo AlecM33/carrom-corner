@@ -3,8 +3,8 @@ port = process.env.PORT || 3001;
 
 var connection = mysql.createConnection({
   host: 'localhost',
-  user: 'root',
-  password: 'Ellie112196',
+  user: 'CHANGEME',
+  password: 'CHANGEME',
   database: 'carrom-corner'
 });
 

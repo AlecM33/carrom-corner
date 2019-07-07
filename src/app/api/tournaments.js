@@ -8,7 +8,7 @@ const connection = require('./db');
 // POST singles tournament
 router.post('/singles/post', function(req, res) {
   const tournament_info = req.body;
-  const query = 'INSERT INTO singles_tournaments VALUES (NULL, ?, false, NULL, ?, 1, ?);';
+  const query = 'INSERT INTO Singles_Tournaments VALUES (NULL, ?, false, NULL, ?, 1, ?);';
   const filter = [tournament_info.name, tournament_info.size, tournament_info.rounds];
   connection.query(query, filter, function(err, result) {
     if (err) throw err;
@@ -21,7 +21,7 @@ router.post('/singles/post', function(req, res) {
 // POST doubles tournament
 router.post('/doubles/post', function(req, res) {
   const tournament_info = req.body;
-  const query = 'INSERT INTO doubles_tournaments VALUES (NULL, ?, false, NULL, NULL, ?, 1, ?);';
+  const query = 'INSERT INTO Doubles_Tournaments VALUES (NULL, ?, false, NULL, NULL, ?, 1, ?);';
   const filter = [tournament_info.name, tournament_info.size, tournament_info.rounds];
   connection.query(query, filter, function(err, result) {
     if (err) throw err;
@@ -33,7 +33,7 @@ router.post('/doubles/post', function(req, res) {
 
 // GET all singles tournaments
 router.get('/singles/get', function(req, res) {
-  const query = 'SELECT * FROM singles_tournaments';
+  const query = 'SELECT * FROM Singles_Tournaments';
   connection.query(query, function(err, result) {
     if (err) throw err;
     else {
@@ -44,7 +44,7 @@ router.get('/singles/get', function(req, res) {
 
 // GET all doubles tournaments
 router.get('/doubles/get', function(req, res) {
-  const query = 'SELECT * FROM doubles_tournaments';
+  const query = 'SELECT * FROM Doubles_Tournaments';
   connection.query(query, function(err, result) {
     if (err) throw err;
     else {
@@ -55,7 +55,7 @@ router.get('/doubles/get', function(req, res) {
 
 // GET a specific singles tournament
 router.get('/get/:singles_id', function(req, res) {
-  const query = 'SELECT * FROM singles_tournaments WHERE id = ?';
+  const query = 'SELECT * FROM Singles_Tournaments WHERE id = ?';
   const filter = [parseInt(req.params.singles_id)];
   connection.query(query, filter, function(err, result) {
     if (err) throw err;
@@ -67,7 +67,7 @@ router.get('/get/:singles_id', function(req, res) {
 
 // GET a specific doubles tournament
 router.get('/get/:doubles_id', function(req, res) {
-  const query = 'SELECT * FROM doubles_tournaments WHERE id = ?';
+  const query = 'SELECT * FROM Doubles_Tournaments WHERE id = ?';
   const filter = [parseInt(req.params.doubles_id)];
   connection.query(query, filter, function(err, result) {
     if (err) throw err;
@@ -80,7 +80,7 @@ router.get('/get/:doubles_id', function(req, res) {
 //DELETE player
 router.delete('/delete/:player_id', function(req, res) {
   const player_id = parseInt(req.params.player_id);
-  const query = 'DELETE FROM players WHERE id = ?';
+  const query = 'DELETE FROM Players WHERE id = ?';
   const filter = [player_id];
   connection.query(query, filter, function(err, result) {
     if (err) throw err;
