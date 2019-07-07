@@ -13,10 +13,15 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
   extended: true
 }));
 
+// add api resources here
 const player = require("./src/app/api/players");
 const tournament = require ("./src/app/api/tournaments");
+const round = require("./src/app/api/rounds");
+const pool = require("./src/app/api/pools");
 app.use("/api/players", player);
 app.use("/api/tournaments", tournament);
+app.use("/api/rounds", round);
+app.use("/api/pools", pool);
 
 app.get('/*', function(req,res) {
   res.sendFile(path.join(__dirname+'/dist/index.html'));
