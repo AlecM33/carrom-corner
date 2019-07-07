@@ -3,24 +3,38 @@ const router = express.Router();
 
 const connection = require('./db');
 
-// POST singles round
+// POST singles pool
 router.post('/singles/post', function(req, res) {
-  const round_info = req.body;
-  const query = 'INSERT INTO singles_rounds VALUES (NULL, ?, ?, ?);';
-  const filter = [round_info.size, round_info.number, round_info.tournamentId];
+  const pool_info = req.body;
+  const query = 'INSERT INTO singles_pools VALUES (NULL, ?, ?);';
+  const filter = [pool_info.roundId, pool_info.number];
   connection.query(query, filter, function(err, result) {
     if (err) throw err;
     else {
+      console.log(JSON.stringify(result));
       return res.status(200).send(JSON.stringify(result));
     }
   })
 });
 
-// POST doubles round
+// POST doubles pool
 router.post('/doubles/post', function(req, res) {
-  const round_info = req.body;
-  const query = 'INSERT INTO doubles_rounds VALUES (NULL, ?, ?, ?);';
-  const filter = [round_info.size, round_info.number, round_info.tournamentId];
+  const pool_info = req.body;
+  const query = 'INSERT INTO doubles_pools VALUES (NULL, ?, ?);';
+  const filter = [pool_info.roundId, pool_info.number];
+  connection.query(query, filter, function(err, result) {
+    if (err) throw err;
+    else {
+      console.log(JSON.stringify(result));
+      return res.status(200).send(JSON.stringify(result));
+    }
+  })
+});
+
+// GET pools for a singles round
+router.get('/get/singles/:round_id', function(req, res) {
+  const query = 'SELECT * FROM singles_pools WHERE round_id = ?';
+  const filter = [parseInt(req.params.round_id)];
   connection.query(query, filter, function(err, result) {
     if (err) throw err;
     else {
@@ -29,22 +43,10 @@ router.post('/doubles/post', function(req, res) {
   })
 });
 
-// GET rounds for a singles tournament
-router.get('/get/singles/:tournament_id', function(req, res) {
-  const query = 'SELECT * FROM singles_rounds WHERE tournament_id = ?';
-  const filter = [parseInt(req.params.tournament_id)];
-  connection.query(query, filter, function(err, result) {
-    if (err) throw err;
-    else {
-      return res.status(200).send(JSON.stringify(result));
-    }
-  })
-});
-
-// GET rounds for a doubles tournament
-router.get('/get/doubles/:tournament_id', function(req, res) {
-  const query = 'SELECT * FROM doubles_rounds WHERE tournament_id = ?';
-  const filter = [parseInt(req.params.tournament_id)];
+// GET pools for a doubles round
+router.get('/get/doubles/:round_id', function(req, res) {
+  const query = 'SELECT * FROM doubles_pools WHERE round_id = ?';
+  const filter = [parseInt(req.params.round_id)];
   connection.query(query, filter, function(err, result) {
     if (err) throw err;
     else {

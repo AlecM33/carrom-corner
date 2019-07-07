@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders} from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
-import { Pool } from '../Pools/pool';
+import { SinglesPool } from '../Pools/singles-pool';
 import { Game } from '../Games/game';
 import { environment } from 'environments/environment';
 
@@ -62,13 +62,13 @@ export class GameService {
         });
     }
 
-    addPool(newPool: Pool) {
-        const httpOptions = {headers: new HttpHeaders({ 'Content-Type': 'application/json' })};
-        const payload = {
-          'tournamentId': newPool.tournamentId,
-          'pools': newPool.pools,
-          'tournyName': newPool.tournyName
-        };
-        return this.http.post(environment.api_url + '/pools', payload, httpOptions);
-    }
+    // addPool(newPool: SinglesPool) {
+    //     const httpOptions = {headers: new HttpHeaders({ 'Content-Type': 'application/json' })};
+    //     const payload = {
+    //       'tournamentId': newPool.tournamentId,
+    //       'pools': newPool.pools,
+    //       'tournyName': newPool.tournyName
+    //     };
+    //     return this.http.post(environment.api_url + '/pools', payload, httpOptions);
+    // }
 }

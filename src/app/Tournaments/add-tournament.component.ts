@@ -10,7 +10,7 @@ import { TournamentService } from '../Services/tournament.service';
 import { Observable } from 'rxjs/Observable';
 import { Tournament } from './tournament';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
-import { Pool } from '../Pools/pool';
+import { SinglesPool } from '../Pools/singles-pool';
 import { Game } from '../Games/game';
 import { GameService } from '../Services/game.service';
 import { reduceEachTrailingCommentRange } from 'typescript';
@@ -115,17 +115,30 @@ export class AddTournamentComponent implements OnInit {
     this.teamIds.splice(index, 1);
   }
 
+  // Creates rounds, pools, pool placements, and games for the created doubles tournament
   createDoublesData(insertId) {
-    this._setupService.createDoublesRounds(this.numberOfRounds, this.playersInTourny.size / 2, insertId);
+    // TODO: Create teams from playersInTourny
+    this._setupService.createDoublesRound(this.numberOfRounds, this.playersInTourny.size, insertId).subscribe((response: any) => {
+      // TODO: Grab insert ids from created pools and use them to create pool placements for the players, games for the pools
+      this._setupService.createDoublesPools(response.insertId, this.playersInTourny.size / 2).subscribe((response) => {
+        console.log(response);
+        // create pool placements, games here
+      });
+    });
   }
 
+  // Creates rounds, pools, pool placements, and games for the created singles tournament
   createSinglesData(insertId: number) {
-    this._setupService.createSinglesRounds(this.numberOfRounds, this.playersInTourny.size, insertId);
-    //this.createSinglesPools();
-    //this.createSinglesGames();
+    this._setupService.createSinglesRound(this.numberOfRounds, this.playersInTourny.size, insertId).subscribe((response: any) => {
+      // TODO: Grab insert ids from created pools and use them to create pool placements for the players, games for the pools
+      this._setupService.createSinglesPools(response.insertId, this.playersInTourny.size).subscribe((response) => {
+        console.log(response);
+        // create pool placements, games here
+      });
+    });
   }
 
-  // Creates a tournament object and calls the tournament service to add to the database
+  // Creates a tournament object, adds it to the database, and then calls the appropriate function to create all corresponding data
   createTourny() {
     if (this.tournyType === 'doubles') {
       this.tournament = new DoublesTournament(this.tournamentName, this.playersInTourny.size / 2, this.numberOfRounds);
@@ -158,13 +171,13 @@ export class AddTournamentComponent implements OnInit {
   }
 
   changeRobinTypeSingle() {
-    this.robinType = "Single";
+    this.robinType = 'Single';
     this.singleRoundRobin = true;
     console.log(this.robinType);
   }
 
   changeRobinTypeDouble() {
-    this.robinType = "Double";
+    this.robinType = 'Double';
     this.singleRoundRobin = false;
     console.log(this.robinType);
   }
@@ -196,12 +209,12 @@ export class AddTournamentComponent implements OnInit {
     }
   }
 
-  addPool(pool) {
-    let newPool = new Pool(this.id, pool, this.tournamentName);
-    this._tournyService.addPool(newPool).subscribe(() => {
-      this.router.navigateByUrl('/tournaments/' + this.tournyType + '/' + this.tournamentName);
-    });
-  }
+  // addPool(pool) {
+  //   let newPool = new SinglesPool(this.id, pool, this.tournamentName);
+  //   this._tournyService.addPool(newPool).subscribe(() => {
+  //     this.router.navigateByUrl('/tournaments/' + this.tournyType + '/' + this.tournamentName);
+  //   });
+  // }
 
   // Takes the selected roster and generates an appropriate player pool distribution
   generatePools(teams) {
@@ -227,7 +240,7 @@ export class AddTournamentComponent implements OnInit {
       this.generatedPools.push(newPool);
     }
     this.distributeLeftovers(sameSizePools, leftovers, teams);
-    this.addPool(this.generatedPools);
+    // this.addPool(this.generatedPools);
   }
 
   // Generates a round robin set of games and schedules them randomly
