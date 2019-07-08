@@ -12,33 +12,47 @@ export class GameService {
 
     constructor(private http: HttpClient) {}
 
-    populateWithGames(ob: any[]): Game[] {
+    populateWithSinglesGames(resp: any[]): SinglesGame[] {
         const games = [];
 
-        for (const piece of ob) {
-            games.push(
-                new Game(
-                        piece['id'],
-                        piece['playoff'],
-                        piece['tournamentId'],
-                        piece['scheduleIndex'],
-                        piece['team1'],
-                        piece['team2'],
-                        piece['winner'],
-                        piece['differential'],
-                        piece['validator']
-                    ));
+        for (const jsonGame of resp) {
+          const newGame = new SinglesGame(
+                                        jsonGame['tournament_id'],
+                                        jsonGame['round_id'],
+                                        jsonGame['pool_id'],
+                                        jsonGame['playoff'],
+                                        jsonGame['player1_id'],
+                                        jsonGame['player2_id']
+                                        );
+          newGame.id = jsonGame['id'];
+          newGame.winner = jsonGame['winner'];
+          newGame.loser = jsonGame['loser'];
+          newGame.differential = jsonGame['differential'];
+          games.push(newGame);
         }
         return games;
     }
 
-    getGames(id): Observable<Game[]> {
-        return this.http.get(environment.api_url + '/games?tournamentId=' + id + '&playoff=false').map(this.populateWithGames);
-    }
+  populateWithDoublesGames(resp: any[]): DoublesGame[] {
+    const games = [];
 
-    getPlayoffGames(id): Observable<Game[]> {
-        return this.http.get(environment.api_url + '/games?tournamentId=' + id + '&playoff=true').map(this.populateWithGames);
+    for (const jsonGame of resp) {
+      const newGame = new DoublesGame(
+        jsonGame['tournament_id'],
+        jsonGame['round_id'],
+        jsonGame['pool_id'],
+        jsonGame['playoff'],
+        jsonGame['team1_id'],
+        jsonGame['team2_id']
+      );
+      newGame.id = jsonGame['id'];
+      newGame.winner = jsonGame['winner'];
+      newGame.loser = jsonGame['loser'];
+      newGame.differential = jsonGame['differential'];
+      games.push(newGame);
     }
+    return games;
+  }
 
     addSinglesGame(newGame: SinglesGame) {
         const payload = {
@@ -82,6 +96,22 @@ export class GameService {
             'validator': validator
         });
     }
+
+  getSinglesGamesInPool(poolId: number, tournamentId: number, roundId: number) {
+    return this.http.request('get', '/api/games/get/singles/' + tournamentId + '/' + roundId + '/' + poolId, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).map(this.populateWithSinglesGames);
+  }
+
+  getDoublesGamesInPool(poolId: number, tournamentId: number, roundId: number) {
+    return this.http.request('get', '/api/games/get/doubles/' + tournamentId + '/' + roundId + '/' + poolId, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).map(this.populateWithDoublesGames);
+  }
 
     // addPool(newPool: SinglesPool) {
     //     const httpOptions = {headers: new HttpHeaders({ 'Content-Type': 'application/json' })};

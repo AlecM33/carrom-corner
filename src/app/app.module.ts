@@ -44,7 +44,7 @@ import { ViewRoundComponent } from './Tournaments/view-round/view-round.componen
       { path: ':name/:type/games/:id/enter_result', component: AddGameComponent},
       { path: 'playoffs/:id', component: PlayoffsComponent},
       { path: 'playoffs/:id/winner', component: WinnerComponent},
-      { path: 'tournaments/:type/:name/:id/:round', component: ViewRoundComponent},
+      { path: 'tournaments/:type/:name/:tourny_id/:round', component: ViewRoundComponent},
       { path: '', component: PlayerListComponent}
     ]),
     CoreModule.forRoot()

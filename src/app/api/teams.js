@@ -21,7 +21,7 @@ router.post('/post', function(req, res) {
 // GET all Teams for a tournament
 router.get('/get/:tournament_id', function(req, res) {
   const tournyid = req.params.tournament_id;
-  const query = 'SELECT * FROM Teams WHERE tournamentId = ?';
+  const query = 'SELECT * FROM Teams WHERE tourny_id = ?';
   const filter = [tournyid];
   connection.query(query, filter, function(err, result) {
     if (err) throw err;
