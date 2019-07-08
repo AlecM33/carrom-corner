@@ -18,12 +18,13 @@ import { WinnerComponent } from './Playoffs/winner.component';
 import { HomepageComponent } from './Homepage/homepage-component';
 import {NgbModule, NgbTooltip, NgbTooltipConfig} from '@ng-bootstrap/ng-bootstrap';
 import { ViewPoolComponent } from './Pools/view-pool/view-pool.component';
+import { ViewRoundComponent } from './Tournaments/view-round/view-round.component';
 
 @NgModule({
   declarations: [
     AppComponent, PlayerListComponent, AddPlayerComponent, AddTournamentComponent,
     TournamentListComponent, ViewTournamentComponent, AddGameComponent, PlayoffsComponent,
-    WinnerComponent, HomepageComponent, ViewPoolComponent
+    WinnerComponent, HomepageComponent, ViewPoolComponent, ViewRoundComponent
   ],
   imports: [
     FormsModule,
@@ -43,6 +44,7 @@ import { ViewPoolComponent } from './Pools/view-pool/view-pool.component';
       { path: ':name/:type/games/:id/enter_result', component: AddGameComponent},
       { path: 'playoffs/:id', component: PlayoffsComponent},
       { path: 'playoffs/:id/winner', component: WinnerComponent},
+      { path: 'tournaments/:type/:name/:id/:round', component: ViewRoundComponent},
       { path: '', component: PlayerListComponent}
     ]),
     CoreModule.forRoot()

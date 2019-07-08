@@ -1,0 +1,26 @@
+<!--<button *ngIf="disabled" (click)="simulate()" class="btn btn-primary btn-lg">Sim Tournament »</button>-->
+<h2>{{tournamentName}} - Round {{currentRound}}</h2>
+<h3>Click on a pool to view details about it.</h3>
+<div class='pools' *ngIf="playerPools">
+  <div *ngFor="let pool of playerPools">
+    <h2>{{getLetter(playerPools.indexOf(pool))}}</h2>
+    <table class='table table-dark pool-table'>
+      <thead>
+      <!--<th *ngIf="selecting"></th>-->
+      <th id="player-name"></th>
+      <th class="number-header">Wins</th>
+      <th class="number-header">Losses</th>
+      <th class="number-header">Coin +/-</th>
+      </thead>
+      <tbody>
+      <tr *ngFor="let id of pool">
+        <!--<td *ngIf="selecting"><input type="checkbox" (click)="addToPlayoffs(team)"/></td>-->
+        <td>{{convertToName(id)}}</td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
