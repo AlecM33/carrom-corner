@@ -163,9 +163,9 @@ export class TournamentSetupService {
         const newPlacement = new SinglesPoolPlacement(insertedPool.insertId, removedPlayer.id);
         poolDistribution.push(newPlacement);
       }
-      if (leftovers > 0) {
-        poolDistribution = this.distributeSinglesLeftovers(poolDistribution, players, leftovers, response);
-      }
+    }
+    if (leftovers > 0) {
+      poolDistribution = this.distributeSinglesLeftovers(poolDistribution, players, leftovers, response);
     }
     return this.addSinglesPoolPlacements(poolDistribution);
   }
@@ -196,9 +196,9 @@ export class TournamentSetupService {
         const newPlacement = new DoublesPoolPlacement(insertedPool.insertId, removedTeam.id);
         poolDistribution.push(newPlacement);
       }
-      if (leftovers > 0) {
-        poolDistribution = this.distributeDoublesLeftovers(poolDistribution, teams, leftovers, response);
-      }
+    }
+    if (leftovers > 0) {
+      poolDistribution = this.distributeDoublesLeftovers(poolDistribution, teams, leftovers, response);
     }
     return this.addDoublesPoolPlacements(poolDistribution);
   }
@@ -284,7 +284,6 @@ export class TournamentSetupService {
         while (i < placements.length) {
           const newGame = new SinglesGame(tournamentId, roundId, poolId, false, placements[j]['player_id'], placements[i]['player_id']);
           this._gameService.addSinglesGame(newGame).subscribe();
-          console.log(newGame);
           i++;
         }
         j++;
@@ -299,7 +298,6 @@ export class TournamentSetupService {
       while (i < placements.length) {
         const newGame = new DoublesGame(tournamentId, roundId, poolId, false, placements[j]['team_id'], placements[i]['team_id']);
         this._gameService.addDoublesGame(newGame).subscribe();
-        console.log(newGame);
         i++;
       }
       j++;
