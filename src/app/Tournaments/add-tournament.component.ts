@@ -128,8 +128,9 @@ export class AddTournamentComponent implements OnInit {
         teams[i].id = response[i].insertId;
       }
       this._setupService.createDoublesRound(this.numberOfRounds, teams.length, insertId).subscribe((resp: any) => {
+        const roundId = resp.insertId;
         this.configurePoolParameters(this.playersInTourny.size / 2);
-        this._setupService.createDoublesPools(resp.insertId, this.sameSizePools).subscribe((resp: any) => {
+        this._setupService.createDoublesPools(roundId, this.sameSizePools).subscribe((resp: any) => {
           this._setupService.createDoublesPoolPlacements(resp, teams, this.optimalGroupSize).subscribe((resp: any) => {
             this._setupService.createDoublesGames(this.tournament.id);
             this.router.navigateByUrl('/tournaments/doubles/' + this.tournamentName + '/' + this.tournament.id + '/1');
@@ -142,8 +143,9 @@ export class AddTournamentComponent implements OnInit {
   // Creates rounds, pools, pool placements, and games for the created singles tournament
   createSinglesData(insertId: number) {
     this._setupService.createSinglesRound(this.numberOfRounds, this.playersInTourny.size, insertId).subscribe((response: any) => {
+      const roundId = response.insertId;
       this.configurePoolParameters(this.playersInTourny.size);
-      this._setupService.createSinglesPools(response.insertId, this.sameSizePools).subscribe((response) => {
+      this._setupService.createSinglesPools(roundId, this.sameSizePools).subscribe((response) => {
         this._setupService.createSinglesPoolPlacements(response, Array.from(this.playersInTourny), this.optimalGroupSize).subscribe(() => {
           this._setupService.createSinglesGames(this.tournament.id);
           this.router.navigateByUrl('/tournaments/singles/' + this.tournamentName + '/' + this.tournament.id + '/1');

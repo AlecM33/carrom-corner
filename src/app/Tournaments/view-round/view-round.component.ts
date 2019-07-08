@@ -7,6 +7,11 @@ import {BracketService} from '../../Services/bracket.service';
 import {GameService} from '../../Services/game.service';
 import {TournamentSetupService} from '../../Services/tournament-setup.service';
 import {Player} from '../../Players/player';
+import {PlayerRecord} from '../../Records/player-record';
+import {SinglesGame} from '../../Games/singles-game';
+import {DoublesGame} from '../../Games/doubles-game';
+import {Team} from '../../Teams/team';
+import {TeamService} from '../../Services/team.service';
 
 @Component({
   selector: 'app-view-round',
@@ -17,19 +22,20 @@ export class ViewRoundComponent implements OnInit {
 
   public tournyType: string;
   public players: Player[];
+  public teams: Team[];
   public tournamentId: number;
   public currentRound: number;
   public tournamentName: string;
   public playerPools = [];
+  public recordPools = [];
 
   constructor(public _playerService: PlayerService,
               public http: HttpClient,
               public active_route: ActivatedRoute,
               public router: Router,
               public _setupService: TournamentSetupService,
-              public _tournyService: TournamentService,
-              public _bracketService: BracketService,
-              public _gameService: GameService
+              public _gameService: GameService,
+              public _teamService: TeamService
               ) { }
 
   ngOnInit() {
@@ -40,14 +46,19 @@ export class ViewRoundComponent implements OnInit {
         this.tournyType = this.active_route.snapshot.paramMap.get('type');
       }
     });
-    this.tournamentId = parseInt(this.active_route.snapshot.paramMap.get('id'), 10);
+    this.tournamentId = parseInt(this.active_route.snapshot.paramMap.get('tourny_id'), 10);
     this.currentRound = parseInt(this.active_route.snapshot.paramMap.get('round'), 10);
     this._playerService.getPlayers().subscribe((players) => {
       this.players = players;
       if (this.tournyType === 'singles') {
-        this.retrieveSinglesData();
+          this.players = players;
+          this.retrieveSinglesData();
       } else {
-        this.retrieveDoublesData();
+        this._teamService.getTeams(this.tournamentId).subscribe((teams) => {
+          this.teams = teams;
+          console.log(teams);
+          this.retrieveDoublesData();
+        });
       }
     });
   }
@@ -59,14 +70,16 @@ export class ViewRoundComponent implements OnInit {
         for (const pool of poolsResponse) {
           const poolId = pool['id'];
           this._setupService.getSinglesPoolPlacements(pool['id']).subscribe((placements: any) => {
-            const playerIds = [];
+            const playerRecords: PlayerRecord[] = [];
             for (const placement of placements) {
-              playerIds.push(placement['player_id']);
+              playerRecords.push(new PlayerRecord(poolId, placement['player_id'], null));
             }
-            this.playerPools.push(playerIds);
+            this.recordPools.push(playerRecords);
+          });
+          this._gameService.getSinglesGamesInPool(poolId, this.tournamentId, roundId).subscribe((games) => {
+            this.calculatePlayerRecords(games);
           });
         }
-        console.log(this.playerPools);
       });
     });
   }
@@ -74,19 +87,58 @@ export class ViewRoundComponent implements OnInit {
   retrieveDoublesData() {
     this._setupService.getFirstDoublesRound(this.tournamentId).subscribe((round) => {
       const roundId = round[0]['id'];
-      this._setupService.getDoublesPools(round[0]['id']).subscribe((poolsResponse: any) => {
+      this._setupService.getDoublesPools(roundId).subscribe((poolsResponse: any) => {
         for (const pool of poolsResponse) {
           const poolId = pool['id'];
           this._setupService.getDoublesPoolPlacements(pool['id']).subscribe((placements: any) => {
-            const teamIds = [];
+            const playerRecords: PlayerRecord[] = [];
             for (const placement of placements) {
-              teamIds.push(placement['team_id']);
+              playerRecords.push(new PlayerRecord(poolId, null, placement['team_id']));
             }
-            this.playerPools.push(teamIds);
+            this.recordPools.push(playerRecords);
+          });
+          console.log(this.recordPools);
+          this._gameService.getDoublesGamesInPool(poolId, this.tournamentId, roundId).subscribe((games) => {
+            this.calculateTeamRecords(games);
           });
         }
       });
     });
+  }
+
+  calculatePlayerRecords(games: SinglesGame[]) {
+    for (const game of games) {
+      if (game.winner) {
+        for (let i = 0; i < this.recordPools.length; i++) {
+          const winningPlayerIndex = this.recordPools.findIndex((record) => record[i].playerId === game.winner);
+          if (winningPlayerIndex) {
+            const losingPlayerIndex = this.recordPools.findIndex((record) => record[i].playerId === game.loser);
+            this.recordPools[i][winningPlayerIndex].wins++;
+            this.recordPools[i][winningPlayerIndex].totalDiff += game.differential;
+            this.recordPools[i][losingPlayerIndex].losses++;
+            this.recordPools[i][winningPlayerIndex].totalDiff -= game.differential;
+          }
+        }
+      }
+    }
+  }
+
+  calculateTeamRecords(games: DoublesGame[]) {
+    console.log(this.recordPools);
+    for (const game of games) {
+      if (game.winner) {
+        for (let i = 0; i < this.recordPools.length; i++) {
+          const winningPlayerIndex = this.recordPools.findIndex((record) => record[i].teamId === game.winner);
+          if (winningPlayerIndex) {
+            const losingPlayerIndex = this.recordPools.findIndex((record) => record[i].teamId === game.loser);
+            this.recordPools[i][winningPlayerIndex].wins++;
+            this.recordPools[i][winningPlayerIndex].totalDiff += game.differential;
+            this.recordPools[i][losingPlayerIndex].losses++;
+            this.recordPools[i][winningPlayerIndex].totalDiff -= game.differential;
+          }
+        }
+      }
+    }
   }
 
   getLetter(index: number): string {
@@ -98,6 +150,10 @@ export class ViewRoundComponent implements OnInit {
     if (this.tournyType === 'singles') {
       return this.players.find((player) => player.id === id).name;
     } else {
+      console.log(this.teams);
+      const foundTeam = this.teams.find((team) => team.id === id);
+      return this.players.find((player) => player.id === foundTeam.player1Id).name
+        + ', ' + this.players.find((player) => player.id === foundTeam.player2Id).name;
       // TODO: fetch teams in doubles tournament and map to names;
     }
   }

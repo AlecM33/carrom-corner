@@ -7,6 +7,7 @@ export class DoublesGame {
   public team1Id: number;
   public team2Id: number;
   public winner: number;
+  public loser: number;
   public differential: number;
 
   constructor(
@@ -25,6 +26,7 @@ export class DoublesGame {
     this.team1Id = team1Id;
     this.team2Id = team2Id;
     this.winner = null;
+    this.loser = null;
     this.differential = null;
   }
 }

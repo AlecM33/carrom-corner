@@ -31,6 +31,7 @@ CREATE TABLE `Singles_Games`
   `player1_id` int,
   `player2_id` int,
   `winner` int,
+  `loser` int,
   `differential` int
 );
 
@@ -44,6 +45,7 @@ CREATE TABLE `Doubles_Games`
   `team1_id` int,
   `team2_id` int,
   `winner` int,
+  `loser` int,
   `differential` int
 );
 
@@ -208,10 +210,6 @@ ALTER TABLE `Singles_Pool_Placements` ADD FOREIGN KEY (`pool_id`) REFERENCES `Si
 ALTER TABLE `Singles_Pool_Placements` ADD FOREIGN KEY (`player_id`) REFERENCES `Players` (`id`);
 
 ALTER TABLE `Doubles_Pool_Placements` ADD FOREIGN KEY (`pool_id`) REFERENCES `Doubles_Pools` (`id`);
-
-ALTER TABLE `Doubles_Pool_Placements` ADD FOREIGN KEY (`player1_id`) REFERENCES `Players` (`id`);
-
-ALTER TABLE `Doubles_Pool_Placements` ADD FOREIGN KEY (`player2_id`) REFERENCES `Players` (`id`);
 
 ALTER TABLE `Doubles_Pool_Placements` ADD FOREIGN KEY (`team_id`) REFERENCES `Teams` (`id`);
 
