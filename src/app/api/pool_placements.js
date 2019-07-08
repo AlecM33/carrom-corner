@@ -38,9 +38,9 @@ router.post('/doubles/post', function(req, res) {
 });
 
 // GET pool placements for a singles pool
-router.get('/get/singles/:round_id', function(req, res) {
-  const query = 'SELECT * FROM Singles_Pools WHERE round_id = ?';
-  const filter = [parseInt(req.params.round_id)];
+router.get('/get/singles/:pool_id', function(req, res) {
+  const query = 'SELECT * FROM Singles_Pool_Placements WHERE pool_id = ?';
+  const filter = [parseInt(req.params.pool_id)];
   connection.query(query, filter, function(err, result) {
     if (err) throw err;
     else {
@@ -50,9 +50,9 @@ router.get('/get/singles/:round_id', function(req, res) {
 });
 
 // GET pool placements for a doubles pool
-router.get('/get/doubles/:round_id', function(req, res) {
-  const query = 'SELECT * FROM Doubles_Pools WHERE round_id = ?';
-  const filter = [parseInt(req.params.round_id)];
+router.get('/get/doubles/:pool_id', function(req, res) {
+  const query = 'SELECT * FROM Doubles_Pool_Placements WHERE pool_id = ?';
+  const filter = [parseInt(req.params.pool_id)];
   connection.query(query, filter, function(err, result) {
     if (err) throw err;
     else {

@@ -155,4 +155,5 @@ export class TournamentService {
         const httpOptions = {headers: new HttpHeaders({ 'Content-Type': 'application/json' })};
         return this.http.delete(environment.api_url + '/tournaments/' + tournament.id, httpOptions);
     }
+
 }

@@ -4,6 +4,8 @@ import { Observable } from 'rxjs/Observable';
 import { SinglesPool } from '../Pools/singles-pool';
 import { Game } from '../Games/game';
 import { environment } from 'environments/environment';
+import {SinglesGame} from '../Games/singles-game';
+import {DoublesGame} from '../Games/doubles-game';
 
 @Injectable()
 export class GameService {
@@ -38,20 +40,39 @@ export class GameService {
         return this.http.get(environment.api_url + '/games?tournamentId=' + id + '&playoff=true').map(this.populateWithGames);
     }
 
-    addGame(newGame: Game) {
-        const httpOptions = {headers: new HttpHeaders({ 'Content-Type': 'application/json' })};
+    addSinglesGame(newGame: SinglesGame) {
         const payload = {
                         'playoff': newGame.playoff,
                         'tournamentId': newGame.tournamentId,
-                        'scheduleIndex': newGame.scheduleIndex,
-                        'team1': newGame.team1,
-                        'team2': newGame.team2,
-                        'winner': newGame.winner,
-                        'differential': newGame.differential,
-                        'validator': newGame.validator
+                        'roundId': newGame.roundId,
+                        'poolId': newGame.poolId,
+                        'player1Id': newGame.player1Id,
+                        'player2Id': newGame.player2Id,
                       };
-        return this.http.post(environment.api_url + '/games', payload, httpOptions);
+      return this.http.request('post', '/api/games/singles/post', {
+        body: payload,
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
     }
+
+  addDoublesGame(newGame: DoublesGame) {
+    const payload = {
+      'playoff': newGame.playoff,
+      'tournamentId': newGame.tournamentId,
+      'roundId': newGame.roundId,
+      'poolId': newGame.poolId,
+      'player1Id': newGame.team1Id,
+      'player2Id': newGame.team2Id,
+    };
+    return this.http.request('post', '/api/games/doubles/post', {
+      body: payload,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+  }
 
     updateGame(id, winner, differential, validator): Observable<any> {
         return this.http.patch(environment.api_url + '/games/' + id,

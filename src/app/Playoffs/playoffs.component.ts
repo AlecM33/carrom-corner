@@ -217,10 +217,10 @@ export class PlayoffsComponent implements OnInit {
                     } else {
                         this.patchSinglesPlayers(game);
                     }
-                    this._gameService.addGame(game).subscribe(() => {
-                        this.getPlayoffGames();
-                        this.newPlayoffGames = [];
-                    });
+                    // this._gameService.addGame(game).subscribe(() => {
+                    //     this.getPlayoffGames();
+                    //     this.newPlayoffGames = [];
+                    // });
                 }
                 this._tournyService.updatePlayoff(this.playoff, this.bracket, this.playInRound).subscribe(() => {
                     const notice = document.getElementById('notice');
