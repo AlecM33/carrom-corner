@@ -284,7 +284,6 @@ export class TournamentSetupService {
         while (i < placements.length) {
           const newGame = new SinglesGame(tournamentId, roundId, poolId, false, placements[j]['player_id'], placements[i]['player_id']);
           this._gameService.addSinglesGame(newGame).subscribe();
-          console.log(newGame);
           i++;
         }
         j++;
@@ -299,7 +298,6 @@ export class TournamentSetupService {
       while (i < placements.length) {
         const newGame = new DoublesGame(tournamentId, roundId, poolId, false, placements[j]['team_id'], placements[i]['team_id']);
         this._gameService.addDoublesGame(newGame).subscribe();
-        console.log(newGame);
         i++;
       }
       j++;
