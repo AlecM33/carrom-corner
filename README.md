@@ -2,17 +2,13 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.7.1.
 
-In its current state, the application makes mock REST calls to a .json file using a service called json-server. I would recommend readig the docs on this service if you run into any problems manipulating the .json file as a database. To run the application, first install json-server. After this, you'll need two command windows. In one, start the server with 
+The application originally ran by querying a mock server through the service json-server, but now it is hitting a mySQL database using the schema stored in src/Schema.sql. The app is only partially migrated to this database, so there are portions of the functionality which are unusable currently. 
 
-`json-server db.json`
+INSTRUCTIONS TO RUN LOCALLY
 
-This will activate the database stored in db.json.
+get a local mySQL server up and running with the schema. Configure db.js with your connection parameters. Start the node server by running "node server.js" in a command window. Serve the project in another window using ng serve --proxy-config proxy.conf.json
 
-and run `ng serve` in the other. 
-
-## Development server
-
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+navigate to localhost:4200 to use the app.
 
 ## Code scaffolding
 
