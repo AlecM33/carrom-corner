@@ -54,10 +54,10 @@ export class TournamentListComponent implements OnInit {
 
   viewTournament(e, tournament) {
     e.preventDefault();
-    if (tournament.singles) {
-      this.router.navigateByUrl('/tournaments/singles/' + tournament.name);
+    if (this.singlesTournaments.includes(tournament)) {
+      this.router.navigateByUrl('/tournaments/singles/' + tournament.name + '/' + tournament.id + '/' + tournament.currentRound);
     } else {
-      this.router.navigateByUrl('/tournaments/doubles/' + tournament.name)
+      this.router.navigateByUrl('/tournaments/doubles/' + tournament.name + '/' + tournament.id + '/' + tournament.currentRound);
     }
   }
 

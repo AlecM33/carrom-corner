@@ -433,7 +433,7 @@ label {
 }
 
 .pool-table:hover {
-  box-shadow: 0 0 5px #f7e5c5;
+  box-shadow: 0 0 7px #f7e5c5;
 }
 
 .pool-table td {
@@ -908,6 +908,7 @@ hr {
 .pools {
   flex-wrap: wrap;
   margin: 0 auto;
+  margin-top: 3em;
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
