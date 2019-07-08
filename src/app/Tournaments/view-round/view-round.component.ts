@@ -64,7 +64,6 @@ export class ViewRoundComponent implements OnInit {
               playerIds.push(placement['player_id']);
             }
             this.playerPools.push(playerIds);
-            //this._setupService.generateSinglesRoundRobinGameSet(placements, this.tournamentId, roundId, poolId);
           });
         }
         console.log(this.playerPools);
@@ -78,8 +77,12 @@ export class ViewRoundComponent implements OnInit {
       this._setupService.getDoublesPools(round[0]['id']).subscribe((poolsResponse: any) => {
         for (const pool of poolsResponse) {
           const poolId = pool['id'];
-          this._setupService.getDoublesPoolPlacements(pool['id']).subscribe((placements) => {
-            this._setupService.generateDoublesRoundRobinGameSet(placements, this.tournamentId, roundId, poolId);
+          this._setupService.getDoublesPoolPlacements(pool['id']).subscribe((placements: any) => {
+            const teamIds = [];
+            for (const placement of placements) {
+              teamIds.push(placement['team_id']);
+            }
+            this.playerPools.push(teamIds);
           });
         }
       });
@@ -95,7 +98,7 @@ export class ViewRoundComponent implements OnInit {
     if (this.tournyType === 'singles') {
       return this.players.find((player) => player.id === id).name;
     } else {
-      // TODO: fetch teams in doubles tournament;
+      // TODO: fetch teams in doubles tournament and map to names;
     }
   }
 
