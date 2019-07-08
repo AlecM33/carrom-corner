@@ -132,7 +132,7 @@ export class AddTournamentComponent implements OnInit {
         this._setupService.createDoublesPools(resp.insertId, this.sameSizePools).subscribe((resp: any) => {
           this._setupService.createDoublesPoolPlacements(resp, teams, this.optimalGroupSize).subscribe((resp: any) => {
             this._setupService.createDoublesGames(this.tournament.id);
-            this.router.navigateByUrl('/tournaments/doubles/' + this.tournament.id + '/1');
+            this.router.navigateByUrl('/tournaments/doubles/' + this.tournamentName + '/' + this.tournament.id + '/1');
           });
         });
       });
@@ -146,7 +146,7 @@ export class AddTournamentComponent implements OnInit {
       this._setupService.createSinglesPools(response.insertId, this.sameSizePools).subscribe((response) => {
         this._setupService.createSinglesPoolPlacements(response, Array.from(this.playersInTourny), this.optimalGroupSize).subscribe(() => {
           this._setupService.createSinglesGames(this.tournament.id);
-          this.router.navigateByUrl('/tournaments/singles/' + this.tournament.id + '/1');
+          this.router.navigateByUrl('/tournaments/singles/' + this.tournamentName + '/' + this.tournament.id + '/1');
         });
       });
     });
