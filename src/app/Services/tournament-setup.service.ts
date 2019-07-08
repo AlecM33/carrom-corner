@@ -163,9 +163,9 @@ export class TournamentSetupService {
         const newPlacement = new SinglesPoolPlacement(insertedPool.insertId, removedPlayer.id);
         poolDistribution.push(newPlacement);
       }
-      if (leftovers > 0) {
-        poolDistribution = this.distributeSinglesLeftovers(poolDistribution, players, leftovers, response);
-      }
+    }
+    if (leftovers > 0) {
+      poolDistribution = this.distributeSinglesLeftovers(poolDistribution, players, leftovers, response);
     }
     return this.addSinglesPoolPlacements(poolDistribution);
   }
@@ -196,9 +196,9 @@ export class TournamentSetupService {
         const newPlacement = new DoublesPoolPlacement(insertedPool.insertId, removedTeam.id);
         poolDistribution.push(newPlacement);
       }
-      if (leftovers > 0) {
-        poolDistribution = this.distributeDoublesLeftovers(poolDistribution, teams, leftovers, response);
-      }
+    }
+    if (leftovers > 0) {
+      poolDistribution = this.distributeDoublesLeftovers(poolDistribution, teams, leftovers, response);
     }
     return this.addDoublesPoolPlacements(poolDistribution);
   }
