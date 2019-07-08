@@ -10,11 +10,15 @@ import {Player} from '../Players/player';
 import {SinglesPoolPlacement} from '../Pools/singles-pool-placement';
 import {DoublesPoolPlacement} from '../Pools/doubles-pool-placement';
 import {Team} from '../Teams/team';
+import {Game} from '../Games/game';
+import {SinglesGame} from '../Games/singles-game';
+import {GameService} from './game.service';
+import {DoublesGame} from '../Games/doubles-game';
 
 @Injectable()
 export class TournamentSetupService {
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private _gameService: GameService) {}
 
   createSinglesRound(roundNumber, size, tournamentId): Observable<Object> {
     const round = new SinglesRound(tournamentId, size, 1);
@@ -226,6 +230,108 @@ export class TournamentSetupService {
       headers: {
         'Content-Type': 'application/json'
       }
+    });
+  }
+
+  getFirstSinglesRound(tournamentId: number) {
+    return this.http.request('get', '/api/rounds/get/singles/' + tournamentId.toString() + '/1', {
+      headers: {
+        'Content-Type': 'application/json'}
+    });
+  }
+
+  getSinglesPools(roundId) {
+    return this.http.request('get', '/api/pools/get/singles/' + roundId.toString(), {
+      headers: {
+        'Content-Type': 'application/json'}
+    });
+  }
+
+  getSinglesPoolPlacements(poolId) {
+    return this.http.request('get', '/api/pool_placements/get/singles/' + poolId.toString(), {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+  }
+
+  getFirstDoublesRound(tournamentId: number) {
+    return this.http.request('get', '/api/rounds/get/doubles/' + tournamentId.toString() + '/1', {
+      headers: {
+        'Content-Type': 'application/json'}
+    });
+  }
+
+  getDoublesPools(roundId) {
+    return this.http.request('get', '/api/pools/get/doubles/' + roundId.toString(), {
+      headers: {
+        'Content-Type': 'application/json'}
+    });
+  }
+
+  getDoublesPoolPlacements(poolId) {
+    return this.http.request('get', '/api/pool_placements/get/doubles/' + poolId.toString(), {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+  }
+
+  generateSinglesRoundRobinGameSet(placements, tournamentId, roundId, poolId) {
+      let j = 0;
+      let i = j + 1;
+      while (j < placements.length - 1) {
+        while (i < placements.length) {
+          const newGame = new SinglesGame(tournamentId, roundId, poolId, false, placements[j]['player_id'], placements[i]['player_id']);
+          this._gameService.addSinglesGame(newGame).subscribe();
+          console.log(newGame);
+          i++;
+        }
+        j++;
+        i = j + 1;
+      }
+  }
+
+  generateDoublesRoundRobinGameSet(placements, tournamentId, roundId, poolId) {
+    let j = 0;
+    let i = j + 1;
+    while (j < placements.length - 1) {
+      while (i < placements.length) {
+        const newGame = new DoublesGame(tournamentId, roundId, poolId, false, placements[j]['team_id'], placements[i]['team_id']);
+        this._gameService.addDoublesGame(newGame).subscribe();
+        console.log(newGame);
+        i++;
+      }
+      j++;
+      i = j + 1;
+    }
+  }
+
+  createSinglesGames(tournamentId: number) {
+    this.getFirstSinglesRound(tournamentId).subscribe((round) => {
+      const roundId = round[0]['id'];
+      this.getSinglesPools(round[0]['id']).subscribe((poolsResponse: any) => {
+        for (const pool of poolsResponse) {
+          const poolId = pool['id'];
+          this.getSinglesPoolPlacements(pool['id']).subscribe((placements) => {
+            this.generateSinglesRoundRobinGameSet(placements, tournamentId, roundId, poolId);
+          });
+        }
+      });
+    });
+  }
+
+  createDoublesGames(tournamentId: number) {
+    this.getFirstDoublesRound(tournamentId).subscribe((round) => {
+      const roundId = round[0]['id'];
+      this.getDoublesPools(round[0]['id']).subscribe((poolsResponse: any) => {
+        for (const pool of poolsResponse) {
+          const poolId = pool['id'];
+          this.getDoublesPoolPlacements(pool['id']).subscribe((placements) => {
+            this.generateDoublesRoundRobinGameSet(placements, tournamentId, roundId, poolId);
+          });
+        }
+      });
     });
   }
 

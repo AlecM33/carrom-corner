@@ -24,21 +24,27 @@ CREATE TABLE `Teams`
 CREATE TABLE `Singles_Games`
 (
   `id` int PRIMARY KEY AUTO_INCREMENT,
-  `playoff` boolean,
   `tourny_id` int,
+  `round_id` int,
+  `pool_id` int,
+  `playoff` boolean,
   `player1_id` int,
   `player2_id` int,
-  `winner` int
+  `winner` int,
+  `differential` int
 );
 
 CREATE TABLE `Doubles_Games`
 (
   `id` int PRIMARY KEY AUTO_INCREMENT,
-  `playoff` boolean,
   `tourny_id` int,
+  `round_id` int,
+  `pool_id` int,
+  `playoff` boolean,
   `team1_id` int,
   `team2_id` int,
-  `winner` int
+  `winner` int,
+  `differential` int
 );
 
 CREATE TABLE `Singles_Tournaments`
@@ -83,13 +89,15 @@ CREATE TABLE `Doubles_Rounds`
 CREATE TABLE `Singles_Pools`
 (
   `id` int PRIMARY KEY AUTO_INCREMENT,
-  `round_id` int
+  `round_id` int,
+  `number` int
 );
 
 CREATE TABLE `Doubles_Pools`
 (
   `id` int PRIMARY KEY AUTO_INCREMENT,
-  `round_id` int
+  `round_id` int,
+  `number` int
 );
 
 CREATE TABLE `Singles_Pool_Placements`
@@ -103,8 +111,6 @@ CREATE TABLE `Doubles_Pool_Placements`
 (
   `id` int PRIMARY KEY AUTO_INCREMENT,
   `pool_id` int,
-  `player1_id` int,
-  `player2_id` int,
   `team_id` int
 );
 

@@ -20,12 +20,14 @@ const round = require("./src/app/api/rounds");
 const pool = require("./src/app/api/pools");
 const pool_placements = require("./src/app/api/pool_placements");
 const teams = require("./src/app/api/teams");
+const games = require("./src/app/api/games");
 app.use("/api/teams", teams);
 app.use("/api/players", player);
 app.use("/api/tournaments", tournament);
 app.use("/api/rounds", round);
 app.use("/api/pools", pool);
 app.use("/api/pool_placements", pool_placements);
+app.use("/api/games", games);
 
 app.get('/*', function(req,res) {
   res.sendFile(path.join(__dirname+'/dist/index.html'));
