@@ -498,7 +498,7 @@ input[type=text]:hover {
   flex-direction: row;
 }
 
-.robin-choice-single, .robin-choice-double, .round-choice-one, .round-choice-two {
+.choice {
   border: 1px solid #f7e5c5;
   padding: 10px 15px 10px 15px;
   font-size: 20px;
@@ -515,19 +515,19 @@ input[type=text]:hover {
   color: #343a40;
 }
 
-.robin-container div:nth-child(1), .round-container div:nth-child(1) {
+.choice-button-container div:nth-child(1) {
   border-top-left-radius: 7px;
   border-bottom-left-radius: 7px;
   width: 125px;
 }
 
-.robin-container div:nth-child(2), .round-container div:nth-child(2) {
+.choice-button-container div:nth-child(2) {
   border-top-right-radius: 7px;
   border-bottom-right-radius: 7px;
   width: 125px;
 }
 
-.robin-container, .round-container {
+.choice-button-container {
   display: flex;
   margin-top: 1em;
   margin-bottom: 2em;
@@ -553,6 +553,323 @@ input[type=text]:hover {
   margin: 0 10px;
 }
 
+/* CSS FOR GAME RESULT CONTAINER */
+
+#game-result-form button {
+  margin-top: 2em;
+}
+
+.number-input-container {
+  display: flex;
+  align-items: center;
+  margin: 10px;
+}
+
+#up-arrow, #down-arrow {
+  height: 20px;
+}
+
+#number-box {
+  user-select: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #f7e5c5;
+  width: 60px;
+  height: 60px;
+  color: #f7e5c5;
+  font-size: 25px;
+  font-family: sans-serif;
+}
+
+.svg-triangle-up {
+  cursor: pointer;
+  fill: #f7e5c5;
+  transform: rotate(-45deg);
+  padding: 0;
+  width: 20px;
+  height: 20px;
+}
+
+.arrows {
+  margin-left: 1em;
+  user-select: none;
+}
+
+.svg-triangle-down {
+  cursor: pointer;
+  padding: 0;
+  fill: #f7e5c5;
+  transform: rotate(135deg);
+  width: 20px;
+  height: 20px;
+}
+
+/* CSS FOR ROUND ROBIN GRAPH */
+
+#game-result-section {
+  width:40%;
+  display: flex;
+  flex-direction: column;
+}
+
+.vs {
+  display: flex;
+  padding: 0;
+  font-size: 25px;
+  color: #828181;
+  font-weight: bolder;
+  justify-content: center;
+  margin: 10px;
+  align-items: flex-end;
+}
+
+#game-result-form {
+  width: 100%;
+  padding: 20px;
+  border-radius: 5px;
+  color: #f7e5c5;
+}
+
+#game-result-form .radio-container:hover input ~ .radio-button {
+  background-color: rgb(106, 100, 100);
+  outline: none;
+  border-color: #f7e5c5;
+  box-shadow: 0 0 10px #f7e5c5;
+}
+
+#game-result-form .radio-container input:checked ~ .radio-button {
+  background-color:gray;
+  opacity: 0.7;
+}
+
+#game-result-form .radio-container {
+  display: block;
+  position: relative;
+  margin-bottom: 12px;
+  cursor: pointer;
+  height: 65px;
+  font-size: 22px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+#game-result-form > div:nth-child(4) > input {
+  width: 70px;
+}
+
+#game-result-form .radio-container input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+}
+
+#game-result-form .radio-button {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  height: 100%;
+  width: 100%;
+  border: 1px solid #f7e5c5;
+  opacity: 0.4;
+}
+
+#game-result-form .submit-container {
+  display: flex;
+  margin: 1rem;
+  justify-content: flex-end;
+}
+
+#game-result-header {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+}
+
+#round-robin-page-container h2 {
+  display: flex;
+  padding: 0;
+  color: #f7e5c5;
+  font-weight: bolder;
+  justify-content: left;
+  margin: 10px;
+}
+
+#game-result-form .radio-container h2 {
+  justify-content: center;
+  align-items: center;
+  height: 65px;
+}
+
+#round-robin-page-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+#graph-container {
+  width: 60%;
+  margin-top: 2em;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  -webkit-animation: fadein 0.7s;
+  -moz-animation: fadein 0.7s;
+  animation: fadein 0.7s;
+  animation-fill-mode: forwards;
+}
+
+#game-result-container {
+  display: flex;
+  justify-content: center;
+  border: 1px solid #f7e5c5;
+  height: 425px;
+}
+
+#game-result-container p {
+  font-size: 20px;
+  color: #828181;
+  align-self: center;
+}
+
+#upper-container {
+  display: flex;
+}
+
+.x-axis {
+  display: flex;
+  justify-content: center;
+}
+
+.filler {
+  width: 82px;
+  height: 92px;
+}
+
+.y-axis {
+}
+
+.axis-label-y {
+  font-size: 16px;
+  color: #f7e5c5;
+  width: 82px;
+  height: 82px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.axis-label-x {
+  transform: rotate(-45deg);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1em;
+  color: #f7e5c5;
+  width: 82px;
+  height: 82px;
+}
+
+#round-robin-graph {
+  display: flex;
+  flex-direction: column;
+}
+
+.graph-square {
+  cursor: pointer;
+  width: 80px;
+  height: 80px;
+  border: 1px solid #828181;
+}
+
+.graph-square-filled {
+  cursor: pointer;
+  width: 80px;
+  height: 80px;
+  border: 1px solid #828181;
+  background-image: url('/assets/images/checkmark-gold.svg');
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.graph-square:hover, .graph-square-filled:hover {
+  box-shadow: inset 0 0 6px 2px rgba(247, 229, 197, 0.5);
+}
+
+.graph-square-empty {
+  pointer-events: none;
+  width: 80px;
+  height: 80px;
+  border: 1px solid #828181;
+  background-color: #17191c;
+  border-collapse: collapse;
+}
+
+.graph-rows {
+  display: flex;
+  flex-direction: row;
+}
+
+.graph-columns {
+  display: flex;
+  flex-direction: column;
+}
+
+/* end styling for graph */
+
+/* STYLING FOR GAME MODAL */
+
+/* The Modal (background) */
+.modal {
+   /* Hidden by default */
+  display: block;
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%; /* Could be more or less, depending on screen size */
+}
+
+/* The Close Button */
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* end styling for modal */
+
 .next-button button {
   width: 100px;
 }
@@ -561,7 +878,7 @@ input[type=text]:hover {
   display: flex;
   justify-content: space-between;
   border-bottom: 1px solid #f7e5c5;
-  margin-bottom: 4em;
+  margin-bottom: 3em;
 }
 
 .navbar-content {
@@ -712,6 +1029,7 @@ h2 {
   color: #f7e5c5;
   font-weight: normal;
   justify-content: left;
+  margin: 1em 0 1em 0
 }
 
 h3 {
@@ -960,25 +1278,12 @@ text {
 .vs-container input[type="number"], select {
   background-color: black;
   border: 1px solid goldenrod;
-  color: #FFF;
-}
-
-.add-player .radio-container input {
-  position: absolute;
-  top: 0;
-  left: 0;
-  opacity: 0;
-  cursor: pointer;
-  width: 100%;
-  height: 100%;
-  z-index: 3;
 }
 
 .add-player .diff-input {
   padding: 5px;
   background-color: black;
   border: 1px solid gold;
-  color: #FFF;
 }
 
 .add-player input.btn {
@@ -996,41 +1301,7 @@ text {
   animation-fill-mode: backwards;
 }
 
-.add-player .radio-button {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 0;
-  height: 100%;
-  width: 100%;
-  background-color: black;
-  border: 1px solid gold;
-  opacity: 0.4;
-}
 
-.add-player .radio-container {
-  display: block;
-  position: relative;
-  margin-bottom: 12px;
-  cursor: pointer;
-  font-size: 22px;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-
-.radio-container:hover input ~ .radio-button {
-  background-color: rgb(106, 100, 100);
-  outline: none;
-  border-color: goldenrod;
-  box-shadow: 0 0 10px goldenrod;
-}
-
-.radio-container input:checked ~ .radio-button {
-  background-color:gray;
-  opacity: 0.7;
-}
 
 .add-player label {
   color: #FFF;

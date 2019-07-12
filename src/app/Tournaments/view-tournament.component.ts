@@ -69,27 +69,27 @@ export class ViewTournamentComponent implements OnInit {
                         this.id = tournament[0].id;
                         this.playoffsBegan = tournament[0]['playoffDefined'];
                         this.tournySize = tournament[0].size;
-                        this.getTournyGames();
+                        //this.getTournyGames();
                     });
             });
     }
 
-    getTournyGames() {
-        this._gameService.getGames(this.id).subscribe((games) => {
-            this.games = games;
-            this.unplayedGames = this.games.filter((game) => game.winner === undefined);
-            this.playedGames = this.games.filter((game) => game.winner !== undefined);
-            this.unplayedGames.sort((a, b) => {
-                if (a.scheduleIndex >= b.scheduleIndex) {
-                    return 1;
-                } else {
-                    return -1;
-                }
-            });
-            this.disabled = this.isDisabled();
-            this.generateStandings();
-        });
-    }
+    // getTournyGames() {
+    //     this._gameService.getGames(this.id).subscribe((games) => {
+    //         this.games = games;
+    //         this.unplayedGames = this.games.filter((game) => game.winner === undefined);
+    //         this.playedGames = this.games.filter((game) => game.winner !== undefined);
+    //         this.unplayedGames.sort((a, b) => {
+    //             if (a.scheduleIndex >= b.scheduleIndex) {
+    //                 return 1;
+    //             } else {
+    //                 return -1;
+    //             }
+    //         });
+    //         this.disabled = this.isDisabled();
+    //         this.generateStandings();
+    //     });
+    // }
 
     // Filters schedule based on user-specified string
     filterGames(input, list) {

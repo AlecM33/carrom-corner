@@ -28,6 +28,7 @@ export class ViewRoundComponent implements OnInit {
   public tournamentName: string;
   public playerPools = [];
   public recordPools = [];
+  public roundId: number;
 
   constructor(public _playerService: PlayerService,
               public http: HttpClient,
@@ -65,7 +66,7 @@ export class ViewRoundComponent implements OnInit {
 
   retrieveSinglesData() {
     this._setupService.getFirstSinglesRound(this.tournamentId).subscribe((round) => {
-      const roundId = round[0]['id'];
+      this.roundId = round[0]['id'];
       this._setupService.getSinglesPools(round[0]['id']).subscribe((poolsResponse: any) => {
         for (const pool of poolsResponse) {
           const poolId = pool['id'];
@@ -76,12 +77,27 @@ export class ViewRoundComponent implements OnInit {
             }
             this.recordPools.push(playerRecords);
           });
-          this._gameService.getSinglesGamesInPool(poolId, this.tournamentId, roundId).subscribe((games) => {
+          this._gameService.getSinglesGamesInPool(poolId, this.tournamentId, this.roundId).subscribe((games) => {
             this.calculatePlayerRecords(games);
+            this.sortPools();
           });
         }
       });
     });
+  }
+
+  sortPools() {
+    for (const pool of this.recordPools) {
+      pool.sort((a, b) => {
+          if(a.wins > b.wins) return -1;
+          if(b.wins > a.wins) return 1;
+          if(a.losses < b.losses) return -1;
+          if(b.losses > a.losses) return 1;
+          console.log(a.totalDiff, ' ', b.totalDiff);
+          return a.totalDiff >= b.totalDiff ? -1 : 1;
+        }
+      );
+    }
   }
 
   retrieveDoublesData() {
@@ -100,6 +116,7 @@ export class ViewRoundComponent implements OnInit {
           console.log(this.recordPools);
           this._gameService.getDoublesGamesInPool(poolId, this.tournamentId, roundId).subscribe((games) => {
             this.calculateTeamRecords(games);
+            this.sortPools();
           });
         }
       });
@@ -109,16 +126,14 @@ export class ViewRoundComponent implements OnInit {
   calculatePlayerRecords(games: SinglesGame[]) {
     for (const game of games) {
       if (game.winner) {
-        for (let i = 0; i < this.recordPools.length; i++) {
-          const winningPlayerIndex = this.recordPools.findIndex((record) => record[i].playerId === game.winner);
-          if (winningPlayerIndex) {
-            const losingPlayerIndex = this.recordPools.findIndex((record) => record[i].playerId === game.loser);
-            this.recordPools[i][winningPlayerIndex].wins++;
-            this.recordPools[i][winningPlayerIndex].totalDiff += game.differential;
-            this.recordPools[i][losingPlayerIndex].losses++;
-            this.recordPools[i][winningPlayerIndex].totalDiff -= game.differential;
-          }
-        }
+        let playerPool = this.recordPools.find((pool) => pool.find((record) => record.playerId === game.winner));
+        let winningPlayerIndex = playerPool.findIndex((record) => record.playerId === game.winner);
+        let losingPlayerIndex = playerPool.findIndex((record) => record.playerId === game.loser);
+
+        playerPool[winningPlayerIndex].wins++;
+        playerPool[winningPlayerIndex].totalDiff += game.differential;
+        playerPool[losingPlayerIndex].losses++;
+        playerPool[losingPlayerIndex].totalDiff -= game.differential;
       }
     }
   }
@@ -128,13 +143,13 @@ export class ViewRoundComponent implements OnInit {
     for (const game of games) {
       if (game.winner) {
         for (let i = 0; i < this.recordPools.length; i++) {
-          const winningPlayerIndex = this.recordPools.findIndex((record) => record[i].teamId === game.winner);
+          const winningPlayerIndex = this.recordPools[i].findIndex((record) => record.teamId === game.winner);
           if (winningPlayerIndex) {
-            const losingPlayerIndex = this.recordPools.findIndex((record) => record[i].teamId === game.loser);
+            const losingPlayerIndex = this.recordPools[i].findIndex((record) => record.teamId === game.loser);
             this.recordPools[i][winningPlayerIndex].wins++;
             this.recordPools[i][winningPlayerIndex].totalDiff += game.differential;
             this.recordPools[i][losingPlayerIndex].losses++;
-            this.recordPools[i][winningPlayerIndex].totalDiff -= game.differential;
+            this.recordPools[i][losingPlayerIndex].totalDiff -= game.differential;
           }
         }
       }
@@ -156,6 +171,11 @@ export class ViewRoundComponent implements OnInit {
         + ', ' + this.players.find((player) => player.id === foundTeam.player2Id).name;
       // TODO: fetch teams in doubles tournament and map to names;
     }
+  }
+
+  routeToPool(poolId: number, letter: string) {
+    this.router.navigateByUrl('/tournaments/' + this.tournyType + '/' + this.tournamentName + '/' + this.tournamentId + '/'
+      + this.roundId + '/' + poolId + '/' + letter);
   }
 
 }

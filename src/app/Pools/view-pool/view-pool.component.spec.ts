@@ -1,6 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ViewPoolComponent } from './view-pool.component';
+import {describe} from 'jasmine';
+import {beforeEach} from 'jasmine';
+import {expect} from 'jasmine';
+import {it} from 'jasmine';
 
 describe('ViewPoolComponent', () => {
   let component: ViewPoolComponent;

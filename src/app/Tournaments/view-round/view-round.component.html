@@ -4,7 +4,7 @@
 <div class='pools' *ngIf="recordPools">
   <div *ngFor="let pool of recordPools">
     <h2>{{getLetter(recordPools.indexOf(pool))}}</h2>
-    <table class='table table-dark pool-table'>
+    <table class='table table-dark pool-table' (click)="routeToPool(pool[0].poolId, getLetter(recordPools.indexOf(pool)))">
       <thead>
       <!--<th *ngIf="selecting"></th>-->
       <th id="player-name"></th>
