@@ -31,16 +31,16 @@
     <div class="tournament-parameters">
       <div class="choice-container">
         <h2>Round Robin Type</h2>
-        <div class="robin-container">
-          <div (click)="changeRobinTypeSingle()" [className]="this.singleRoundRobin ? 'robin-choice-single selected' : 'robin-choice-single'">Single</div>
-          <div (click)="changeRobinTypeDouble()" [className]="this.singleRoundRobin ? 'robin-choice-double' : 'robin-choice-double selected'">Double</div>
+        <div class="choice-button-container">
+          <div (click)="changeRobinTypeSingle()" [className]="this.singleRoundRobin ? 'choice selected' : 'choice'">Single</div>
+          <div (click)="changeRobinTypeDouble()" [className]="this.singleRoundRobin ? 'choice' : 'choice selected'">Double</div>
         </div>
       </div>
       <div class="choice-container">
         <h2>Number of Rounds</h2>
-        <div class="round-container">
-          <div (click)="changeRoundNumber()" [className]="this.oneRound ? 'round-choice-one selected' : 'round-choice-one'">One</div>
-          <div (click)="changeRoundNumber()" [className]="this.oneRound ? 'round-choice-two' : 'round-choice-two selected'">Two</div>
+        <div class="choice-button-container">
+          <div (click)="changeRoundNumber()" [className]="this.oneRound ? 'choice selected' : 'choice'">One</div>
+          <div (click)="changeRoundNumber()" [className]="this.oneRound ? 'choice' : 'choice selected'">Two</div>
         </div>
       </div>
     </div>

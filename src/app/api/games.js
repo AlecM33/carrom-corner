@@ -55,4 +55,30 @@ router.get('/get/doubles/:tournament_id/:round_id/:pool_id', function(req, res) 
   })
 });
 
+// UPDATE Singles Game
+router.post('/singles/update/:game_id', function(req, res) {
+  const game = req.body;
+  const query = 'UPDATE Singles_Games SET winner = ?, loser = ?, differential = ? WHERE id = ?';
+  const filter = [game.winner, game.loser, game.differential, req.params.game_id];
+  connection.query(query, filter, function(err, result) {
+    if (err) throw err;
+    else {
+      return res.status(200).send(JSON.stringify(result));
+    }
+  })
+});
+
+// UPDATE Doubles Game
+router.post('/doubles/update/:game_id', function(req, res) {
+  const game = req.body;
+  const query = 'UPDATE Doubles_Games SET winner = ?, loser = ?, differential = ? WHERE id = ?';
+  const filter = [game.winner, game.loser, game.differential, req.params.game_id];
+  connection.query(query, filter, function(err, result) {
+    if (err) throw err;
+    else {
+      return res.status(200).send(JSON.stringify(result));
+    }
+  })
+});
+
 module.exports = router;

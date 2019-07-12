@@ -70,15 +70,15 @@ export class PlayoffsComponent implements OnInit {
             if (this.bracket[0][0].team instanceof Array) {
                 this.tournyType = 'doubles';
             }
-            this.getPlayoffGames();
+            //this.getPlayoffGames();
         });
     }
 
-    getPlayoffGames() {
-        this._gameService.getPlayoffGames(this.playoffId).subscribe((games) => {
-            this.playoffGames = games;
-        });
-    }
+    // getPlayoffGames() {
+    //     this._gameService.getPlayoffGames(this.playoffId).subscribe((games) => {
+    //         this.playoffGames = games;
+    //     });
+    // }
 
 
     goBack() {
@@ -195,7 +195,7 @@ export class PlayoffsComponent implements OnInit {
                     this.playInRound = this.bracket.shift();
                     this.tournamentWinner = playoff['winner'];
                     this.newPlayoffGames = [];
-                    this.getPlayoffGames();
+                    //this.getPlayoffGames();
                 });
             }
         });

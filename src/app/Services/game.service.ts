@@ -88,14 +88,33 @@ export class GameService {
     });
   }
 
-    updateGame(id, winner, differential, validator): Observable<any> {
-        return this.http.patch(environment.api_url + '/games/' + id,
-        {
-            'winner': winner,
-            'differential': differential,
-            'validator': validator
-        });
+    updateSinglesGame(game: SinglesGame): Observable<any> {
+      const payload = {
+        'winner': game.winner,
+        'loser': game.loser,
+        'differential': game.differential,
+      };
+      return this.http.request('post', '/api/games/singles/update/' + game.id, {
+        body: payload,
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
     }
+
+  updateDoublesGame(game: DoublesGame): Observable<any> {
+    const payload = {
+      'winner': game.winner,
+      'loser': game.loser,
+      'differential': game.differential,
+    };
+    return this.http.request('post', '/api/games/doubles/update', {
+      body: payload,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+  }
 
   getSinglesGamesInPool(poolId: number, tournamentId: number, roundId: number) {
     return this.http.request('get', '/api/games/get/singles/' + tournamentId + '/' + roundId + '/' + poolId, {

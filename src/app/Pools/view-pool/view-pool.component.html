@@ -1,3 +1,62 @@
-<p>
-  view-pool works!
-</p>
+
+<h2>{{tournamentName}}: Pool {{letter}}</h2>
+<div id="round-robin-page-container">
+  <div id="graph-container">
+    <div id="upper-container">
+      <div class="y-axis">
+        <div *ngFor="let player of playersInPool">
+          <div class="axis-label-y">{{convertToName(player.id)}}</div>
+        </div>
+      </div>
+      <div id="round-robin-graph">
+        <div class="graph-rows" *ngFor="let player of playersInPool; let i = index">
+          <div class="graph-columns" *ngFor="let element of returnArrayOfLength(i + 1); let j = index">
+            <div *ngIf="!(j === i)" [ngClass]="{'graph-square': !gameIsPlayed(playersInPool[j].id, playersInPool[i].id),
+            'graph-square-filled': gameIsPlayed(playersInPool[j].id, playersInPool[i].id)}" (click)="setCurrentGame(playersInPool[j].id, playersInPool[i].id)"></div>
+            <div *ngIf="j === i" class="graph-square-empty"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="x-axis">
+      <div class="filler"></div>
+      <div *ngFor="let player of playersInPool">
+        <div class="axis-label-x">{{convertToName(player.id)}}</div>
+      </div>
+    </div>
+  </div>
+  <div id="game-result-section">
+    <h2>Game Results</h2>
+    <div id="game-result-container">
+        <div *ngIf="currentGame" id="game-result-form">
+          <div class="choice-container">
+            <h2>Winner</h2>
+            <div class="choice-button-container">
+              <div (click)="setGameWinner(currentGame.player1Id, currentGame.player2Id)" [className]="currentGame.winner === currentGame.player1Id ? 'choice selected' : 'choice'">{{convertToName(currentGame.player1Id)}}</div>
+              <div (click)="setGameWinner(currentGame.player2Id, currentGame.player1Id)" [className]="currentGame.winner === currentGame.player2Id ? 'choice selected' : 'choice'">{{convertToName(currentGame.player2Id)}}</div>
+            </div>
+          </div>
+          <h2>Differential</h2>
+          <div class="number-input-container">
+          <span id="number-box">
+            {{currentGame.differential}}
+          </span>
+            <div class="arrows">
+              <div id="up-arrow">
+                <svg class="svg-triangle-up" (click)="setGameDifferential('plus')">
+                  <polygon points="0,0 100,0 100,100"/>
+                </svg>
+              </div>
+              <div id="down-arrow">
+                <svg class="svg-triangle-down" (click)="setGameDifferential('minus')">
+                  <polygon points="0,0 100,0 100,100"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+          <button class='app-btn' (click)="submitGame()">Update Game</button>
+        </div>
+        <p *ngIf="!currentGame">Click a game on the graph to see the results.</p>
+      </div>
+  </div>
+</div>
