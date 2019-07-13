@@ -45,20 +45,6 @@ export class AddGameComponent implements OnInit {
             this.gameId = this.active_route.snapshot.paramMap.get('id');
             this.tournyType = this.active_route.snapshot.paramMap.get('type');
             this.tournyName = this.active_route.snapshot.paramMap.get('name');
-            this.getSelectedGame();
-        });
-    }
-
-    getSelectedGame() {
-        this.http.get(environment.api_url + '/games?id=' + this.gameId).subscribe((game) => {
-            this.currentGame = game;
-            if (this.tournyType === 'singles') {
-                this.firstTeam = this.convertToName(this.currentGame[0].team1);
-                this.secondTeam = this.convertToName(this.currentGame[0].team2);
-            } else {
-                this.firstTeam = this.convertToName(this.currentGame[0].team1);
-                this.secondTeam = this.convertToName(this.currentGame[0].team2);
-            }
         });
     }
 
@@ -69,17 +55,6 @@ export class AddGameComponent implements OnInit {
             return firstName + ' & ' + secondName;
         }
         return this.players.find((player) => player.id === team).name;
-    }
-
-    // Function for validating form
-    validateGame() {
-        this.teamsBlank = this.winningTeam === undefined;
-        this.scoreBlank = this.scoreDifferential === undefined;
-        this.validatorBlank = this.validator === undefined;
-        this.scoreInvalid = this.scoreDifferential < 1 || this.scoreDifferential > 8;
-        if (!this.teamsBlank && !this.scoreBlank && !this.validatorBlank && !this.scoreInvalid) {
-            this.submitGame();
-        }
     }
 
     // Updates the player database with data from the entered game
@@ -140,30 +115,4 @@ export class AddGameComponent implements OnInit {
         this.router.navigateByUrl('/tournaments/' + this.tournyType + '/' + this.tournyName);
     }
 
-
-
-    // user submits form for game result
-    submitGame() {
-        let winner, validator;
-        if (this.winningTeam === 'team1') {
-            winner = this.currentGame[0].team1;
-        } else {
-            winner = this.currentGame[0].team2;
-        }
-        if (this.validator === 'team1') {
-            validator = this.currentGame[0].team1;
-        } else {
-            validator = this.currentGame[0].team2;
-        }
-        this._gameService.updateGame(this.gameId, winner, this.scoreDifferential, validator).subscribe(() => {
-            this.http.get(environment.api_url + '/games?id=' + this.gameId).subscribe((game) => {
-                this.currentGame = game;
-                if (this.tournyType === 'doubles') {
-                    this.patchDoublesPlayers();
-                } else {
-                    this.patchSinglesPlayers();
-                }
-            });
-        });
-    }
 }

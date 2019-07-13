@@ -47,7 +47,7 @@ export class ViewPoolComponent implements OnInit {
     this.tournyType = this.active_route.snapshot.paramMap.get('type');
     this.letter = this.active_route.snapshot.paramMap.get('letter');
     this.tournamentName = this.active_route.snapshot.paramMap.get('name');
-    this.currentRound = this.active_route.snapshot.paramMap.get('round');
+    this.currentRound = parseInt(this.active_route.snapshot.paramMap.get('round'), 10);
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         this.tournyType = this.active_route.snapshot.paramMap.get('type');
