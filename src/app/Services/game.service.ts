@@ -77,8 +77,8 @@ export class GameService {
       'tournamentId': newGame.tournamentId,
       'roundId': newGame.roundId,
       'poolId': newGame.poolId,
-      'player1Id': newGame.team1Id,
-      'player2Id': newGame.team2Id,
+      'team1Id': newGame.team1Id,
+      'team2Id': newGame.team2Id,
     };
     return this.http.request('post', '/api/games/doubles/post', {
       body: payload,
@@ -108,7 +108,7 @@ export class GameService {
       'loser': game.loser,
       'differential': game.differential,
     };
-    return this.http.request('post', '/api/games/doubles/update', {
+    return this.http.request('post', '/api/games/doubles/update/'  + game.id, {
       body: payload,
       headers: {
         'Content-Type': 'application/json'

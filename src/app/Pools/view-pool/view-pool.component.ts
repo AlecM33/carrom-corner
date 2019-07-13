@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, ElementRef, Inject, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import {PlayerRecord} from '../../Records/player-record';
 import {Player} from '../../Players/player';
@@ -28,9 +28,11 @@ export class ViewPoolComponent implements OnInit {
   public roundId: number;
   public poolGames = [];
   public letter: string;
-  public playersInPool = [];
+  public participantsInPool = [];
   public currentGame = undefined;
   public gameWinner: any;
+
+  @ViewChild('updateBtn') updateBtn: ElementRef;
 
   constructor(public _playerService: PlayerService,
               public http: HttpClient,
@@ -38,13 +40,14 @@ export class ViewPoolComponent implements OnInit {
               public router: Router,
               public _setupService: TournamentSetupService,
               public _gameService: GameService,
-              public _teamService: TeamService
+              public _teamService: TeamService,
   ) { }
 
   ngOnInit() {
     this.tournyType = this.active_route.snapshot.paramMap.get('type');
     this.letter = this.active_route.snapshot.paramMap.get('letter');
     this.tournamentName = this.active_route.snapshot.paramMap.get('name');
+    this.currentRound = this.active_route.snapshot.paramMap.get('round');
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         this.tournyType = this.active_route.snapshot.paramMap.get('type');
@@ -61,11 +64,14 @@ export class ViewPoolComponent implements OnInit {
       } else {
         this._teamService.getTeams(this.tournamentId).subscribe((teams) => {
           this.teams = teams;
-          console.log(teams);
           this.retrieveDoublesData();
         });
       }
     });
+  }
+
+  backToRound() {
+    this.router.navigateByUrl('/tournaments/' + this.tournyType + '/' + this.tournamentName + '/' + this.tournamentId + '/' + this.currentRound);
   }
 
   retrieveSinglesData() {
@@ -76,42 +82,68 @@ export class ViewPoolComponent implements OnInit {
   }
 
   retrieveDoublesData() {
-    // this._gameService.getDoublesGamesInPool(this.poolId, this.tournamentId, this.roundId).subscribe((games) => {
-    //   this.poolGames = games;
-    //   this.getPoolTeams(this.poolGames);
-    // });
+    this._gameService.getDoublesGamesInPool(this.poolId, this.tournamentId, this.roundId).subscribe((games) => {
+      this.poolGames = games;
+      this.getPoolTeams();
+    });
   }
 
   getPoolPlayers() {
     for (const game of this.poolGames) {
       const player1 = this.players.find((player) => player.id === game.player1Id);
       const player2 = this.players.find((player) => player.id === game.player2Id);
-      if (!this.playersInPool.includes(player1)) {
-        this.playersInPool.push(player1);
+      if (!this.participantsInPool.includes(player1)) {
+        this.participantsInPool.push(player1);
       }
-      if (!this.playersInPool.includes(player2)) {
-        this.playersInPool.push(player2);
+      if (!this.participantsInPool.includes(player2)) {
+        this.participantsInPool.push(player2);
       }
     }
-    console.log(this.playersInPool);
   }
 
-  gameIsPlayed(player1Id: number, player2Id: number) {
-    const game = this.poolGames.find((game) => game.player1Id === player1Id && game.player2Id === player2Id);
+  getPoolTeams() {
+    for (const game of this.poolGames) {
+      const team1 = this.teams.find((team) => team.id === game.team1Id);
+      const team2 = this.teams.find((team) => team.id === game.team2Id);
+      if (!this.participantsInPool.includes(team1)) {
+        this.participantsInPool.push(team1);
+      }
+      if (!this.participantsInPool.includes(team2)) {
+        this.participantsInPool.push(team2);
+      }
+    }
+  }
+
+  gameIsPlayed(participant1Id: number, participant2Id: number) {
+    let game;
+    if (this.tournyType === 'singles') {
+      game = this.poolGames.find((game) => game.player1Id === participant1Id && game.player2Id === participant2Id);
+    } else {
+      game = this.poolGames.find((game) => game.team1Id === participant1Id && game.team2Id === participant2Id);
+    }
     return game && game.winner && game.differential;
   }
 
-  setCurrentGame(player1Id: number, player2Id: number) {
-    this.currentGame = this.poolGames.find((game) => game.player1Id === player1Id && game.player2Id === player2Id);
-    console.log(this.currentGame);
+  setCurrentGame(participant1Id: number, participant2Id: number) {
+    this.updateBtn.nativeElement.innerText = 'Update Game';
+    this.updateBtn.nativeElement.className = 'app-btn';
+    if (this.tournyType === 'singles') {
+      this.currentGame = this.poolGames.find((game) => game.player1Id === participant1Id && game.player2Id === participant2Id);
+    } else {
+      this.currentGame = this.poolGames.find((game) => game.team1Id === participant1Id && game.team2Id === participant2Id);
+    }
   }
 
   setGameWinner(winnerId: number, loserId: number) {
+    this.updateBtn.nativeElement.innerText = 'Update Game';
+    this.updateBtn.nativeElement.className = 'app-btn';
     this.currentGame.winner = winnerId;
     this.currentGame.loser = loserId;
   }
 
   setGameDifferential(plusOrMinus: string) {
+    this.updateBtn.nativeElement.innerText = 'Update Game';
+    this.updateBtn.nativeElement.className = 'app-btn';
     if (plusOrMinus === 'plus') {
       if (this.currentGame.differential < 11) {
         this.currentGame.differential += 1;
@@ -130,14 +162,18 @@ export class ViewPoolComponent implements OnInit {
 
   submitGame() {
     if (this.validateGame()) {
-      console.log('here');
-      this._gameService.updateSinglesGame(this.currentGame).subscribe(() => {
-        console.log(this.currentGame);
+      this.updateBtn.nativeElement.innerText = 'Updating...';
+      this.updateBtn.nativeElement.className = 'app-btn';
+      const call = this.tournyType === 'singles' ? this._gameService.updateSinglesGame(this.currentGame)
+        : this._gameService.updateDoublesGame(this.currentGame);
+      call.subscribe(() => {
           if (this.tournyType === 'doubles') {
             //this.patchDoublesPlayers();
           } else {
             //this.patchSinglesPlayers();
           }
+        this.updateBtn.nativeElement.innerText = 'Updated';
+        this.updateBtn.nativeElement.className = 'app-btn confirmed';
       });
     }
   }
@@ -157,7 +193,6 @@ export class ViewPoolComponent implements OnInit {
     if (this.tournyType === 'singles') {
       return this.players.find((player) => player.id === id).name;
     } else {
-      console.log(this.teams);
       const foundTeam = this.teams.find((team) => team.id === id);
       return this.players.find((player) => player.id === foundTeam.player1Id).name
         + ', ' + this.players.find((player) => player.id === foundTeam.player2Id).name;

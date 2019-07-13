@@ -57,7 +57,6 @@ export class ViewRoundComponent implements OnInit {
       } else {
         this._teamService.getTeams(this.tournamentId).subscribe((teams) => {
           this.teams = teams;
-          console.log(teams);
           this.retrieveDoublesData();
         });
       }
@@ -93,7 +92,6 @@ export class ViewRoundComponent implements OnInit {
           if(b.wins > a.wins) return 1;
           if(a.losses < b.losses) return -1;
           if(b.losses > a.losses) return 1;
-          console.log(a.totalDiff, ' ', b.totalDiff);
           return a.totalDiff >= b.totalDiff ? -1 : 1;
         }
       );
@@ -102,8 +100,8 @@ export class ViewRoundComponent implements OnInit {
 
   retrieveDoublesData() {
     this._setupService.getFirstDoublesRound(this.tournamentId).subscribe((round) => {
-      const roundId = round[0]['id'];
-      this._setupService.getDoublesPools(roundId).subscribe((poolsResponse: any) => {
+      this.roundId = round[0]['id'];
+      this._setupService.getDoublesPools(this.roundId).subscribe((poolsResponse: any) => {
         for (const pool of poolsResponse) {
           const poolId = pool['id'];
           this._setupService.getDoublesPoolPlacements(pool['id']).subscribe((placements: any) => {
@@ -113,8 +111,7 @@ export class ViewRoundComponent implements OnInit {
             }
             this.recordPools.push(playerRecords);
           });
-          console.log(this.recordPools);
-          this._gameService.getDoublesGamesInPool(poolId, this.tournamentId, roundId).subscribe((games) => {
+          this._gameService.getDoublesGamesInPool(poolId, this.tournamentId, this.roundId).subscribe((games) => {
             this.calculateTeamRecords(games);
             this.sortPools();
           });
@@ -139,19 +136,16 @@ export class ViewRoundComponent implements OnInit {
   }
 
   calculateTeamRecords(games: DoublesGame[]) {
-    console.log(this.recordPools);
     for (const game of games) {
       if (game.winner) {
-        for (let i = 0; i < this.recordPools.length; i++) {
-          const winningPlayerIndex = this.recordPools[i].findIndex((record) => record.teamId === game.winner);
-          if (winningPlayerIndex) {
-            const losingPlayerIndex = this.recordPools[i].findIndex((record) => record.teamId === game.loser);
-            this.recordPools[i][winningPlayerIndex].wins++;
-            this.recordPools[i][winningPlayerIndex].totalDiff += game.differential;
-            this.recordPools[i][losingPlayerIndex].losses++;
-            this.recordPools[i][losingPlayerIndex].totalDiff -= game.differential;
-          }
-        }
+        let teamPool = this.recordPools.find((pool) => pool.find((record) => record.teamId === game.winner));
+        let winningTeamIndex = teamPool.findIndex((record) => record.teamId === game.winner);
+        let losingTeamIndex = teamPool.findIndex((record) => record.teamId === game.loser);
+
+        teamPool[winningTeamIndex].wins++;
+        teamPool[winningTeamIndex].totalDiff += game.differential;
+        teamPool[losingTeamIndex].losses++;
+        teamPool[losingTeamIndex].totalDiff -= game.differential;
       }
     }
   }
@@ -165,7 +159,6 @@ export class ViewRoundComponent implements OnInit {
     if (this.tournyType === 'singles') {
       return this.players.find((player) => player.id === id).name;
     } else {
-      console.log(this.teams);
       const foundTeam = this.teams.find((team) => team.id === id);
       return this.players.find((player) => player.id === foundTeam.player1Id).name
         + ', ' + this.players.find((player) => player.id === foundTeam.player2Id).name;
@@ -174,8 +167,8 @@ export class ViewRoundComponent implements OnInit {
   }
 
   routeToPool(poolId: number, letter: string) {
-    this.router.navigateByUrl('/tournaments/' + this.tournyType + '/' + this.tournamentName + '/' + this.tournamentId + '/'
-      + this.roundId + '/' + poolId + '/' + letter);
+    this.router.navigateByUrl('/tournaments/' + this.tournyType + '/' + this.tournamentName + '/' + this.tournamentId + '/' +
+      this.currentRound + '/' + this.roundId + '/' + poolId + '/' + letter);
   }
 
 }
