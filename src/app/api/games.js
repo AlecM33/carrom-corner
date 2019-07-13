@@ -47,6 +47,7 @@ router.get('/get/singles/:tournament_id/:round_id/:pool_id', function(req, res) 
 router.get('/get/doubles/:tournament_id/:round_id/:pool_id', function(req, res) {
   const query = 'SELECT * FROM Doubles_Games WHERE (tourny_id = ? AND round_id = ? AND pool_id = ?);';
   const filter = [parseInt(req.params.tournament_id), parseInt(req.params.round_id), parseInt(req.params.pool_id)];
+  console.log(filter);
   connection.query(query, filter, function(err, result) {
     if (err) throw err;
     else {

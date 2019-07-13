@@ -147,6 +147,10 @@ html, body {
   background-color: rgba(133, 133, 133, 0.3);
 }
 
+.confirmed {
+  background-color: rgba(3, 166, 36, 0.1);
+}
+
 input#name {
 }
 
@@ -162,6 +166,8 @@ input#name {
 h3 {
 
 }
+
+.hidden { display: none !important;}
 
 .winner {
   color: rgb(236, 208, 49);
@@ -584,7 +590,7 @@ input[type=text]:hover {
 
 .svg-triangle-up {
   cursor: pointer;
-  fill: #f7e5c5;
+  fill: #999999;
   transform: rotate(-45deg);
   padding: 0;
   width: 20px;
@@ -599,13 +605,18 @@ input[type=text]:hover {
 .svg-triangle-down {
   cursor: pointer;
   padding: 0;
-  fill: #f7e5c5;
+  fill: #999999;
   transform: rotate(135deg);
   width: 20px;
   height: 20px;
 }
 
 /* CSS FOR ROUND ROBIN GRAPH */
+
+.back-button {
+  display: flex;
+  justify-content: left;
+}
 
 #game-result-section {
   width:40%;
@@ -629,6 +640,15 @@ input[type=text]:hover {
   padding: 20px;
   border-radius: 5px;
   color: #f7e5c5;
+}
+
+#game-result-form .choice-button-container .choice {
+  width: 50%;
+  height: 65px;
+  font-size: 1em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 #game-result-form .radio-container:hover input ~ .radio-button {
@@ -718,7 +738,7 @@ input[type=text]:hover {
 }
 
 #graph-container {
-  width: 60%;
+  width: 75%;
   margin-top: 2em;
   display: flex;
   align-items: center;
@@ -734,6 +754,7 @@ input[type=text]:hover {
   justify-content: center;
   border: 1px solid #f7e5c5;
   height: 425px;
+  background-color: rgba(120,120,120,0.15);
 }
 
 #game-result-container p {
@@ -752,8 +773,8 @@ input[type=text]:hover {
 }
 
 .filler {
-  width: 82px;
-  height: 92px;
+  width: 97px;
+  height: 107px;
 }
 
 .y-axis {
@@ -761,10 +782,12 @@ input[type=text]:hover {
 
 .axis-label-y {
   font-size: 16px;
+  margin-right: 1em;
   color: #f7e5c5;
-  width: 82px;
-  height: 82px;
+  width: 97px;
+  height: 97px;
   display: flex;
+  font-size: 0.7vw;
   flex-direction: column;
   justify-content: center;
 }
@@ -774,10 +797,10 @@ input[type=text]:hover {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 1em;
+  font-size: 0.7vw;
   color: #f7e5c5;
-  width: 82px;
-  height: 82px;
+  width: 97px;
+  height: 97px;
 }
 
 #round-robin-graph {
@@ -787,15 +810,15 @@ input[type=text]:hover {
 
 .graph-square {
   cursor: pointer;
-  width: 80px;
-  height: 80px;
+  width: 95px;
+  height: 95px;
   border: 1px solid #828181;
 }
 
 .graph-square-filled {
   cursor: pointer;
-  width: 80px;
-  height: 80px;
+  width: 95px;
+  height: 95px;
   border: 1px solid #828181;
   background-image: url('/assets/images/checkmark-gold.svg');
   background-repeat: no-repeat;
@@ -808,8 +831,8 @@ input[type=text]:hover {
 
 .graph-square-empty {
   pointer-events: none;
-  width: 80px;
-  height: 80px;
+  width: 95px;
+  height: 95px;
   border: 1px solid #828181;
   background-color: #17191c;
   border-collapse: collapse;

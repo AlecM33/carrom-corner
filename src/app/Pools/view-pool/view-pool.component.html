@@ -1,18 +1,20 @@
 
-<h2>{{tournamentName}}: Pool {{letter}}</h2>
+
+<button class='app-btn back-button' (click)="backToRound()">« Back to Round</button>
+<h2 *ngIf="tournamentName">{{tournamentName}}: Pool {{letter}}</h2>
 <div id="round-robin-page-container">
   <div id="graph-container">
     <div id="upper-container">
       <div class="y-axis">
-        <div *ngFor="let player of playersInPool">
-          <div class="axis-label-y">{{convertToName(player.id)}}</div>
+        <div *ngFor="let participant of participantsInPool">
+          <div class="axis-label-y">{{convertToName(participant.id)}}</div>
         </div>
       </div>
       <div id="round-robin-graph">
-        <div class="graph-rows" *ngFor="let player of playersInPool; let i = index">
+        <div class="graph-rows" *ngFor="let participant of participantsInPool; let i = index">
           <div class="graph-columns" *ngFor="let element of returnArrayOfLength(i + 1); let j = index">
-            <div *ngIf="!(j === i)" [ngClass]="{'graph-square': !gameIsPlayed(playersInPool[j].id, playersInPool[i].id),
-            'graph-square-filled': gameIsPlayed(playersInPool[j].id, playersInPool[i].id)}" (click)="setCurrentGame(playersInPool[j].id, playersInPool[i].id)"></div>
+            <div *ngIf="!(j === i)" [ngClass]="{'graph-square': !gameIsPlayed(participantsInPool[j].id, participantsInPool[i].id),
+            'graph-square-filled': gameIsPlayed(participantsInPool[j].id, participantsInPool[i].id)}" (click)="setCurrentGame(participantsInPool[j].id, participantsInPool[i].id)"></div>
             <div *ngIf="j === i" class="graph-square-empty"></div>
           </div>
         </div>
@@ -20,20 +22,22 @@
     </div>
     <div class="x-axis">
       <div class="filler"></div>
-      <div *ngFor="let player of playersInPool">
-        <div class="axis-label-x">{{convertToName(player.id)}}</div>
+      <div *ngFor="let participant of participantsInPool">
+        <div class="axis-label-x">{{convertToName(participant.id)}}</div>
       </div>
     </div>
   </div>
   <div id="game-result-section">
     <h2>Game Results</h2>
     <div id="game-result-container">
-        <div *ngIf="currentGame" id="game-result-form">
+        <div [ngClass]="{'hidden': currentGame === undefined}" id="game-result-form">
           <div class="choice-container">
             <h2>Winner</h2>
             <div class="choice-button-container">
-              <div (click)="setGameWinner(currentGame.player1Id, currentGame.player2Id)" [className]="currentGame.winner === currentGame.player1Id ? 'choice selected' : 'choice'">{{convertToName(currentGame.player1Id)}}</div>
-              <div (click)="setGameWinner(currentGame.player2Id, currentGame.player1Id)" [className]="currentGame.winner === currentGame.player2Id ? 'choice selected' : 'choice'">{{convertToName(currentGame.player2Id)}}</div>
+              <div *ngIf="tournyType === 'singles'" (click)="setGameWinner(currentGame.player1Id, currentGame.player2Id)" [className]="currentGame.winner === currentGame.player1Id ? 'choice selected' : 'choice'">{{convertToName(currentGame.player1Id)}}</div>
+              <div *ngIf="tournyType === 'doubles'" (click)="setGameWinner(currentGame.team1Id, currentGame.team2Id)" [className]="currentGame.winner === currentGame.team1Id ? 'choice selected' : 'choice'">{{convertToName(currentGame.team1Id)}}</div>
+              <div *ngIf="tournyType === 'singles'" (click)="setGameWinner(currentGame.player2Id, currentGame.player1Id)" [className]="currentGame.winner === currentGame.player2Id ? 'choice selected' : 'choice'">{{convertToName(currentGame.player2Id)}}</div>
+              <div *ngIf="tournyType === 'doubles'" (click)="setGameWinner(currentGame.team2Id, currentGame.team1Id)" [className]="currentGame.winner === currentGame.team2Id ? 'choice selected' : 'choice'">{{convertToName(currentGame.team2Id)}}</div>
             </div>
           </div>
           <h2>Differential</h2>
@@ -54,9 +58,9 @@
               </div>
             </div>
           </div>
-          <button class='app-btn' (click)="submitGame()">Update Game</button>
+          <button class='app-btn' (click)="submitGame()" #updateBtn>Update Game</button>
         </div>
-        <p *ngIf="!currentGame">Click a game on the graph to see the results.</p>
+        <p [ngClass]="{'hidden': currentGame !== undefined}">Click a game on the graph to see the results.</p>
       </div>
   </div>
 </div>
