@@ -11,16 +11,16 @@ making calls to the database */
 @Injectable()
 export class PlayerService {
 
+    public players: Player[];
 
     constructor(private http: HttpClient, private elo_adjuster: EloService) {
     }
 
     // Takes an observable and creates player objects from the data observed
     populateWithPlayers(retrievedPlayers: any[]): Player[] {
-        const players = [];
-
+      this.players = [];
         for (const jsonPlayers of retrievedPlayers) {
-            players.push(new Player(
+            this.players.push(new Player(
                                     jsonPlayers['id'],
                                     jsonPlayers['name'],
                                     jsonPlayers['nickname'],
@@ -35,15 +35,19 @@ export class PlayerService {
                                     )
                                 );
         }
-        return players;
+        return this.players;
     }
 
     // Sends a GET request to the database for all players
     getPlayers(): Observable<Player[]> {
+      if (!this.players) {
         return this.http.request('get', '/api/players/get', {
-        headers: {
-          'Content-Type': 'application/json'}
+          headers: {
+            'Content-Type': 'application/json'
+          }
         }).map(this.populateWithPlayers);
+      }
+      return Observable.of(this.players);
     }
 
     updatePlayer(id, elo, doublesElo, wins, losses, totalDiff, singlesPlayed, doublesPlayed): Observable<any> {

@@ -9,7 +9,7 @@ import {TournamentSetupService} from './Services/tournament-setup.service';
 import {TeamService} from './Services/team.service';
 
 @NgModule({
-    providers: [PlayerService, TournamentService, BracketService, EloService, GameService, TournamentSetupService, TeamService],
+    providers: [TournamentService, BracketService, EloService, GameService, TournamentSetupService, TeamService],
     declarations: []
 })
 export class CoreModule {
@@ -22,7 +22,10 @@ export class CoreModule {
 
     static forRoot(): ModuleWithProviders {
         return {
-            ngModule: CoreModule
+            ngModule: CoreModule,
+            providers: [
+              PlayerService
+            ]
         };
       }
 

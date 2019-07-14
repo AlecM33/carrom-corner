@@ -32,6 +32,8 @@ CREATE TABLE `Singles_Games`
   `player2_id` int,
   `winner` int,
   `loser` int,
+  `validator` int,
+  `coin_flip_winner` int,
   `differential` int
 );
 
@@ -46,6 +48,8 @@ CREATE TABLE `Doubles_Games`
   `team2_id` int,
   `winner` int,
   `loser` int,
+  `validator` int,
+  `coin_flip_winner` int,
   `differential` int
 );
 

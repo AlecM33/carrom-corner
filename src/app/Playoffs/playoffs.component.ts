@@ -96,10 +96,10 @@ export class PlayoffsComponent implements OnInit {
 
     viewGroupStage() {
         let name;
-        this._tournyService.getTournament(this.playoff['tournamentId']).subscribe((tourny) => {
-            name = tourny['name'];
-            this.router.navigateByUrl('/tournaments/' + this.tournyType + '/' + name);
-        });
+        // this._tournyService.getTournament(this.playoff['tournamentId']).subscribe((tourny) => {
+        //     name = tourny['name'];
+        //     this.router.navigateByUrl('/tournaments/' + this.tournyType + '/' + name);
+        // });
     }
 
     // Updates player database with results from entered doubles game

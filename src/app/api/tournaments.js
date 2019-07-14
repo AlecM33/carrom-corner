@@ -54,7 +54,7 @@ router.get('/doubles/get', function(req, res) {
 });
 
 // GET a specific singles tournament
-router.get('/get/:singles_id', function(req, res) {
+router.get('/singles/get/:singles_id', function(req, res) {
   const query = 'SELECT * FROM Singles_Tournaments WHERE id = ?';
   const filter = [parseInt(req.params.singles_id)];
   connection.query(query, filter, function(err, result) {
@@ -66,7 +66,7 @@ router.get('/get/:singles_id', function(req, res) {
 });
 
 // GET a specific doubles tournament
-router.get('/get/:doubles_id', function(req, res) {
+router.get('/doubles/get/:doubles_id', function(req, res) {
   const query = 'SELECT * FROM Doubles_Tournaments WHERE id = ?';
   const filter = [parseInt(req.params.doubles_id)];
   connection.query(query, filter, function(err, result) {
@@ -77,11 +77,22 @@ router.get('/get/:doubles_id', function(req, res) {
   })
 });
 
-//DELETE player
-router.delete('/delete/:player_id', function(req, res) {
-  const player_id = parseInt(req.params.player_id);
-  const query = 'DELETE FROM Players WHERE id = ?';
-  const filter = [player_id];
+// UPDATE Singles Tournament Round
+router.post('/singles/update_round/:tourny_id', function(req, res) {
+  const query = 'UPDATE Singles_Tournaments SET current_round = ? WHERE id = ?';
+  const filter = [req.body.current_round, req.params.tourny_id];
+  connection.query(query, filter, function(err, result) {
+    if (err) throw err;
+    else {
+      return res.status(200).send(JSON.stringify(result));
+    }
+  })
+});
+
+// UPDATE Doubles Tournament Round
+router.post('/doubles/update_round/:tourny_id', function(req, res) {
+  const query = 'UPDATE Doubles_Tournaments SET current_round = ? WHERE id = ?';
+  const filter = [req.body.current_round, req.params.tourny_id];
   connection.query(query, filter, function(err, result) {
     if (err) throw err;
     else {

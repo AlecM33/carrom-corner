@@ -1,6 +1,48 @@
-<!--<button *ngIf="disabled" (click)="simulate()" class="btn btn-primary btn-lg">Sim Tournament »</button>-->
+<button (click)="simulate()" class="app-btn">Sim Round (For Testing) »</button>
+<!-- The Modal -->
+<div class="modal hidden" #roundModal>
+  <!-- Modal content -->
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>Begin Round 2</h2>
+      <span class="close" (click)="hideModal()">&times;</span>
+    </div>
+    <div class="modal-body">
+      <h2>I'd like to take the top</h2>
+      <div class="number-input-container">
+          <span id="number-box">
+            {{numberToAdvance}}
+          </span>
+        <div class="arrows">
+          <div id="up-arrow">
+            <svg class="svg-triangle-up" (click)="setRoundAdvancements('plus')">
+              <polygon points="0,0 100,0 100,100"/>
+            </svg>
+          </div>
+          <div id="down-arrow">
+            <svg class="svg-triangle-down" (click)="setRoundAdvancements('minus')">
+              <polygon points="0,0 100,0 100,100"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+      <h2>players or teams from each pool.</h2>
+      <h2>For pools with an extra player, I'd like to advance an extra player.</h2>
+      <div class="choice-container">
+        <div class="choice-button-container">
+          <div (click)="changeExtraPlayerChoice()" [className]="this.extraPlayer ? 'choice selected' : 'choice'">Yes</div>
+          <div (click)="changeExtraPlayerChoice()" [className]="this.extraPlayer ? 'choice' : 'choice selected'">No</div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="app-btn" (click)="startNextRound()">Advance</button>
+    </div>
+  </div>
+</div>
 <h2>{{tournamentName}} - Round {{currentRound}}</h2>
 <h3>Click on a pool to view details about it.</h3>
+<button *ngIf="numberOfRounds > 1 && currentRound === 1" (click)="openModal()" [ngClass]="{'app-btn': true, 'disabled': allGamesPlayed === false}">Start Next Round</button>
 <div class='pools' *ngIf="recordPools">
   <div *ngFor="let pool of recordPools">
     <h2>{{getLetter(recordPools.indexOf(pool))}}</h2>

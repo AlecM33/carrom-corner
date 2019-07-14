@@ -70,7 +70,7 @@
     flex-direction: row;
   }
   .pools {
-    width: 80%;
+    width: 100%;
   }
 }
 
@@ -145,6 +145,13 @@ html, body {
 .app-btn:hover {
   transform: scale(1.05);
   background-color: rgba(133, 133, 133, 0.3);
+}
+
+.disabled {
+  pointer-events: none;
+  opacity: 0.5;
+  border: 1px solid lightgray;
+  color: lightgray;
 }
 
 .confirmed {
@@ -781,13 +788,12 @@ input[type=text]:hover {
 }
 
 .axis-label-y {
-  font-size: 16px;
+  font-size: 11px;
   margin-right: 1em;
   color: #f7e5c5;
   width: 97px;
   height: 97px;
   display: flex;
-  font-size: 0.7vw;
   flex-direction: column;
   justify-content: center;
 }
@@ -797,7 +803,7 @@ input[type=text]:hover {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 0.7vw;
+  font-size: 11px;
   color: #f7e5c5;
   width: 97px;
   height: 97px;
@@ -852,41 +858,100 @@ input[type=text]:hover {
 
 /* STYLING FOR GAME MODAL */
 
-/* The Modal (background) */
 .modal {
-   /* Hidden by default */
+  position: fixed;
   display: block;
-  position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
+  z-index: 1;
   left: 0;
   top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0,0,0); /* Fallback color */
-  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  scrollbar-base-color: rgba(0, 0, 0, 0);
+  background-color: rgb(0,0,0);
+  background-color: rgba(0,0,0,0.4);
 }
 
-/* Modal Content/Box */
+.modal-body .number-input-container {
+  margin: 20px;
+}
+
+.modal-body h2 {
+  font-size: 22px;
+  align-self: center;
+}
+
+.modal-body .choice-button-container {
+  margin: 20px;
+  align-self: center;
+}
+
+.modal-footer button {
+  width: 100px;
+}
+
 .modal-content {
-  background-color: #fefefe;
-  margin: 15% auto; /* 15% from the top and centered */
+  background-color: #343a40;
+  margin: 9% auto;
   padding: 20px;
   border: 1px solid #888;
-  width: 80%; /* Could be more or less, depending on screen size */
+  width: 80%;
+  animation-name: animatetop;
+  animation-duration: 0.4s
+}
+
+@keyframes animatetop {
+  from {top: -50px; opacity: 0}
+  to {top: 0; opacity: 1}
+}
+
+.modal-table thead th {
+  border: none;
+}
+
+.modal-table tr {
+  border: none;
+}
+
+.modal-table {
+  border: none;
+  margin: 1em;
+  width: 40%;
+  height: 363px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 12px;
+}
+
+.modal-header {
+  border: none;
+  display: flex;
+}
+
+.modal-header h2 {
+
+}
+
+.modal-body {
+  border: none;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.modal-footer {
+  border: none;
 }
 
 /* The Close Button */
 .close {
-  color: #aaa;
+  color: #f7e5c5;
   float: right;
-  font-size: 28px;
-  font-weight: bold;
+  font-size: 30px;
 }
 
 .close:hover,
 .close:focus {
-  color: black;
+  color: #828181;
   text-decoration: none;
   cursor: pointer;
 }
@@ -1256,6 +1321,14 @@ hr {
   animation: fadein 1s;
   animation-fill-mode: backwards;
   animation-delay: 0.4s;
+}
+
+.selecting {
+  cursor: pointer;
+}
+
+.selecting:hover {
+  background-color: rgba(133, 133, 133, 0.3);
 }
 
 text {

@@ -31,7 +31,7 @@
     <h2>Game Results</h2>
     <div id="game-result-container">
         <div [ngClass]="{'hidden': currentGame === undefined}" id="game-result-form">
-          <div class="choice-container">
+          <div *ngIf="currentGame" class="choice-container">
             <h2>Winner</h2>
             <div class="choice-button-container">
               <div *ngIf="tournyType === 'singles'" (click)="setGameWinner(currentGame.player1Id, currentGame.player2Id)" [className]="currentGame.winner === currentGame.player1Id ? 'choice selected' : 'choice'">{{convertToName(currentGame.player1Id)}}</div>
@@ -42,7 +42,7 @@
           </div>
           <h2>Differential</h2>
           <div class="number-input-container">
-          <span id="number-box">
+          <span *ngIf="currentGame"  id="number-box">
             {{currentGame.differential}}
           </span>
             <div class="arrows">

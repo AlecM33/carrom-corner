@@ -7,6 +7,7 @@ import { Playoff } from '../Playoffs/playoff';
 import { environment } from 'environments/environment';
 import {SinglesTournament} from '../Tournaments/singles-tournament';
 import {DoublesTournament} from '../Tournaments/doubles-tournament';
+import {SinglesGame} from '../Games/singles-game';
 
 @Injectable()
 export class TournamentService {
@@ -72,12 +73,44 @@ export class TournamentService {
       }).map(this.populateWithDoublesTournaments);
     }
 
-    getTournament(name): Observable<Object> {
-        if (typeof(name) === 'number') {
-            return this.http.get(environment.api_url + '/tournaments/' + name);
-        }
-        return this.http.get(environment.api_url + '/tournaments?name=' + name);
+    getTournament(id, type): Observable<Object> {
+      if (type === 'singles') {
+        return this.http.request('get', '/api/tournaments/singles/get/' + id, {
+          headers: {
+            'Content-Type': 'application/json'}
+        });
+      } else {
+        return this.http.request('get', '/api/tournaments/doubles/get/' + id, {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+      }
     }
+
+  updateSinglesTournamentRound(tournyId: number, round: number): Observable<any> {
+    const payload = {
+      'current_round': round
+    };
+    return this.http.request('post', '/api/tournaments/singles/update_round/' + tournyId, {
+      body: payload,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+  }
+
+  updateDoublesTournamentRound(tournyId: number, round: number): Observable<any> {
+    const payload = {
+      'current_round': round
+    };
+    return this.http.request('post', '/api/tournaments/doubles/update_round/' + tournyId, {
+      body: payload,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+  }
 
     getPlayoff(id): Observable<Object> {
         return this.http.get(environment.api_url + '/playoffs/' + id);
