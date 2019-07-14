@@ -24,10 +24,10 @@ export class WinnerComponent implements OnInit {
       this.players = players;
       this.playoffId = this.active_route.snapshot.paramMap.get('id');
       this.playoffId = parseInt(this.playoffId, 10);
-      this._tournyService.getTournament(this.playoffId).subscribe((tournament) => {
-        this.tournament = tournament;
-        this.winner = this.tournament.winner;
-      });
+      // this._tournyService.getTournament(this.playoffId).subscribe((tournament) => {
+      //   this.tournament = tournament;
+      //   this.winner = this.tournament.winner;
+      // });
     });
   }
 

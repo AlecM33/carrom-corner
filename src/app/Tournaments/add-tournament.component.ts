@@ -99,75 +99,20 @@ export class AddTournamentComponent implements OnInit {
     this.teamIds.splice(index, 1);
   }
 
-  configurePoolParameters(size) {
-    if (size <= 16) {
-      this.optimalGroupSize = 4;
-    } else if (size > 16 && size < 24) {
-      this.optimalGroupSize = 5;
-    } else {
-      this.optimalGroupSize = 6;
-    }
-    this.sameSizePools = Math.floor(size / this.optimalGroupSize);
-  }
-
-  generateTeams(players: Player[], tournamentId: number): Team[] {
-    const teams: Team[] = [];
-    while (players.length > 0) {
-      const teammate1 = players.splice(this.getRandomIntInclusive(0, players.length - 1), 1)[0].id;
-      const teammate2 = players.splice(this.getRandomIntInclusive(0, players.length - 1), 1)[0].id;
-      teams.push(new Team(tournamentId, teammate1, teammate2));
-    }
-    return teams;
-  }
-
-  // Creates rounds, pools, pool placements, and games for the created doubles tournament
-  createDoublesData(insertId) {
-    const teams: Team[] = this.generateTeams(Array.from(this.playersInTourny), insertId);
-    this._setupService.postTeams(teams).subscribe((response: any) => {
-      for (let i = 0; i < response.length; i++) {
-        teams[i].id = response[i].insertId;
-      }
-      this._setupService.createDoublesRound(this.numberOfRounds, teams.length, insertId).subscribe((resp: any) => {
-        const roundId = resp.insertId;
-        this.configurePoolParameters(this.playersInTourny.size / 2);
-        this._setupService.createDoublesPools(roundId, this.sameSizePools).subscribe((resp: any) => {
-          this._setupService.createDoublesPoolPlacements(resp, teams, this.optimalGroupSize).subscribe((resp: any) => {
-            this._setupService.createDoublesGames(this.tournament.id);
-            this.router.navigateByUrl('/tournaments/doubles/' + this.tournamentName + '/' + this.tournament.id + '/1');
-          });
-        });
-      });
-    });
-  }
-
-  // Creates rounds, pools, pool placements, and games for the created singles tournament
-  createSinglesData(insertId: number) {
-    this._setupService.createSinglesRound(this.numberOfRounds, this.playersInTourny.size, insertId).subscribe((response: any) => {
-      const roundId = response.insertId;
-      this.configurePoolParameters(this.playersInTourny.size);
-      this._setupService.createSinglesPools(roundId, this.sameSizePools).subscribe((response) => {
-        this._setupService.createSinglesPoolPlacements(response, Array.from(this.playersInTourny), this.optimalGroupSize).subscribe(() => {
-          this._setupService.createSinglesGames(this.tournament.id);
-          this.router.navigateByUrl('/tournaments/singles/' + this.tournamentName + '/' + this.tournament.id + '/1');
-        });
-      });
-    });
-  }
-
   // Creates a tournament object, adds it to the database, and then calls the appropriate function to create all corresponding data
   createTourny() {
     if (this.tournyType === 'doubles') {
       this.tournament = new DoublesTournament(this.tournamentName, this.playersInTourny.size / 2, this.numberOfRounds);
       this._tournyService.addDoublesTournament(this.tournament).subscribe((result: any) => {
         this.tournament.id = result.insertId;
-        this.createDoublesData(result.insertId);
+        this._setupService.createDoublesData(result.insertId, this.tournamentName, 1, this.playersInTourny);
         console.log('All Doubles Tournament data successfully created for the first round!');
       });
     } else {
       this.tournament = new SinglesTournament(this.tournamentName, this.playersInTourny.size, this.numberOfRounds);
       this._tournyService.addSinglesTournament(this.tournament).subscribe((result: any) => {
         this.tournament.id = result.insertId;
-        this.createSinglesData(result.insertId);
+        this._setupService.createSinglesData(result.insertId, this.tournamentName, 1, this.playersInTourny);
         console.log('All Singles Tournament data successfully created for the first round!');
       });
     }

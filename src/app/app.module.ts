@@ -19,6 +19,8 @@ import { HomepageComponent } from './Homepage/homepage-component';
 import {NgbModule, NgbTooltip, NgbTooltipConfig} from '@ng-bootstrap/ng-bootstrap';
 import { ViewPoolComponent } from './Pools/view-pool/view-pool.component';
 import { ViewRoundComponent } from './Tournaments/view-round/view-round.component';
+import {ModuleWithProviders} from '@angular/compiler/src/core';
+import {PlayerService} from './Services/player.service';
 
 @NgModule({
   declarations: [
@@ -47,10 +49,10 @@ import { ViewRoundComponent } from './Tournaments/view-round/view-round.componen
       { path: 'tournaments/:type/:name/:tourny_id/:round', component: ViewRoundComponent},
       { path: 'tournaments/:type/:name/:tourny_id/:round/:round_id/:pool_id/:letter', component: ViewPoolComponent},
       { path: '', component: PlayerListComponent}
-    ]),
+    ], { onSameUrlNavigation: 'reload' }),
     CoreModule.forRoot()
   ],
-  providers: [ NgbTooltipConfig],
+  providers: [ NgbTooltipConfig ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}

@@ -41,10 +41,10 @@ router.get('/get/singles/:tournament_id', function(req, res) {
   })
 })
 
-// GET first round for a singles tournament
-router.get('/get/singles/:tournament_id/1', function(req, res) {
-  const query = 'SELECT * FROM Singles_Rounds WHERE (tourny_id = ? AND number = 1)';
-  const filter = [parseInt(req.params.tournament_id)];
+// GET round for a singles tournament
+router.get('/get/singles/:tournament_id/:round_number', function(req, res) {
+  const query = 'SELECT * FROM Singles_Rounds WHERE (tourny_id = ? AND number = ?)';
+  const filter = [parseInt(req.params.tournament_id), parseInt(req.params.round_number)];
   connection.query(query, filter, function(err, result) {
     if (err) throw err;
     else {
@@ -53,10 +53,10 @@ router.get('/get/singles/:tournament_id/1', function(req, res) {
   })
 });
 
-// GET first round for a doubles tournament
-router.get('/get/doubles/:tournament_id/1', function(req, res) {
-  const query = 'SELECT * FROM Doubles_Rounds WHERE (tourny_id = ? AND number = 1)';
-  const filter = [parseInt(req.params.tournament_id)];
+// GET round for a doubles tournament
+router.get('/get/doubles/:tournament_id/:round_number', function(req, res) {
+  const query = 'SELECT * FROM Doubles_Rounds WHERE (tourny_id = ? AND number = ?)';
+  const filter = [parseInt(req.params.tournament_id), parseInt(req.params.round_number)];
   connection.query(query, filter, function(err, result) {
     if (err) throw err;
     else {

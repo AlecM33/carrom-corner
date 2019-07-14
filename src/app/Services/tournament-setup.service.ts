@@ -14,14 +14,92 @@ import {Game} from '../Games/game';
 import {SinglesGame} from '../Games/singles-game';
 import {GameService} from './game.service';
 import {DoublesGame} from '../Games/doubles-game';
+import {Router} from '@angular/router';
 
 @Injectable()
 export class TournamentSetupService {
 
-  constructor(private http: HttpClient, private _gameService: GameService) {}
+  private optimalGroupSize: number;
+  private sameSizePools: number;
+
+  constructor(private http: HttpClient, private _gameService: GameService, private router: Router) {}
+
+  // Creates rounds, pools, pool placements, and games for the created singles tournament
+  createSinglesData(insertId: number, tournyName: string, roundNumber: number, players: Set<Player>) {
+    this.createSinglesRound(roundNumber, players.size, insertId).subscribe((response: any) => {
+      const roundId = response.insertId;
+      this.configurePoolParameters(players.size);
+      this.createSinglesPools(roundId, this.sameSizePools).subscribe((response) => {
+        this.createSinglesPoolPlacements(response, Array.from(players), this.optimalGroupSize).subscribe(() => {
+          this.createSinglesGames(insertId, roundNumber);
+          this.router.navigateByUrl('/tournaments/singles/' + tournyName + '/' + insertId + '/' + roundNumber);
+        });
+      });
+    });
+  }
+
+  // Creates rounds, pools, pool placements, and games for the created doubles tournament
+  createDoublesData(insertId: number, tournyName: string, roundNumber: number, members: Set<any>) {
+    if (Array.from(members)[0] instanceof Team) {
+      this.createDoublesDataForSecondRound(insertId, tournyName, roundNumber, members);
+    } else {
+      const teams: Team[] = this.generateTeams(Array.from(members), insertId);
+      this.postTeams(teams).subscribe((response: any) => {
+        for (let i = 0; i < response.length; i++) {
+          teams[i].id = response[i].insertId;
+        }
+        this.createDoublesRound(roundNumber, teams.length, insertId).subscribe((resp: any) => {
+          const roundId = resp.insertId;
+          this.configurePoolParameters(teams.length);
+          this.createDoublesPools(roundId, this.sameSizePools).subscribe((resp: any) => {
+            this.createDoublesPoolPlacements(resp, teams, this.optimalGroupSize).subscribe((resp: any) => {
+              this.createDoublesGames(insertId, roundNumber);
+              this.router.navigateByUrl('/tournaments/doubles/' + tournyName + '/' + insertId + '/' + roundNumber);
+            });
+          });
+        });
+      });
+    }
+  }
+
+  createDoublesDataForSecondRound(insertId: number, tournyName: string, roundNumber: number, members: Set<Team>) {
+    this.createDoublesRound(roundNumber, members.size, insertId).subscribe((resp: any) => {
+      const roundId = resp.insertId;
+      this.configurePoolParameters(members.size);
+      this.createDoublesPools(roundId, this.sameSizePools).subscribe((resp: any) => {
+        this.createDoublesPoolPlacements(resp, Array.from(members), this.optimalGroupSize).subscribe((resp: any) => {
+          this.createDoublesGames(insertId, roundNumber);
+          this.router.navigateByUrl('/tournaments/doubles/' + tournyName + '/' + insertId + '/' + roundNumber);
+        });
+      });
+    });
+  }
+
+  generateTeams(players: Player[], tournamentId: number): Team[] {
+    const teams: Team[] = [];
+    while (players.length > 0) {
+      const teammate1 = players.splice(this.getRandomIntInclusive(0, players.length - 1), 1)[0].id;
+      const teammate2 = players.splice(this.getRandomIntInclusive(0, players.length - 1), 1)[0].id;
+      teams.push(new Team(tournamentId, teammate1, teammate2));
+    }
+    return teams;
+  }
+
+  configurePoolParameters(size) {
+    if (size <= 6) {
+      this.optimalGroupSize = size;
+    } else if (size > 6 && size <= 16) {
+      this.optimalGroupSize = 4;
+    } else if (size > 16 && size < 24) {
+      this.optimalGroupSize = 5;
+    } else {
+      this.optimalGroupSize = 6;
+    }
+    this.sameSizePools = Math.floor(size / this.optimalGroupSize);
+  }
 
   createSinglesRound(roundNumber, size, tournamentId): Observable<Object> {
-    const round = new SinglesRound(tournamentId, size, 1);
+    const round = new SinglesRound(tournamentId, size, roundNumber);
     return this.addSinglesRound(round);
   }
 
@@ -38,8 +116,8 @@ export class TournamentSetupService {
     });
   }
 
-  createDoublesRound(numberOfRounds, size, tournamentId): Observable<Object> {
-    const round = new DoublesRound(tournamentId, size, 1);
+  createDoublesRound(roundNumber, size, tournamentId): Observable<Object> {
+    const round = new DoublesRound(tournamentId, size, roundNumber);
     return this.addDoublesRound(round);
   }
 
@@ -233,8 +311,8 @@ export class TournamentSetupService {
     });
   }
 
-  getFirstSinglesRound(tournamentId: number) {
-    return this.http.request('get', '/api/rounds/get/singles/' + tournamentId.toString() + '/1', {
+  getSinglesRound(tournamentId: number, roundNumber: number) {
+    return this.http.request('get', '/api/rounds/get/singles/' + tournamentId.toString() + '/' + roundNumber, {
       headers: {
         'Content-Type': 'application/json'}
     });
@@ -255,8 +333,8 @@ export class TournamentSetupService {
     });
   }
 
-  getFirstDoublesRound(tournamentId: number) {
-    return this.http.request('get', '/api/rounds/get/doubles/' + tournamentId.toString() + '/1', {
+  getDoublesRound(tournamentId: number, roundNumber: number) {
+    return this.http.request('get', '/api/rounds/get/doubles/' + tournamentId.toString() + '/' + roundNumber, {
       headers: {
         'Content-Type': 'application/json'}
     });
@@ -305,8 +383,8 @@ export class TournamentSetupService {
     }
   }
 
-  createSinglesGames(tournamentId: number) {
-    this.getFirstSinglesRound(tournamentId).subscribe((round) => {
+  createSinglesGames(tournamentId: number, round: number) {
+    this.getSinglesRound(tournamentId, round).subscribe((round) => {
       const roundId = round[0]['id'];
       this.getSinglesPools(round[0]['id']).subscribe((poolsResponse: any) => {
         for (const pool of poolsResponse) {
@@ -319,8 +397,8 @@ export class TournamentSetupService {
     });
   }
 
-  createDoublesGames(tournamentId: number) {
-    this.getFirstDoublesRound(tournamentId).subscribe((round) => {
+  createDoublesGames(tournamentId: number, round: number) {
+    this.getDoublesRound(tournamentId, round).subscribe((round) => {
       const roundId = round[0]['id'];
       this.getDoublesPools(round[0]['id']).subscribe((poolsResponse: any) => {
         for (const pool of poolsResponse) {
