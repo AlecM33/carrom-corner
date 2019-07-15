@@ -242,6 +242,7 @@ export class ViewRoundComponent implements OnInit {
 
   startNextRound() {
     this.roundModal.nativeElement.className = 'modal hidden';
+    this.loading = true;
     let roundUpdateObs;
     this.tournyType === 'singles' ?
       roundUpdateObs = this._tournamentService.updateSinglesTournamentRound(this.tournament[0].id, 2)
