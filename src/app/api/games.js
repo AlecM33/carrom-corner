@@ -56,6 +56,28 @@ router.get('/get/doubles/:tournament_id/:round_id/:pool_id', function(req, res) 
   })
 });
 
+// GET all played singles games
+router.get('/get/singles', function(req, res) {
+  const query = 'SELECT * FROM Singles_Games WHERE winner IS NOT NULL;';
+  connection.query(query, function(err, result) {
+    if (err) throw err;
+    else {
+      return res.status(200).send(JSON.stringify(result));
+    }
+  })
+});
+
+// GET all played doubles games
+router.get('/get/singles', function(req, res) {
+  const query = 'SELECT * FROM Doubles_Games WHERE winner IS NOT NULL;';
+  connection.query(query, function(err, result) {
+    if (err) throw err;
+    else {
+      return res.status(200).send(JSON.stringify(result));
+    }
+  })
+});
+
 // UPDATE Singles Game
 router.post('/singles/update/:game_id', function(req, res) {
   const game = req.body;
