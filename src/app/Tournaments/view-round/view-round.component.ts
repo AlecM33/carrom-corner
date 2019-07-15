@@ -37,6 +37,7 @@ export class ViewRoundComponent implements OnInit {
   public gamePools = [];
   public tournamentSize: number;
   public tournament = undefined;
+  public simulated: true;
 
   @ViewChild('roundModal') roundModal: ElementRef;
 
@@ -271,6 +272,7 @@ export class ViewRoundComponent implements OnInit {
 
   // Function that simulates all tournament games for testing
   simulate() {
+    this.simulated = true;
     for (const pool of this.gamePools) {
       for (let i = 0; i < pool.length; i++) {
         let winner;
