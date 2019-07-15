@@ -1,4 +1,4 @@
-<button (click)="simulate()" class="app-btn">Sim Round (For Testing) »</button>
+<button *ngIf="!simulated" (click)="simulate()" class="app-btn">Sim Round (For Testing) »</button>
 <!-- The Modal -->
 <div class="modal hidden" #roundModal>
   <!-- Modal content -->

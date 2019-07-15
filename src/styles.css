@@ -649,6 +649,10 @@ input[type=text]:hover {
   padding: 20px;
   width: 700px;
   color: #999999;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
 }
 
 .stat-section {
