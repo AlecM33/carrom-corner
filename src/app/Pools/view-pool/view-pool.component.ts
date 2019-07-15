@@ -141,6 +141,18 @@ export class ViewPoolComponent implements OnInit {
     this.currentGame.loser = loserId;
   }
 
+  setValidator(id) {
+    this.updateBtn.nativeElement.innerText = 'Update Game';
+    this.updateBtn.nativeElement.className = 'app-btn';
+    this.currentGame.validator = id;
+  }
+
+  setFlipWinner(id) {
+    this.updateBtn.nativeElement.innerText = 'Update Game';
+    this.updateBtn.nativeElement.className = 'app-btn';
+    this.currentGame.coinFlipWinner = id;
+  }
+
   setGameDifferential(plusOrMinus: string) {
     this.updateBtn.nativeElement.innerText = 'Update Game';
     this.updateBtn.nativeElement.className = 'app-btn';

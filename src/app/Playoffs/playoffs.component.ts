@@ -4,7 +4,6 @@ import { TournamentService } from '../Services/tournament.service';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Player } from '../Players/player';
-import { Game } from '../Games/game';
 import { GameService } from '../Services/game.service';
 import { NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
 import * as _swal from 'sweetalert';
@@ -35,7 +34,6 @@ export class PlayoffsComponent implements OnInit {
     public bracket = [];
     public tournyType = 'singles';
     public playInRound = [];
-    public playoffGames: Game[];
     public newPlayoffGames = [];
     public tournamentWinner: any;
     public scoreDifferential: number;
@@ -175,10 +173,6 @@ export class PlayoffsComponent implements OnInit {
         } else {
             validatingPlayer = this.modalLoser.team;
         }
-        // TODO: NOT pass undefined as the id for new games. Create a global ID sequence/generation service
-        const playoffGame = new Game(undefined, true, parseInt(this.playoffId, 10),
-          undefined, this.modalWinner.team, this.modalLoser.team, this.modalWinner.team, this.scoreDifferential, validatingPlayer);
-        this.newPlayoffGames.push(playoffGame);
         this.closeModal();
     }
 

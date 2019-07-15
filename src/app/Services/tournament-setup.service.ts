@@ -10,7 +10,6 @@ import {Player} from '../Players/player';
 import {SinglesPoolPlacement} from '../Pools/singles-pool-placement';
 import {DoublesPoolPlacement} from '../Pools/doubles-pool-placement';
 import {Team} from '../Teams/team';
-import {Game} from '../Games/game';
 import {SinglesGame} from '../Games/singles-game';
 import {GameService} from './game.service';
 import {DoublesGame} from '../Games/doubles-game';

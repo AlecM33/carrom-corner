@@ -9,6 +9,8 @@ export class SinglesGame {
   public winner: number;
   public loser: number;
   public differential: number;
+  public validator: number;
+  public coinFlipWinner: number;
 
   constructor(
     tournamentId: number,
@@ -28,5 +30,7 @@ export class SinglesGame {
     this.winner = null;
     this.loser = null;
     this.differential = null;
+    this.validator = null;
+    this.coinFlipWinner = null;
   }
 }
