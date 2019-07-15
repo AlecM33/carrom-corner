@@ -132,6 +132,22 @@ export class GameService {
     }).map(this.populateWithSinglesGames);
   }
 
+  getPlayedSinglesGames() {
+    return this.http.request('get', '/api/games/get/singles', {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).map(this.populateWithSinglesGames);
+  }
+
+  getPlayedDoublesGames() {
+    return this.http.request('get', '/api/games/get/doubles', {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).map(this.populateWithSinglesGames);
+  }
+
   getDoublesGamesInPool(poolId: number, tournamentId: number, roundId: number) {
     return this.http.request('get', '/api/games/get/doubles/' + tournamentId + '/' + roundId + '/' + poolId, {
       headers: {

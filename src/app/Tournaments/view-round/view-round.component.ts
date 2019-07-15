@@ -73,19 +73,18 @@ export class ViewRoundComponent implements OnInit {
       this.tournament = tournament;
       this.numberOfRounds = tournament[0]['rounds'];
       this.tournamentSize = tournament[0]['size'];
-      console.log(this.numberOfRounds);
-    });
-    this._playerService.getPlayers().subscribe((players) => {
-      this.players = players;
-      if (this.tournyType === 'singles') {
+      this._playerService.getPlayers().subscribe((players) => {
         this.players = players;
-        this.retrieveSinglesData();
-      } else {
-        this._teamService.getTeams(this.tournamentId).subscribe((teams) => {
-          this.teams = teams;
-          this.retrieveDoublesData();
-        });
-      }
+        if (this.tournyType === 'singles') {
+          this.players = players;
+          this.retrieveSinglesData();
+        } else {
+          this._teamService.getTeams(this.tournamentId).subscribe((teams) => {
+            this.teams = teams;
+            this.retrieveDoublesData();
+          });
+        }
+      });
     });
   }
 
