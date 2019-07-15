@@ -1,4 +1,4 @@
-import { Component, OnInit, DoCheck } from '@angular/core';
+import {Component, OnInit, DoCheck, ViewChild, ElementRef} from '@angular/core';
 import { PlayerService } from '../Services/player.service';
 import { HttpClient } from '@angular/common/http';
 import { Player } from '../Players/player';
@@ -49,6 +49,8 @@ export class AddTournamentComponent implements OnInit {
   rosterForbidden = false;
   rosterUneven = false;
   nameFormatInvalid = false;
+
+  @ViewChild('createBtn') createBtn: ElementRef;
 
   ngOnInit() {
     this.tournyType = this.active_route.snapshot.paramMap.get('type');
@@ -101,6 +103,7 @@ export class AddTournamentComponent implements OnInit {
 
   // Creates a tournament object, adds it to the database, and then calls the appropriate function to create all corresponding data
   createTourny() {
+    this.createBtn.nativeElement.innerText = 'Creating...';
     if (this.tournyType === 'doubles') {
       this.tournament = new DoublesTournament(this.tournamentName, this.playersInTourny.size / 2, this.numberOfRounds);
       this._tournyService.addDoublesTournament(this.tournament).subscribe((result: any) => {

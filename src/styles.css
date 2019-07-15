@@ -618,6 +618,37 @@ input[type=text]:hover {
   height: 20px;
 }
 
+/* CSS FOR LOADING*/
+
+@keyframes cycleCoinsOuter {
+  0%   {fill: #a1692f}
+  33%  {fill: #610101}
+  67% {fill: black}
+  100%   {fill: #a1692f}
+
+}
+
+@keyframes cycleCoinsInner {
+  0%   {fill: #b38049}
+  33%  {fill: #731818 }
+  67% {fill: #252626}
+  100%   {fill: #b38049}
+}
+
+.loading-container {
+  margin: 9em;
+}
+
+.loading-outer, .loading-inner {
+  animation: cycleCoinsOuter 3s infinite;
+  opacity: 0.8;
+}
+
+.loading-middle {
+  animation: cycleCoinsInner 3s infinite;
+  opacity: 0.8;
+}
+
 /* CSS FOR HOMEPAGE */
 
 #homepage-container {

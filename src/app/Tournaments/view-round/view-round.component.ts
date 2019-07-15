@@ -37,7 +37,8 @@ export class ViewRoundComponent implements OnInit {
   public gamePools = [];
   public tournamentSize: number;
   public tournament = undefined;
-  public simulated: true;
+  public simulated = false;
+  public loading = true;
 
   @ViewChild('roundModal') roundModal: ElementRef;
 
@@ -163,6 +164,7 @@ export class ViewRoundComponent implements OnInit {
         playerPool[losingPlayerIndex].totalDiff -= game.differential;
       }
     }
+    this.loading = false;
   }
 
   calculateTeamRecords(games: DoublesGame[]) {
@@ -178,6 +180,7 @@ export class ViewRoundComponent implements OnInit {
         teamPool[losingTeamIndex].totalDiff -= game.differential;
       }
     }
+    this.loading = false;
   }
 
   setRoundAdvancements(plusOrMinus: string) {
@@ -252,7 +255,9 @@ export class ViewRoundComponent implements OnInit {
             : nextRoundAdvancers.add(this.teams.find((team) => team.id === pool[i].teamId));
         }
         if (pool.length === this.findLargestPool() && this.extraPlayer === true) {
-          nextRoundAdvancers.add(pool[0]);
+          this.tournyType === 'singles' ?
+            nextRoundAdvancers.add(this.players.find((player) => player.id === pool[0].playerId))
+            : nextRoundAdvancers.add(this.teams.find((team) => team.id === pool[0].teamId));
         }
       }
       console.log(nextRoundAdvancers);
