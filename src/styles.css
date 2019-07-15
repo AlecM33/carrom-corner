@@ -650,8 +650,8 @@ input[type=text]:hover {
 }
 
 #game-result-form .choice-button-container .choice {
-  width: 50%;
-  height: 65px;
+  width: 40%;
+  height: 36px;
   font-size: 1em;
   display: flex;
   justify-content: center;
@@ -738,6 +738,11 @@ input[type=text]:hover {
   height: 65px;
 }
 
+#game-result-container h2 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: normal;
+}
 #round-robin-page-container {
   display: flex;
   flex-direction: row;
@@ -760,7 +765,7 @@ input[type=text]:hover {
   display: flex;
   justify-content: center;
   border: 1px solid #f7e5c5;
-  height: 425px;
+  height: 580px;
   background-color: rgba(120,120,120,0.15);
 }
 

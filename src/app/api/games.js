@@ -8,7 +8,7 @@ const connection = require('./db');
 // POST Singles game
 router.post('/singles/post', function(req, res) {
   const game = req.body;
-  const query = 'INSERT INTO Singles_Games VALUES (NULL, ?, ?, ?, false, ?, ?, NULL, NULL, NULL);';
+  const query = 'INSERT INTO Singles_Games VALUES (NULL, ?, ?, ?, false, ?, ?, NULL, NULL, NULL, NULL, NULL);';
   const filter = [game.tournamentId, game.roundId, game.poolId, game.player1Id, game.player2Id];
   connection.query(query, filter, function(err, result) {
     if (err) throw err;
@@ -21,7 +21,7 @@ router.post('/singles/post', function(req, res) {
 // POST Doubles game
 router.post('/doubles/post', function(req, res) {
   const game = req.body;
-  const query = 'INSERT INTO Doubles_Games VALUES (NULL, ?, ?, ?, false, ?, ?, NULL, NULL, NULL);';
+  const query = 'INSERT INTO Doubles_Games VALUES (NULL, ?, ?, ?, false, ?, ?, NULL, NULL, NULL, NULL, NULL);';
   const filter = [game.tournamentId, game.roundId, game.poolId, game.team1Id, game.team2Id];
   connection.query(query, filter, function(err, result) {
     if (err) throw err;
@@ -59,8 +59,9 @@ router.get('/get/doubles/:tournament_id/:round_id/:pool_id', function(req, res) 
 // UPDATE Singles Game
 router.post('/singles/update/:game_id', function(req, res) {
   const game = req.body;
-  const query = 'UPDATE Singles_Games SET winner = ?, loser = ?, differential = ? WHERE id = ?';
-  const filter = [game.winner, game.loser, game.differential, req.params.game_id];
+  console.log(game);
+  const query = 'UPDATE Singles_Games SET winner = ?, loser = ?, validator = ?, coin_flip_winner = ?, differential = ? WHERE id = ?';
+  const filter = [game.winner, game.loser, game.validator, game.coin_flip_winner, game.differential, req.params.game_id];
   connection.query(query, filter, function(err, result) {
     if (err) throw err;
     else {
@@ -72,8 +73,9 @@ router.post('/singles/update/:game_id', function(req, res) {
 // UPDATE Doubles Game
 router.post('/doubles/update/:game_id', function(req, res) {
   const game = req.body;
-  const query = 'UPDATE Doubles_Games SET winner = ?, loser = ?, differential = ? WHERE id = ?';
-  const filter = [game.winner, game.loser, game.differential, req.params.game_id];
+  console.log(game);
+  const query = 'UPDATE Doubles_Games SET winner = ?, loser = ?, validator = ?, coin_flip_winner = ?, differential = ? WHERE id = ?';
+  const filter = [game.winner, game.loser, game.validator, game.coin_flip_winner, game.differential, req.params.game_id];
   connection.query(query, filter, function(err, result) {
     if (err) throw err;
     else {

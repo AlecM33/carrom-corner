@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders} from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { SinglesPool } from '../Pools/singles-pool';
-import { Game } from '../Games/game';
 import { environment } from 'environments/environment';
 import {SinglesGame} from '../Games/singles-game';
 import {DoublesGame} from '../Games/doubles-game';
@@ -27,6 +26,8 @@ export class GameService {
           newGame.id = jsonGame['id'];
           newGame.winner = jsonGame['winner'];
           newGame.loser = jsonGame['loser'];
+          newGame.validator = jsonGame['validator'];
+          newGame.coinFlipWinner = jsonGame['coin_flip_winner'];
           newGame.differential = jsonGame['differential'];
           games.push(newGame);
         }
@@ -48,6 +49,8 @@ export class GameService {
       newGame.id = jsonGame['id'];
       newGame.winner = jsonGame['winner'];
       newGame.loser = jsonGame['loser'];
+      newGame.validator = jsonGame['validator'];
+      newGame.coinFlipWinner = jsonGame['coin_flip_winner'];
       newGame.differential = jsonGame['differential'];
       games.push(newGame);
     }
@@ -89,9 +92,12 @@ export class GameService {
   }
 
     updateSinglesGame(game: SinglesGame): Observable<any> {
+      console.log(game);
       const payload = {
         'winner': game.winner,
         'loser': game.loser,
+        'validator': game.validator,
+        'coin_flip_winner': game.coinFlipWinner,
         'differential': game.differential,
       };
       return this.http.request('post', '/api/games/singles/update/' + game.id, {
@@ -106,6 +112,8 @@ export class GameService {
     const payload = {
       'winner': game.winner,
       'loser': game.loser,
+      'validator': game.validator,
+      'coin_flip_winner': game.coinFlipWinner,
       'differential': game.differential,
     };
     return this.http.request('post', '/api/games/doubles/update/'  + game.id, {
