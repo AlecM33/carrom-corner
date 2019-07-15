@@ -145,7 +145,7 @@ export class GameService {
       headers: {
         'Content-Type': 'application/json'
       }
-    }).map(this.populateWithSinglesGames);
+    }).map(this.populateWithDoublesGames);
   }
 
   getDoublesGamesInPool(poolId: number, tournamentId: number, roundId: number) {

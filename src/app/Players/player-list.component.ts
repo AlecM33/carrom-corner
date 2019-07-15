@@ -14,6 +14,7 @@ import 'rxjs/add/operator/do';
   templateUrl: './player-list.component.html',
 })
 
+
 export class PlayerListComponent implements OnInit {
 
   public players = [];

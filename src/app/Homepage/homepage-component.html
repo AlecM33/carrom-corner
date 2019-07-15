@@ -1,0 +1,32 @@
+<div id="homepage-container">
+  <h2>Office Stats</h2>
+  <div *ngIf="playedSinglesGames.length > 0 || playedDoublesGames.length > 0" class="stats-container">
+    <div class="stat-section">
+      <div class="stat-container">
+        <div *ngIf="playedSinglesGames.length > 0" class="stat">{{singlesValidatorPct | percent}}</div>
+        <div *ngIf="playedSinglesGames.length === 0" class="stat">--</div>
+        of <span class="emphasis">singles</span> games are won by the player who <span class="smaller-emphasis"> validated the queen</span>.
+      </div>
+      <div class="stat-container">
+        <div *ngIf="playedDoublesGames.length > 0" class="stat">{{doublesValidatorPct | percent}}</div>
+        <div *ngIf="playedDoublesGames.length === 0" class="stat">--</div>
+        of <span class="emphasis">doubles</span> games are won by the team that <span class="smaller-emphasis"> validated the queen</span>.
+      </div>
+    </div>
+    <div class="stat-section">
+      <div class="stat-container">
+        <div *ngIf="playedSinglesGames.length > 0" class="stat">{{singlesCoinFlipPct | percent}}</div>
+        <div *ngIf="playedSinglesGames.length === 0" class="stat">--</div>
+        of <span class="emphasis">singles</span> games are won by the player who <span class="smaller-emphasis"> won the coin toss</span>.
+      </div>
+      <div class="stat-container">
+        <div *ngIf="playedDoublesGames.length > 0" class="stat">{{doublesCoinFlipPct | percent}}</div>
+        <div *ngIf="playedDoublesGames.length === 0" class="stat">--</div>
+        of <span class="emphasis">doubles</span> games are won by the team that <span class="smaller-emphasis"> won the coin toss</span>.
+      </div>
+    </div>
+  </div>
+  <div *ngIf="playedSinglesGames.length === 0 && playedDoublesGames.length === 0" class="stats-container">
+    Play some games to reveal stats.
+  </div>
+</div>
