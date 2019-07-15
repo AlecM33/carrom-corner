@@ -12,12 +12,32 @@ export class HomepageComponent implements OnInit {
     }
 
     public playedSinglesGames: SinglesGame[];
-    public playedDoublesGame: DoublesGame[];
+    public playedDoublesGames: DoublesGame[];
+    public singlesValidatorPct: number;
+    public doublesValidatorPct: number;
+    public singlesCoinFlipPct: number;
+    public doublesCoinFlipPct: number;
 
     ngOnInit() {
       this._gameService.getPlayedSinglesGames().subscribe((games) => {
         this.playedSinglesGames = games;
-        console.log(this.playedSinglesGames);
+        this._gameService.getPlayedDoublesGames().subscribe((games) => {
+          this.playedDoublesGames = games;
+          if (this.playedSinglesGames && this.playedDoublesGames) {
+            this.calculateWinPercentages();
+          }
+        });
       });
+    }
+
+    calculateWinPercentages() {
+      this.singlesValidatorPct = this.playedSinglesGames.filter((game) => game.validator === game.winner).length
+        / this.playedSinglesGames.length;
+      this.doublesValidatorPct = this.playedDoublesGames.filter((game) => game.validator === game.winner).length
+        / this.playedDoublesGames.length;
+      this.singlesCoinFlipPct = this.playedSinglesGames.filter((game) => game.coinFlipWinner === game.winner).length
+        / this.playedSinglesGames.length;
+      this.doublesCoinFlipPct = this.playedDoublesGames.filter((game) => game.coinFlipWinner === game.winner).length
+        / this.playedDoublesGames.length;
     }
 }

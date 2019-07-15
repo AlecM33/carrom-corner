@@ -276,6 +276,8 @@ export class ViewRoundComponent implements OnInit {
         let winner;
         if (this.tournyType === 'singles') {
           this.getRandomIntInclusive(1, 2) === 1 ? winner = pool[i].player1Id : winner = pool[i].player2Id;
+          this.getRandomIntInclusive(1, 2) === 1 ? pool[i].validator = pool[i].player1Id : pool[i].validator = pool[i].player2Id;
+          this.getRandomIntInclusive(1, 2) === 1 ? pool[i].coinFlipWinner = pool[i].player1Id : pool[i].coinFlipWinner = pool[i].player2Id;
           if (winner === pool[i].player1Id) {
             pool[i].winner = pool[i].player1Id;
             pool[i].loser = pool[i].player2Id;
@@ -285,6 +287,8 @@ export class ViewRoundComponent implements OnInit {
           }
         } else {
           this.getRandomIntInclusive(1, 2) === 1 ? winner = pool[i].team1Id : winner = pool[i].team2Id;
+          this.getRandomIntInclusive(1, 2) === 1 ? pool[i].validator = pool[i].team1Id : pool[i].validator = pool[i].team2Id;
+          this.getRandomIntInclusive(1, 2) === 1 ? pool[i].coinFlipWinner = pool[i].team1Id : pool[i].coinFlipWinner = pool[i].team2Id;
           if (winner === pool[i].team1Id) {
             pool[i].winner = pool[i].team1Id;
             pool[i].loser = pool[i].team2Id;

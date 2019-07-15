@@ -68,7 +68,7 @@ router.get('/get/singles', function(req, res) {
 });
 
 // GET all played doubles games
-router.get('/get/singles', function(req, res) {
+router.get('/get/doubles', function(req, res) {
   const query = 'SELECT * FROM Doubles_Games WHERE winner IS NOT NULL;';
   connection.query(query, function(err, result) {
     if (err) throw err;
