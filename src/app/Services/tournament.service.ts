@@ -112,29 +112,12 @@ export class TournamentService {
     });
   }
 
-    getPlayoff(id): Observable<Object> {
-        return this.http.get(environment.api_url + '/playoffs/' + id);
-    }
-
-    addSinglesTournament(newTournament: SinglesTournament): Observable<Object> {
-        const payload = { 'name': newTournament.name,
-                          'size': newTournament.size,
-                          'rounds': newTournament.rounds
-                        };
-        return this.http.request('post', '/api/tournaments/singles/post', {
-          body: payload,
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        });
-    }
-
-  addDoublesTournament(newTournament: DoublesTournament) {
+  addSinglesTournament(newTournament: SinglesTournament): Observable<Object> {
       const payload = { 'name': newTournament.name,
-        'size': newTournament.size,
-        'rounds': newTournament.rounds
-      };
-      return this.http.request('post', '/api/tournaments/doubles/post', {
+                        'size': newTournament.size,
+                        'rounds': newTournament.rounds
+                      };
+      return this.http.request('post', '/api/tournaments/singles/post', {
         body: payload,
         headers: {
           'Content-Type': 'application/json'
@@ -142,37 +125,27 @@ export class TournamentService {
       });
   }
 
-    // addPool(newPool: SinglesPool) {
-    //     const httpOptions = {headers: new HttpHeaders({ 'Content-Type': 'application/json' })};
-    //     const payload = {
-    //                     'tournamentId': newPool.tournamentId,
-    //                     'pools': newPool.pools,
-    //                     'tournyName': newPool.tournyName
-    //                   };
-    //     return this.http.post(environment.api_url + '/pools', payload, httpOptions);
-    // }
+  addDoublesTournament(newTournament: DoublesTournament) {
+    const payload = { 'name': newTournament.name,
+      'size': newTournament.size,
+      'rounds': newTournament.rounds
+    };
+    return this.http.request('post', '/api/tournaments/doubles/post', {
+      body: payload,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+  }
 
-    addPlayoff(newPlayoff: Playoff) {
-        const httpOptions = {headers: new HttpHeaders({ 'Content-Type': 'application/json' })};
-        const payload = {
-                        'id': newPlayoff.id,
-                        'tournamentId': newPlayoff.tournamentId,
-                        'playInSpots': newPlayoff.playInSpots,
-                        'bracket': newPlayoff.bracket,
-                        'winner': newPlayoff.winner,
-                        'ended': newPlayoff.ended
-                      };
-        return this.http.post(environment.api_url + '/playoffs', payload, httpOptions);
-    }
-
-    updateSinglesPlayoff(tournyId) {
-      return this.http.request('post', '/api/tournaments/singles/update_playoffs/' + tournyId, {
-        body: '',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-    }
+  updateSinglesPlayoff(tournyId) {
+    return this.http.request('post', '/api/tournaments/singles/update_playoffs/' + tournyId, {
+      body: '',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+  }
 
   updateDoublesPlayoff(tournyId) {
     return this.http.request('post', '/api/tournaments/doubles/update_playoffs/' + tournyId, {
@@ -182,13 +155,6 @@ export class TournamentService {
       }
     });
   }
-
-    toggleDefined(id): Observable<any> {
-        return this.http.patch(environment.api_url + '/tournaments/' + id,
-        {
-            'playoffDefined': true
-        });
-    }
 
     // NOTE: Also deletes corresponding pools, games, and playoffs.
     deleteTournament(tournament, name) {

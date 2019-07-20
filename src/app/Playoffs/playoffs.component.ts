@@ -9,6 +9,8 @@ import { NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
 import * as _swal from 'sweetalert';
 import { SweetAlert } from 'sweetalert/typings/core';
 import { EloService } from '../Services/elo.service';
+import {PlayoffService} from '../Services/playoff.service';
+import {BracketService} from '../Services/bracket.service';
 const swal: SweetAlert = _swal as any;
 
 @Component({
@@ -22,7 +24,9 @@ export class PlayoffsComponent implements OnInit {
                 public active_route: ActivatedRoute,
                 public _gameService: GameService,
                 public tooltipConfig: NgbTooltipConfig,
-                public elo_adjuster: EloService) {
+                public elo_adjuster: EloService,
+                public _playoffService: PlayoffService,
+                public _bracketService: BracketService) {
     }
 
     public players: Player[];
@@ -39,6 +43,8 @@ export class PlayoffsComponent implements OnInit {
     public scoreDifferential: number;
     public round: number;
     public isOver = true;
+    tournament: any;
+    public tournamentId: any;
 
     // variables related to modal for playoff game result entry
     public modalOpen = false;
@@ -50,26 +56,36 @@ export class PlayoffsComponent implements OnInit {
     scoreInvalid = false;
 
     ngOnInit() {
+      this.tournyType = this.active_route.snapshot.paramMap.get('type');
+      this.tournamentId = this.active_route.snapshot.paramMap.get('id');
+      this._tournyService.getTournament(this.tournamentId, this.tournyType).subscribe((tournament) => {
+        const playoffObs = this.tournyType === 'singles' ?
+          this._playoffService.getSinglesPlayoff(tournament[0].id)
+          : this._playoffService.getDoublesPlayoff(tournament[0].id);
+        playoffObs.subscribe((playoff) => {
+          //TODO: get bracket nodes for the playoff
+        });
+      });
         this._playerService.getPlayers().subscribe((players) => {
             this.players = players;
             this.playoffId = this.active_route.snapshot.paramMap.get('id');
-            this.constructPlayoff();
+            //this.constructPlayoff();
         });
 
     }
 
     constructPlayoff() {
-        this._tournyService.getPlayoff(this.playoffId).subscribe((playoff) => {
-            this.tournamentWinner = playoff['winner'];
-            this.isOver = playoff['ended'];
-            this.playoff = playoff;
-            this.bracket = playoff['bracket'];
-            this.playInRound = this.bracket.shift();
-            if (this.bracket[0][0].team instanceof Array) {
-                this.tournyType = 'doubles';
-            }
-            //this.getPlayoffGames();
-        });
+        // this._tournyService.getPlayoff(this.playoffId).subscribe((playoff) => {
+        //     this.tournamentWinner = playoff['winner'];
+        //     this.isOver = playoff['ended'];
+        //     this.playoff = playoff;
+        //     this.bracket = playoff['bracket'];
+        //     this.playInRound = this.bracket.shift();
+        //     if (this.bracket[0][0].team instanceof Array) {
+        //         this.tournyType = 'doubles';
+        //     }
+        //     //this.getPlayoffGames();
+        // });
     }
 
     // getPlayoffGames() {
@@ -176,24 +192,24 @@ export class PlayoffsComponent implements OnInit {
         this.closeModal();
     }
 
-    resetBracket() {
-        swal({
-            title: 'Revert Changes',
-            text: 'Are you sure you wish to clear your changes? This will also delete any games you entered since your last save.',
-            buttons: [true, true],
-        }).then((wantsToSave) => {
-            if (wantsToSave) {
-                this._tournyService.getPlayoff(this.playoffId).subscribe((playoff) => {
-                    this.playoff = playoff;
-                    this.bracket = playoff['bracket'];
-                    this.playInRound = this.bracket.shift();
-                    this.tournamentWinner = playoff['winner'];
-                    this.newPlayoffGames = [];
-                    //this.getPlayoffGames();
-                });
-            }
-        });
-    }
+    // resetBracket() {
+    //     swal({
+    //         title: 'Revert Changes',
+    //         text: 'Are you sure you wish to clear your changes? This will also delete any games you entered since your last save.',
+    //         buttons: [true, true],
+    //     }).then((wantsToSave) => {
+    //         if (wantsToSave) {
+    //             this._tournyService.getPlayoff(this.playoffId).subscribe((playoff) => {
+    //                 this.playoff = playoff;
+    //                 this.bracket = playoff['bracket'];
+    //                 this.playInRound = this.bracket.shift();
+    //                 this.tournamentWinner = playoff['winner'];
+    //                 this.newPlayoffGames = [];
+    //                 //this.getPlayoffGames();
+    //             });
+    //         }
+    //     });
+    // }
 
     saveBracket() {
         swal({

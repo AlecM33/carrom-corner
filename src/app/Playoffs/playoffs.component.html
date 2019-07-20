@@ -90,28 +90,6 @@
                 </div>
             </div>
         </div>
-        <hr id="playoff-hr" />
-        <div class="results-container">
-            <div class='table-responsive table-dark results-table'>
-                <h3>Playoff Game Results</h3>
-                <table *ngIf="playoffGames" class="playoff-games-table">
-                    <tr *ngFor="let game of newPlayoffGames">
-                        <td class='result-winner'>W +{{game.differential}} </td>
-                        <td>{{convertToName(game.winner)}}</td>
-                        <td>vs.</td>
-                        <td class='result-loser'>L</td>
-                        <td>{{convertToName(game.team2)}}</td>
-                    </tr>
-                    <tr *ngFor="let game of playoffGames">
-                        <td class='result-winner'>W +{{game.differential}} </td>
-                        <td>{{convertToName(game.winner)}}</td>
-                        <td>vs.</td>
-                        <td class='result-loser'>L</td>
-                        <td>{{convertToName(game.team2)}}</td>
-                    </tr>
-                </table>
-            </div>
-        </div>
     </div>
 </div>
 
