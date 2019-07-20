@@ -216,10 +216,10 @@ export class PlayoffsComponent implements OnInit {
                     //     this.newPlayoffGames = [];
                     // });
                 }
-                this._tournyService.updatePlayoff(this.playoff, this.bracket, this.playInRound).subscribe(() => {
-                    const notice = document.getElementById('notice');
-                    notice.textContent = 'Bracket Successfully Saved \u2713';
-                });
+                // this._tournyService.updatePlayoff(this.playoff, this.bracket, this.playInRound).subscribe(() => {
+                //     const notice = document.getElementById('notice');
+                //     notice.textContent = 'Bracket Successfully Saved \u2713';
+                // });
             }
         });
     }

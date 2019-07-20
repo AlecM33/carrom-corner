@@ -4,7 +4,7 @@
   <!-- Modal content -->
   <div class="modal-content">
     <div class="modal-header">
-      <h2>Begin Round 2</h2>
+      <h2>Advance Tournament</h2>
       <span class="close" (click)="hideModal()">&times;</span>
     </div>
     <div class="modal-body">
@@ -36,13 +36,15 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button class="app-btn" (click)="startNextRound()">Advance</button>
+      <button *ngIf="currentRound !== numberOfRounds" class="app-btn" (click)="startNextRound(false)">Advance</button>
+      <button *ngIf="currentRound === numberOfRounds" class="app-btn" (click)="startNextRound(true)">Advance</button>
     </div>
   </div>
 </div>
 <h2>{{tournamentName}} - Round {{currentRound}}</h2>
 <h3>Click on a pool to view details about it.</h3>
 <button *ngIf="numberOfRounds > 1 && currentRound === 1" (click)="openModal()" [ngClass]="{'app-btn': true, 'disabled': allGamesPlayed === false}">Start Next Round</button>
+<button *ngIf="currentRound === 2 || (currentRound === 1 && numberOfRounds === 1)" (click)="openModal()" [ngClass]="{'app-btn': true, 'disabled': allGamesPlayed === false}">Start Playoffs</button>
 <div class='pools' *ngIf="recordPools && !loading">
   <div *ngFor="let pool of recordPools">
     <h2>{{getLetter(recordPools.indexOf(pool))}}</h2>

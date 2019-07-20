@@ -165,16 +165,23 @@ export class TournamentService {
         return this.http.post(environment.api_url + '/playoffs', payload, httpOptions);
     }
 
-    updatePlayoff(playoff: Object, bracket: Array<Object>, playInRound: Array<Object>) {
-        const newBracket = Object.assign([], bracket);
-        newBracket.unshift(playInRound);
-        return this.http.patch(environment.api_url + '/playoffs/' + playoff['id'],
-        {
-            'bracket': newBracket,
-            'winner': playoff['winner'],
-            'ended': playoff['ended']
-        });
+    updateSinglesPlayoff(tournyId) {
+      return this.http.request('post', '/api/tournaments/singles/update_playoffs/' + tournyId, {
+        body: '',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
     }
+
+  updateDoublesPlayoff(tournyId) {
+    return this.http.request('post', '/api/tournaments/doubles/update_playoffs/' + tournyId, {
+      body: '',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+  }
 
     toggleDefined(id): Observable<any> {
         return this.http.patch(environment.api_url + '/tournaments/' + id,

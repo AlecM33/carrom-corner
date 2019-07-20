@@ -92,7 +92,6 @@ export class GameService {
   }
 
     updateSinglesGame(game: SinglesGame): Observable<any> {
-      console.log(game);
       const payload = {
         'winner': game.winner,
         'loser': game.loser,
