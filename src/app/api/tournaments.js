@@ -1,6 +1,4 @@
 const express = require('express');
-const path = require('path');
-const mysql = require('mysql');
 const router = express.Router();
 
 const connection = require('./db');
@@ -93,6 +91,30 @@ router.post('/singles/update_round/:tourny_id', function(req, res) {
 router.post('/doubles/update_round/:tourny_id', function(req, res) {
   const query = 'UPDATE Doubles_Tournaments SET current_round = ? WHERE id = ?';
   const filter = [req.body.current_round, req.params.tourny_id];
+  connection.query(query, filter, function(err, result) {
+    if (err) throw err;
+    else {
+      return res.status(200).send(JSON.stringify(result));
+    }
+  })
+});
+
+// UPDATE singles tournament Playoff status
+router.post('/singles/update_playoffs/:tourny_id', function(req, res) {
+  const query = 'UPDATE Singles_Tournaments SET playoffs_started = true WHERE id = ?';
+  const filter = [req.params.tourny_id];
+  connection.query(query, filter, function(err, result) {
+    if (err) throw err;
+    else {
+      return res.status(200).send(JSON.stringify(result));
+    }
+  })
+});
+
+// UPDATE Doubles Tournament playoff status
+router.post('/doubles/update_playoffs/:tourny_id', function(req, res) {
+  const query = 'UPDATE Doubles_Tournaments SET playoffs_started = true WHERE id = ?';
+  const filter = [req.params.tourny_id];
   connection.query(query, filter, function(err, result) {
     if (err) throw err;
     else {

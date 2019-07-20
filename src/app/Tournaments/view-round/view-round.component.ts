@@ -12,6 +12,10 @@ import {SinglesGame} from '../../Games/singles-game';
 import {DoublesGame} from '../../Games/doubles-game';
 import {Team} from '../../Teams/team';
 import {TeamService} from '../../Services/team.service';
+import {Playoff} from '../../Playoffs/playoff';
+import {PlayoffService} from '../../Services/playoff.service';
+import {SinglesBracketNode} from '../../Brackets/singles-bracket-node';
+import {DoublesBracketNode} from '../../Brackets/doubles-bracket-node';
 
 @Component({
   selector: 'app-view-round',
@@ -49,7 +53,9 @@ export class ViewRoundComponent implements OnInit {
               public _setupService: TournamentSetupService,
               public _tournamentService: TournamentService,
               public _gameService: GameService,
-              public _teamService: TeamService
+              public _teamService: TeamService,
+              public _bracketService: BracketService,
+              public _playoffService: PlayoffService
               ) { }
 
   ngOnInit() {
@@ -125,6 +131,18 @@ export class ViewRoundComponent implements OnInit {
         }
       );
     }
+  }
+
+  sortPlayoffPool(pool) {
+    pool.sort((a, b) => {
+        if(a.wins > b.wins) return -1;
+        if(b.wins > a.wins) return 1;
+        if(a.losses < b.losses) return -1;
+        if(b.losses > a.losses) return 1;
+        return a.totalDiff >= b.totalDiff ? -1 : 1;
+      }
+    );
+    return pool;
   }
 
   retrieveDoublesData() {
@@ -240,9 +258,8 @@ export class ViewRoundComponent implements OnInit {
     this.roundModal.nativeElement.className = 'modal';
   }
 
-  startNextRound() {
+  startNextRound(playoffs: boolean) {
     this.roundModal.nativeElement.className = 'modal hidden';
-    this.loading = true;
     let roundUpdateObs;
     this.tournyType === 'singles' ?
       roundUpdateObs = this._tournamentService.updateSinglesTournamentRound(this.tournament[0].id, 2)
@@ -261,11 +278,14 @@ export class ViewRoundComponent implements OnInit {
             : nextRoundAdvancers.add(this.teams.find((team) => team.id === pool[0].teamId));
         }
       }
-      console.log(nextRoundAdvancers);
-      this.tournyType === 'singles' ?
-        this._setupService.createSinglesData(this.tournamentId, this.tournamentName, 2, nextRoundAdvancers)
-        : this._setupService.createDoublesData(this.tournamentId, this.tournamentName, 2, nextRoundAdvancers);
-      this.ngOnInit();
+      if (playoffs) {
+        this.startPlayoffs(nextRoundAdvancers);
+      } else {
+        this.loading = true;
+        this.tournyType === 'singles' ?
+          this._setupService.createSinglesData(this.tournamentId, this.tournamentName, 2, nextRoundAdvancers)
+          : this._setupService.createDoublesData(this.tournamentId, this.tournamentName, 2, nextRoundAdvancers);
+      }
     });
   }
 
@@ -315,4 +335,113 @@ export class ViewRoundComponent implements OnInit {
     }
   }
 
+  startPlayoffs(advancers: Set<PlayerRecord>) {
+    const playoffArray = this.sortPlayoffPool(Array.from(advancers));
+    let seed = 1;
+    for (const advancer of playoffArray) {
+      advancer.playoffSeed = seed;
+      seed ++;
+    }
+    this.constructBracket(playoffArray);
+  }
+
+  // Builds a bracket using the bracket service and then splits them into rounds
+  constructBracket(playoffArray: PlayerRecord[]) {
+    const treeLevels = [];
+    const bracket = this._bracketService.generateBracket(playoffArray);
+    const depth = this._bracketService.getTreeDepth(bracket.winnerNode);
+    for (let i = 1; i <= depth; i ++) {
+      const nodesAtLevel = [];
+      this._bracketService.getNodesAtLevel(bracket.winnerNode, i, nodesAtLevel);
+      treeLevels.push(nodesAtLevel);
+    }
+    console.log(treeLevels);
+    // const playInSpots = [];
+    // for (const spot of treeLevels[1]) {
+    //   if (JSON.stringify(spot) === '{}') {
+    //     playInSpots.push(treeLevels[1].indexOf(spot));
+    //   }
+    // }
+    this.createPlayoffs(treeLevels, playoffArray.length);
+  }
+
+  createPlayoffs(treeLevels: Array<Array<any>>, size: number) {
+    if (this.tournyType === 'singles') {
+      this._playoffService.addSinglesPlayoff(this.tournamentId).subscribe((playoff: any) => {
+        this.postBracketInfo(playoff.insertId, treeLevels);
+        this._tournamentService.updateSinglesPlayoff(this.tournamentId).subscribe(() => {
+          this.router.navigateByUrl('/playoffs/' + this.tournamentId);
+        });
+      });
+    } else {
+      this._playoffService.addDoublesPlayoff(this.tournamentId).subscribe((playoff: any) => {
+        this.postBracketInfo(playoff.insertId, treeLevels);
+        this._tournamentService.updateDoublesPlayoff(this.tournamentId).subscribe(() => {
+          this.router.navigateByUrl('/playoffs/' + this.tournamentId);
+        });
+      });
+    }
+  }
+
+  createSinglesBracketNodes(bracketId: number, treeLevels) {
+    let nodeIndex = 1;
+    let playInAmount = 0;
+    let currentPlayIn = 0;
+    const balancedLeafIndices = [];
+    for (const level of treeLevels) {
+      for (let i = 0; i < level.length; i += 2) {
+        let newNode;
+        if (level[i] instanceof Player && level[i + 1] instanceof Player) {
+          newNode = new SinglesBracketNode(bracketId, level[i].id, level[i + 1].id, level[i].playoffSeed, level[i + 1].playoffSeed,
+            balancedLeafIndices[currentPlayIn]);
+          currentPlayIn++;
+        } else if (level[i] instanceof Player && !(level[i + 1] instanceof Player)) {
+          newNode = new SinglesBracketNode(bracketId, level[i].id, null, level[i].playoffSeed, null, nodeIndex);
+          balancedLeafIndices[playInAmount] = (nodeIndex * 2) + 1;
+          playInAmount++;
+        } else {
+          newNode = new SinglesBracketNode(bracketId, null, null, null, null, nodeIndex);
+        }
+        this._bracketService.addSinglesBracketNode(newNode).subscribe();
+        nodeIndex ++;
+      }
+    }
+  }
+
+  createDoublesBracketNodes(bracketId: number, treeLevels) {
+    let nodeIndex = 1;
+    let playInAmount = 0;
+    let currentPlayIn = 0;
+    const balancedLeafIndices = [];
+    for (const level of treeLevels) {
+      for (let i = 0; i < level.length; i += 2) {
+        let newNode;
+        if (level[i] instanceof Team && level[i + 1] instanceof Team) {
+          newNode = new DoublesBracketNode(bracketId, level[i].id, level[i + 1].id, level[i].playoffSeed, level[i + 1].playoffSeed,
+            balancedLeafIndices[currentPlayIn]);
+          currentPlayIn++;
+        } else if (level[i] instanceof Team && !(level[i + 1] instanceof Team)) {
+          newNode = new DoublesBracketNode(bracketId, level[i].id, null, level[i].playoffSeed, null, nodeIndex);
+          balancedLeafIndices[playInAmount] = (nodeIndex * 2) + 1;
+          playInAmount++;
+        } else {
+          newNode = new DoublesBracketNode(bracketId, null, null, null, null, nodeIndex);
+        }
+        this._bracketService.addDoublesBracketNode(newNode).subscribe();
+        nodeIndex ++;
+      }
+    }
+  }
+
+  postBracketInfo(insertId: number, treeLevels: Array<Array<any>>) {
+    if (this.tournyType === 'singles') {
+      this._bracketService.addSinglesBracket(insertId, treeLevels.length).subscribe((bracket: any) => {
+        this.createSinglesBracketNodes(bracket.insertId, treeLevels);
+      });
+    } else {
+      this._bracketService.addDoublesBracket(insertId, treeLevels.length).subscribe((bracket: any) => {
+        this.createDoublesBracketNodes(bracket.insertId, treeLevels);
+      });
+    }
+  }
 }

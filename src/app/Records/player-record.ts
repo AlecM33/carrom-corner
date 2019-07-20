@@ -6,6 +6,7 @@ export class PlayerRecord {
   public wins: number;
   public losses: number;
   public totalDiff: number;
+  public playoffSeed: number;
 
 
   constructor(
@@ -20,5 +21,6 @@ export class PlayerRecord {
     this.wins = 0;
     this.losses = 0;
     this.totalDiff = 0;
+    this.playoffSeed = null;
   }
 }

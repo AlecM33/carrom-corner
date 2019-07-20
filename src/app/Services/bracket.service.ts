@@ -2,11 +2,18 @@ import { Injectable } from '@angular/core';
 import { BracketGraph } from '../Brackets/bracketgraph';
 import { BracketNode } from '../Brackets/bracketnode';
 import { ChildTeams } from '../Brackets/childteams';
+import {Player} from '../Players/player';
+import {Team} from '../Teams/team';
+import {Observable} from 'rxjs/Observable';
+import {HttpClient} from '@angular/common/http';
+import {SinglesBracketNode} from '../Brackets/singles-bracket-node';
+import {DoublesBracketNode} from '../Brackets/doubles-bracket-node';
 
 /* This service provides relevant methods for constructing a tournament bracket with a variable number of players */
 @Injectable()
 export class BracketService {
 
+  constructor(private http: HttpClient) {}
 
     generateBracket(playerList: Object[]): BracketGraph {
         const bracketGraph = new BracketGraph();
@@ -87,5 +94,65 @@ export class BracketService {
         }
         return output;
     }
+
+    addSinglesBracket(playoffId: number, depth: number): Observable<Object> {
+      const payload = {
+        'playoff_id': playoffId,
+        'depth': depth
+      };
+      return this.http.request('post', '/api/brackets/singles/post', {
+        body: payload,
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+    }
+
+    addDoublesBracket(playoffId: number, depth: number) {
+      const payload = {
+        'playoff_id': playoffId,
+        'depth': depth
+      };
+      return this.http.request('post', '/api/brackets/doubles/post', {
+        body: payload,
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+    }
+
+  addSinglesBracketNode(node: SinglesBracketNode): Observable<Object> {
+    const payload = {
+      'bracket_id': node.bracketId,
+      'player1_id': node.player1Id,
+      'player2_id': node.player2Id,
+      'seed1': node.seed1,
+      'seed2': node.seed2,
+      'node_index': node.nodeIndex
+    };
+    return this.http.request('post', '/api/brackets/singles/nodes/post', {
+      body: payload,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+  }
+
+  addDoublesBracketNode(node: DoublesBracketNode): Observable<Object> {
+    const payload = {
+      'bracket_id': node.bracketId,
+      'team1_id': node.team1Id,
+      'team2_id': node.team2Id,
+      'seed1': node.seed1,
+      'seed2': node.seed2,
+      'node_index': node.nodeIndex
+    };
+    return this.http.request('post', '/api/brackets/doubles/nodes/post', {
+      body: payload,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+  }
 
 }

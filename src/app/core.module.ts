@@ -7,9 +7,10 @@ import { EloService } from './Services/elo.service';
 import { GameService } from './Services/game.service';
 import {TournamentSetupService} from './Services/tournament-setup.service';
 import {TeamService} from './Services/team.service';
+import {PlayoffService} from './Services/playoff.service';
 
 @NgModule({
-    providers: [TournamentService, BracketService, EloService, GameService, TournamentSetupService, TeamService],
+    providers: [TournamentService, BracketService, EloService, GameService, TournamentSetupService, TeamService, PlayoffService, BracketService],
     declarations: []
 })
 export class CoreModule {
