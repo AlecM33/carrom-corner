@@ -16,7 +16,7 @@
     <td *ngIf="tournament.winner">{{tournament.winner}}</td>
     <td class='in-progress' *ngIf="!tournament.winner">In progress...</td>
     <td><a href="/" (click)='delete($event, tournament)' class='link'>Delete</a></td>
-    <td *ngIf="tournament.playoffsStarted"><a href="/" (click)='viewPlayoff($event, tournament.id)' class='link'>View</a></td>
+    <td *ngIf="tournament.playoffsStarted"><a href="/" (click)='viewPlayoff($event, tournament)' class='link'>View</a></td>
     <td *ngIf="!tournament.playoffsStarted"><a href="/" (click)='viewTournament($event, tournament)' class='link'>View</a></td>
   </tr>
   </tbody>

@@ -25,13 +25,13 @@ export class TournamentListComponent implements OnInit {
   constructor(public _tournyService: TournamentService, private http: HttpClient, private router: Router) {
   }
 
-  playoffDefined(id): boolean {
-    return this._tournyService.getPlayoff(id) !== undefined;
-  }
-
-  viewPlayoff(e, id) {
+  viewPlayoff(e, tournament) {
     e.preventDefault();
-    this.router.navigateByUrl('/playoffs/' + id);
+    if (this.singlesTournaments.includes(tournament)) {
+      this.router.navigateByUrl('/playoffs/singles/' + tournament.id);
+    } else {
+      this.router.navigateByUrl('/playoffs/doubles/' + tournament.id);
+    }
   }
 
   // delete(e, tournament) {

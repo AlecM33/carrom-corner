@@ -4,11 +4,40 @@ import {Playoff} from '../Playoffs/playoff';
 import {environment} from '../../environments/environment';
 import {SinglesPlayoff} from '../Playoffs/singles-playoff';
 import {Observable} from 'rxjs/Observable';
+import {SinglesTournament} from '../Tournaments/singles-tournament';
+import {DoublesPlayoff} from '../Playoffs/doubles-playoff';
 
 @Injectable()
 export class PlayoffService {
 
   constructor(private http: HttpClient) {
+  }
+
+  populateWithSinglesPlayoff(response: any[]): SinglesTournament[] {
+    const playoffs = [];
+    for (const jsonPlayoff of response) {
+      const retrievedPlayoff = new SinglesPlayoff(undefined);
+      retrievedPlayoff.id = jsonPlayoff['id'];
+      retrievedPlayoff.tournamentId = jsonPlayoff['tourny_id'];
+      retrievedPlayoff.winner = jsonPlayoff['winner'];
+      retrievedPlayoff.ended = jsonPlayoff['ended'];
+      playoffs.push(retrievedPlayoff);
+    }
+    return playoffs;
+  }
+
+  populateWithDoublesPlayoff(response: any[]): SinglesTournament[] {
+    const playoffs = [];
+    for (const jsonPlayoff of response) {
+      const retrievedPlayoff = new DoublesPlayoff(undefined);
+      retrievedPlayoff.id = jsonPlayoff['id'];
+      retrievedPlayoff.tournamentId = jsonPlayoff['tourny_id'];
+      retrievedPlayoff.winner1 = jsonPlayoff['winner1'];
+      retrievedPlayoff.winner2 = jsonPlayoff['winner2'];
+      retrievedPlayoff.ended = jsonPlayoff['ended'];
+      playoffs.push(retrievedPlayoff);
+    }
+    return playoffs;
   }
 
   addSinglesPlayoff(tournyId: number): Observable<Object> {
@@ -29,5 +58,19 @@ export class PlayoffService {
         'Content-Type': 'application/json'
       }
     });
+  }
+
+  getSinglesPlayoff(id: number): Observable<SinglesTournament[]> {
+    return this.http.request('get', '/api/playoffs/singles/get/' + id, {
+      headers: {
+        'Content-Type': 'application/json'}
+    }).map(this.populateWithSinglesPlayoff);
+  }
+
+  getDoublesPlayoff(id: number): Observable<SinglesTournament[]> {
+    return this.http.request('get', '/api/playoffs/doubles/get/' + id, {
+      headers: {
+        'Content-Type': 'application/json'}
+    }).map(this.populateWithDoublesPlayoff);
   }
 }
