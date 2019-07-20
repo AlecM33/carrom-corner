@@ -160,7 +160,8 @@ CREATE TABLE `Singles_Bracket_Nodes`
   `player1_id` int,
   `player2_id` int,
   `seed1` int,
-  `seed2` int
+  `seed2` int,
+  `node_index` int
 );
 
 CREATE TABLE `Doubles_Bracket_Nodes`
@@ -170,7 +171,8 @@ CREATE TABLE `Doubles_Bracket_Nodes`
   `team1_id` int,
   `team2_id` int,
   `seed1` int,
-  `seed2` int
+  `seed2` int,
+  `node_index` int
 );
 
 ALTER TABLE `Teams` ADD FOREIGN KEY (`tourny_id`) REFERENCES `Doubles_Tournaments` (`id`);
