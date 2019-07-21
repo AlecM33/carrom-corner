@@ -107,7 +107,7 @@ router.post('/doubles/update/:node_id', function(req, res) {
 
 // GET singles bracket nodes for a playoff
 router.get('/singles/nodes/get/:playoff_id', function(req, res) {
-  const query = 'SELECT * FROM Singles_Bracket_Nodes WHERE playoff_id = ?';
+  const query = 'SELECT * FROM Singles_Bracket_Nodes WHERE bracket_id = ?';
   const filter = [req.params.playoff_id];
   connection.query(query, filter, function(err, result) {
     if (err) throw err;
@@ -119,7 +119,7 @@ router.get('/singles/nodes/get/:playoff_id', function(req, res) {
 
 // GET doubles bracket nodes for a playoff
 router.get('/doubles/nodes/get/:playoff_id', function(req, res) {
-  const query = 'SELECT * FROM Doubles_Bracket_Nodes WHERE playoff_id = ?';
+  const query = 'SELECT * FROM Doubles_Bracket_Nodes WHERE bracket_id = ?';
   const filter = [req.params.playoff_id];
   connection.query(query, filter, function(err, result) {
     if (err) throw err;

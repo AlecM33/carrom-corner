@@ -6,6 +6,8 @@ import {SinglesPlayoff} from '../Playoffs/singles-playoff';
 import {Observable} from 'rxjs/Observable';
 import {SinglesTournament} from '../Tournaments/singles-tournament';
 import {DoublesPlayoff} from '../Playoffs/doubles-playoff';
+import {SinglesBracketNode} from '../Brackets/singles-bracket-node';
+import {DoublesBracketNode} from '../Brackets/doubles-bracket-node';
 
 @Injectable()
 export class PlayoffService {
@@ -60,17 +62,19 @@ export class PlayoffService {
     });
   }
 
-  getSinglesPlayoff(id: number): Observable<SinglesTournament[]> {
-    return this.http.request('get', '/api/playoffs/singles/get/' + id, {
-      headers: {
-        'Content-Type': 'application/json'}
-    }).map(this.populateWithSinglesPlayoff);
-  }
-
-  getDoublesPlayoff(id: number): Observable<SinglesTournament[]> {
-    return this.http.request('get', '/api/playoffs/doubles/get/' + id, {
-      headers: {
-        'Content-Type': 'application/json'}
-    }).map(this.populateWithDoublesPlayoff);
+  getPlayoff(id: number, type: string): Observable<any> {
+    if (type === 'singles') {
+      return this.http.request('get', '/api/playoffs/singles/get/' + id, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }).map(this.populateWithSinglesPlayoff);
+    } else {
+      return this.http.request('get', '/api/playoffs/doubles/get/' + id, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }).map(this.populateWithDoublesPlayoff);
+    }
   }
 }

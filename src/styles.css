@@ -1047,6 +1047,42 @@ input[type=text]:hover {
 
 /* end styling for modal */
 
+/* STYLING FOR BRACKET */
+
+#bracket {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+#bracket .bracket-node {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #f7e5c5;
+  justify-content: center;
+  align-items: center;
+  width: 175px;
+  height: 100px;
+  margin: 1em;
+}
+
+#bracket .bracket-member {
+  display: flex;
+  color: #828181;
+  height: 50%;
+  width: 100%;
+  align-self: center;
+  align-items: center;
+}
+
+#bracket > div > div > div:nth-child(1) {
+  border-bottom: 1px solid #828181;
+}
+
+#bracket p {
+  margin: 0;
+  margin-left: 1em;
+}
+
 .next-button button {
   width: 100px;
 }
