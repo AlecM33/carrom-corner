@@ -356,12 +356,6 @@ export class ViewRoundComponent implements OnInit {
       treeLevels.push(nodesAtLevel);
     }
     console.log(treeLevels);
-    // const playInSpots = [];
-    // for (const spot of treeLevels[1]) {
-    //   if (JSON.stringify(spot) === '{}') {
-    //     playInSpots.push(treeLevels[1].indexOf(spot));
-    //   }
-    // }
     this.createPlayoffs(treeLevels, playoffArray.length);
   }
 
@@ -370,38 +364,43 @@ export class ViewRoundComponent implements OnInit {
       this._playoffService.addSinglesPlayoff(this.tournamentId).subscribe((playoff: any) => {
         this.postBracketInfo(playoff.insertId, treeLevels);
         this._tournamentService.updateSinglesPlayoff(this.tournamentId).subscribe(() => {
-          this.router.navigateByUrl('/playoffs/' + this.tournamentId);
+          this.router.navigateByUrl('/playoffs/' + this.tournyType + '/' + this.tournamentId);
         });
       });
     } else {
       this._playoffService.addDoublesPlayoff(this.tournamentId).subscribe((playoff: any) => {
         this.postBracketInfo(playoff.insertId, treeLevels);
         this._tournamentService.updateDoublesPlayoff(this.tournamentId).subscribe(() => {
-          this.router.navigateByUrl('/playoffs/' + this.tournamentId);
+          this.router.navigateByUrl('/playoffs/' + this.tournyType + '/'  + this.tournamentId);
         });
       });
     }
   }
 
+  // Converts the bracket tree into a balanced binary tree representation, where nodeIndex is the node number N starting from 1 at the root
   createSinglesBracketNodes(bracketId: number, treeLevels) {
     let nodeIndex = 1;
     let playInAmount = 0;
     let currentPlayIn = 0;
     const balancedLeafIndices = [];
-    for (const level of treeLevels) {
-      for (let i = 0; i < level.length; i += 2) {
+    for (let i = 0; i < treeLevels.length; i++) {
+      for (let j = 0; j < treeLevels[i].length; j += 2) {
         let newNode;
-        if (level[i] instanceof Player && level[i + 1] instanceof Player) {
-          newNode = new SinglesBracketNode(bracketId, level[i].id, level[i + 1].id, level[i].playoffSeed, level[i + 1].playoffSeed,
-            balancedLeafIndices[currentPlayIn]);
+        if (treeLevels[i][j] instanceof Player && treeLevels[i][j + 1] instanceof Player && i === treeLevels.length - 1) {
+          newNode = new SinglesBracketNode(bracketId, treeLevels[i][j].id, treeLevels[i][j + 1].id, treeLevels[i][j].playoffSeed,
+            treeLevels[i][j + 1].playoffSeed, balancedLeafIndices[currentPlayIn]);
           currentPlayIn++;
-        } else if (level[i] instanceof Player && !(level[i + 1] instanceof Player)) {
-          newNode = new SinglesBracketNode(bracketId, level[i].id, null, level[i].playoffSeed, null, nodeIndex);
+        } else if (treeLevels[i][j] instanceof Player && treeLevels[i][j + 1] instanceof Player && i !== treeLevels.length - 1) {
+          newNode = new SinglesBracketNode(bracketId, treeLevels[i][j].id, treeLevels[i][j + 1].id, treeLevels[i][j].playoffSeed,
+            treeLevels[i][j + 1].playoffSeed, nodeIndex);
+        } else if (treeLevels[i][j] instanceof Player && !(treeLevels[i][j + 1] instanceof Player)) {
+          newNode = new SinglesBracketNode(bracketId, treeLevels[i][j].id, null, treeLevels[i][j].playoffSeed, null, nodeIndex);
           balancedLeafIndices[playInAmount] = (nodeIndex * 2) + 1;
           playInAmount++;
         } else {
           newNode = new SinglesBracketNode(bracketId, null, null, null, null, nodeIndex);
         }
+        console.log(newNode);
         this._bracketService.addSinglesBracketNode(newNode).subscribe();
         nodeIndex ++;
       }
@@ -413,15 +412,18 @@ export class ViewRoundComponent implements OnInit {
     let playInAmount = 0;
     let currentPlayIn = 0;
     const balancedLeafIndices = [];
-    for (const level of treeLevels) {
-      for (let i = 0; i < level.length; i += 2) {
+    for (let i = 0; i < treeLevels.length; i++) {
+      for (let j = 0; j < treeLevels[i].length; j += 2) {
         let newNode;
-        if (level[i] instanceof Team && level[i + 1] instanceof Team) {
-          newNode = new DoublesBracketNode(bracketId, level[i].id, level[i + 1].id, level[i].playoffSeed, level[i + 1].playoffSeed,
-            balancedLeafIndices[currentPlayIn]);
+        if (treeLevels[i][j] instanceof Team && treeLevels[i][j + 1] instanceof Team && i === treeLevels.length - 1) {
+          newNode = new DoublesBracketNode(bracketId, treeLevels[i][j].id, treeLevels[i][j + 1].id, treeLevels[i][j].playoffSeed,
+            treeLevels[i][j + 1].playoffSeed, balancedLeafIndices[currentPlayIn]);
           currentPlayIn++;
-        } else if (level[i] instanceof Team && !(level[i + 1] instanceof Team)) {
-          newNode = new DoublesBracketNode(bracketId, level[i].id, null, level[i].playoffSeed, null, nodeIndex);
+        } else if (treeLevels[i][j] instanceof Team && treeLevels[i][j + 1] instanceof Team && i !== treeLevels.length - 1) {
+          newNode = new DoublesBracketNode(bracketId, treeLevels[i][j].id, treeLevels[i][j + 1].id, treeLevels[i][j].playoffSeed,
+            treeLevels[i][j + 1].playoffSeed, nodeIndex);
+        } else if (treeLevels[i][j] instanceof Team && !(treeLevels[i][j + 1] instanceof Team)) {
+          newNode = new DoublesBracketNode(bracketId, treeLevels[i][j].id, null, treeLevels[i][j].playoffSeed, null, nodeIndex);
           balancedLeafIndices[playInAmount] = (nodeIndex * 2) + 1;
           playInAmount++;
         } else {

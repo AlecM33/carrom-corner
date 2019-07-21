@@ -45,6 +45,8 @@ export class PlayoffsComponent implements OnInit {
     public isOver = true;
     tournament: any;
     public tournamentId: any;
+    public tournamentName: any;
+    public nodes = [];
 
     // variables related to modal for playoff game result entry
     public modalOpen = false;
@@ -57,42 +59,33 @@ export class PlayoffsComponent implements OnInit {
 
     ngOnInit() {
       this.tournyType = this.active_route.snapshot.paramMap.get('type');
-      this.tournamentId = this.active_route.snapshot.paramMap.get('id');
+      this.tournamentId = this.active_route.snapshot.paramMap.get('tourny_id');
       this._tournyService.getTournament(this.tournamentId, this.tournyType).subscribe((tournament) => {
-        const playoffObs = this.tournyType === 'singles' ?
-          this._playoffService.getSinglesPlayoff(tournament[0].id)
-          : this._playoffService.getDoublesPlayoff(tournament[0].id);
-        playoffObs.subscribe((playoff) => {
-          //TODO: get bracket nodes for the playoff
+        this.tournamentName = tournament[0]['name'];
+        this._playoffService.getPlayoff(tournament[0].id, this.tournyType).subscribe((playoff) => {
+          this._bracketService.getBracket(playoff[0].id, this.tournyType).subscribe((bracket) => {
+            this._bracketService.getBracketNodes(bracket[0]['id'], this.tournyType).subscribe((nodes) => {
+              this.nodes = nodes;
+              this.sortNodes();
+            });
+          });
         });
       });
+
         this._playerService.getPlayers().subscribe((players) => {
             this.players = players;
             this.playoffId = this.active_route.snapshot.paramMap.get('id');
-            //this.constructPlayoff();
         });
 
     }
 
-    constructPlayoff() {
-        // this._tournyService.getPlayoff(this.playoffId).subscribe((playoff) => {
-        //     this.tournamentWinner = playoff['winner'];
-        //     this.isOver = playoff['ended'];
-        //     this.playoff = playoff;
-        //     this.bracket = playoff['bracket'];
-        //     this.playInRound = this.bracket.shift();
-        //     if (this.bracket[0][0].team instanceof Array) {
-        //         this.tournyType = 'doubles';
-        //     }
-        //     //this.getPlayoffGames();
-        // });
+    sortNodes() {
+      this.nodes.sort((a, b) => {
+          return a.nodeIndex > b.nodeIndex ? -1 : 1;
+        }
+      );
+      console.log(this.nodes);
     }
-
-    // getPlayoffGames() {
-    //     this._gameService.getPlayoffGames(this.playoffId).subscribe((games) => {
-    //         this.playoffGames = games;
-    //     });
-    // }
 
 
     goBack() {
@@ -284,13 +277,15 @@ export class PlayoffsComponent implements OnInit {
         return Array(n);
     }
 
-  convertToName(team) {
-    if (team instanceof Array) {
-      const firstName = this.players.find((player) => player.id === team[0]).name;
-      const secondName = this.players.find((player) => player.id === team[1]).name;
-      return firstName + ' & ' + secondName;
+  convertToName(id) {
+    if (this.tournyType === 'singles') {
+      return this.players.find((player) => player.id === id).name;
+    } else {
+      // const foundTeam = this.teams.find((team) => team.id === id);
+      // return this.players.find((player) => player.id === foundTeam.player1Id).name
+      //   + ', ' + this.players.find((player) => player.id === foundTeam.player2Id).name;
+      // // TODO: fetch teams in doubles tournament and map to names;
     }
-    return this.players.find((player) => player.id === team).name;
   }
 
   getRandomIntInclusive(min, max) {

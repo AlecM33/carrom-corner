@@ -155,4 +155,64 @@ export class BracketService {
     });
   }
 
+  getBracket(id: number, type: string): Observable<any> {
+    if (type === 'singles') {
+      return this.http.request('get', '/api/brackets/singles/get/' + id, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+    } else {
+      return this.http.request('get', '/api/brackets/doubles/get/' + id, {
+        headers: {
+          'Content-Type': 'application/json'}
+      });
+    }
+  }
+
+  getBracketNodes(id: number, type: string): Observable<any> {
+    if (type === 'singles') {
+      return this.http.request('get', '/api/brackets/singles/nodes/get/' + id, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }).map(this.populateWithSinglesNodes);
+    } else {
+      return this.http.request('get', '/api/brackets/doubles/nodes/get/' + id, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }).map(this.populateWithDoublesNodes);
+    }
+  }
+
+  populateWithSinglesNodes(response: any[]): SinglesBracketNode[] {
+    const nodes = [];
+    for (const jsonNode of response) {
+      nodes.push(new SinglesBracketNode(
+        jsonNode['bracket_id'],
+        jsonNode['player1_id'],
+        jsonNode['player2_id'],
+        jsonNode['seed1'],
+        jsonNode['seed2'],
+        jsonNode['node_index'])
+      );
+    }
+    return nodes;
+  }
+
+  populateWithDoublesNodes(response: any[]): DoublesBracketNode[] {
+    const nodes = [];
+    for (const jsonNode of response) {
+      nodes.push(new DoublesBracketNode(
+        jsonNode['bracket_id'],
+        jsonNode['team1_id'],
+        jsonNode['team2_id'],
+        jsonNode['seed1'],
+        jsonNode['seed2'],
+        jsonNode['node_index'])
+      );
+    }
+    return nodes;
+  }
 }
