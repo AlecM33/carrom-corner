@@ -12,6 +12,7 @@ import { EloService } from '../Services/elo.service';
 import {PlayoffService} from '../Services/playoff.service';
 import {BracketService} from '../Services/bracket.service';
 const swal: SweetAlert = _swal as any;
+import * as d3 from 'd3';
 
 @Component({
     templateUrl: 'playoffs.component.html',
@@ -43,10 +44,12 @@ export class PlayoffsComponent implements OnInit {
     public scoreDifferential: number;
     public round: number;
     public isOver = true;
+    public bracketDepth: number;
     tournament: any;
     public tournamentId: any;
     public tournamentName: any;
     public nodes = [];
+    public treeLevels = [];
 
     // variables related to modal for playoff game result entry
     public modalOpen = false;
@@ -64,28 +67,124 @@ export class PlayoffsComponent implements OnInit {
         this.tournamentName = tournament[0]['name'];
         this._playoffService.getPlayoff(tournament[0].id, this.tournyType).subscribe((playoff) => {
           this._bracketService.getBracket(playoff[0].id, this.tournyType).subscribe((bracket) => {
+            this.bracketDepth = bracket[0]['depth'];
             this._bracketService.getBracketNodes(bracket[0]['id'], this.tournyType).subscribe((nodes) => {
               this.nodes = nodes;
               this.sortNodes();
+              const root = this.nodes.shift();
+              const tree = [{index: 1, a: this.convertToName(root.player1Id), b: this.convertToName(root.player2Id), aSeed: root.seed1,
+                bSeed: root.seed2, children: []}];
+              this.buildJSONTree(tree);
+              this.buildD3Graph(tree);
             });
           });
         });
       });
 
-        this._playerService.getPlayers().subscribe((players) => {
-            this.players = players;
-            this.playoffId = this.active_route.snapshot.paramMap.get('id');
-        });
+      this._playerService.getPlayers().subscribe((players) => {
+          this.players = players;
+          this.playoffId = this.active_route.snapshot.paramMap.get('id');
+      });
 
     }
 
     sortNodes() {
       this.nodes.sort((a, b) => {
-          return a.nodeIndex > b.nodeIndex ? -1 : 1;
+          return a.nodeIndex > b.nodeIndex ? 1 : -1;
         }
       );
-      console.log(this.nodes);
     }
+
+  buildJSONTree(tree) {
+    if (tree[0]) {
+      this.buildJSONTree(tree[0].children);
+    }
+    if (tree[1]) {
+      this.buildJSONTree(tree[1].children);
+    }
+    if (this.nodes.length > 0) {
+      const node = this.nodes.shift();
+      const parent = tree.find((parentNode) => parentNode.index === Math.ceil((node.nodeIndex - 1) / 2));
+      console.log(node);
+      console.log(tree);
+      if (parent) {
+        parent.children.push({
+          index: node.nodeIndex, a: this.convertToName(node.player1Id), b: this.convertToName(node.player2Id),
+          aSeed: node.seed1, bSeed: node.seed2, children: []
+        });
+        this.buildJSONTree(tree);
+      } else {
+        this.nodes.unshift(node);
+        if (tree[0]) {
+          this.buildJSONTree(tree[0].children);
+        }
+        if (tree[1]) {
+          this.buildJSONTree(tree[1].children);
+        }
+      }
+    }
+  }
+
+  buildD3Graph(tree) {
+
+    const margin = {top: 65, right: 90, bottom: 50, left: 150},
+      width = (230 * this.bracketDepth) - margin.left - margin.right,
+      height = (180 * this.bracketDepth) - margin.top - margin.bottom,
+      separationConstant = 1;
+    // line connector between nodes
+    const line = d3.line()
+      .x(d => width - d.y)
+      .y(d => d.x)
+      .curve(d3.curveStep);
+
+    // declares a tree layout and assigns the size
+    const treemap = d3.tree()
+      .size([height, width])
+      .separation((a, b) => a.parent === b.parent ? 1 : separationConstant);
+
+    //  assigns the data to a hierarchy using parent-child relationships
+    console.log(tree);
+    let nodes = d3.hierarchy(tree[0]);
+
+    // maps the node data to the tree layout
+    nodes = treemap(nodes);
+
+    const svg = d3.select('#bracket-svg')
+      .attr('width', width + margin.left + margin.right)
+      .attr('height', height + margin.top + margin.bottom);
+
+    const g = svg.append('g')
+      .attr('transform', 'translate(' + margin.left  + ',' + margin.top + ')');
+
+    // adds the links between the nodes
+    const link = g.selectAll('.link')
+      .data(nodes.descendants().slice(1))
+      .enter().append('path')
+      .attr('class', 'link')
+      .attr('d', d => line([d, d.parent ]));
+
+    // adds labels to the nodes
+    function gameTemplate(d) {
+      return '' +
+        '<div class=\'node-row\'>' +
+        '<span class=\'cell seed\'>' + (d.data.aSeed || ' ') + '</span>' +
+        '<span class=\'cell name\'>' + (d.data.a || ' ') + '</span>' +
+        '</div>' +
+        '<div class=\'node-row\'>' +
+        '<span class=\'cell seed\'>' + (d.data.bSeed || ' ') + '</span>' +
+        '<span class=\'cell name\'>' + (d.data.b || ' ') + '</span>' +
+        '</div>';
+    }
+
+    const labels = d3.select('#labels').selectAll('div')
+      .data(nodes.descendants())
+      .enter()
+      .append('div')
+      .classed('node', true)
+      .style('left', d => (width - d.y + margin.left - 100) + 'px')
+      .style('top', d => (d.x + 26) + 'px')
+      .html(d => gameTemplate(d));
+  }
 
 
     goBack() {
@@ -278,13 +377,17 @@ export class PlayoffsComponent implements OnInit {
     }
 
   convertToName(id) {
-    if (this.tournyType === 'singles') {
-      return this.players.find((player) => player.id === id).name;
+    if (id) {
+      if (this.tournyType === 'singles') {
+        return this.players.find((player) => player.id === id).name;
+      } else {
+        // const foundTeam = this.teams.find((team) => team.id === id);
+        // return this.players.find((player) => player.id === foundTeam.player1Id).name
+        //   + ', ' + this.players.find((player) => player.id === foundTeam.player2Id).name;
+        // // TODO: fetch teams in doubles tournament and map to names;
+      }
     } else {
-      // const foundTeam = this.teams.find((team) => team.id === id);
-      // return this.players.find((player) => player.id === foundTeam.player1Id).name
-      //   + ', ' + this.players.find((player) => player.id === foundTeam.player2Id).name;
-      // // TODO: fetch teams in doubles tournament and map to names;
+      return undefined;
     }
   }
 
