@@ -272,12 +272,13 @@ export class ViewRoundComponent implements OnInit {
             nextRoundAdvancers.add(this.players.find((player) => player.id === pool[i].playerId))
             : nextRoundAdvancers.add(this.teams.find((team) => team.id === pool[i].teamId));
         }
-        if (pool.length === this.findLargestPool() && this.extraPlayer === true) {
+        if (pool.length === this.findLargestPool() && this.extraPlayer === true && this.numberToAdvance !== this.findLargestPool()) {
           this.tournyType === 'singles' ?
-            nextRoundAdvancers.add(this.players.find((player) => player.id === pool[0].playerId))
-            : nextRoundAdvancers.add(this.teams.find((team) => team.id === pool[0].teamId));
+            nextRoundAdvancers.add(this.players.find((player) => player.id === pool[this.numberToAdvance].playerId))
+            : nextRoundAdvancers.add(this.teams.find((team) => team.id === pool[this.numberToAdvance].teamId));
         }
       }
+      console.log(nextRoundAdvancers);
       if (playoffs) {
         this.startPlayoffs(nextRoundAdvancers);
       } else {
@@ -386,21 +387,30 @@ export class ViewRoundComponent implements OnInit {
     for (let i = 0; i < treeLevels.length; i++) {
       for (let j = 0; j < treeLevels[i].length; j += 2) {
         let newNode;
+        // leaf node that is a play-in match
         if (treeLevels[i][j] instanceof Player && treeLevels[i][j + 1] instanceof Player && i === treeLevels.length - 1) {
           newNode = new SinglesBracketNode(bracketId, treeLevels[i][j].id, treeLevels[i][j + 1].id, treeLevels[i][j].playoffSeed,
             treeLevels[i][j + 1].playoffSeed, balancedLeafIndices[currentPlayIn]);
           currentPlayIn++;
+          // leaf node that is not a play-in match
         } else if (treeLevels[i][j] instanceof Player && treeLevels[i][j + 1] instanceof Player && i !== treeLevels.length - 1) {
           newNode = new SinglesBracketNode(bracketId, treeLevels[i][j].id, treeLevels[i][j + 1].id, treeLevels[i][j].playoffSeed,
             treeLevels[i][j + 1].playoffSeed, nodeIndex);
+          // node that contains one play-in spot
         } else if (treeLevels[i][j] instanceof Player && !(treeLevels[i][j + 1] instanceof Player)) {
           newNode = new SinglesBracketNode(bracketId, treeLevels[i][j].id, null, treeLevels[i][j].playoffSeed, null, nodeIndex);
           balancedLeafIndices[playInAmount] = (nodeIndex * 2) + 1;
           playInAmount++;
+          // node that contains two play-in spots
+        } else if (!(treeLevels[i][j] instanceof Player) && !(treeLevels[i][j + 1] instanceof Player) && i === treeLevels.length - 2) {
+          newNode = new SinglesBracketNode(bracketId, null, null, null, null, nodeIndex);
+          balancedLeafIndices[playInAmount] = (nodeIndex * 2);
+          balancedLeafIndices[playInAmount + 1] = (nodeIndex * 2) + 1;
+          playInAmount += 2;
+          // blank nodes deeper in the tree
         } else {
           newNode = new SinglesBracketNode(bracketId, null, null, null, null, nodeIndex);
         }
-        console.log(newNode);
         this._bracketService.addSinglesBracketNode(newNode).subscribe();
         nodeIndex ++;
       }
@@ -426,6 +436,11 @@ export class ViewRoundComponent implements OnInit {
           newNode = new DoublesBracketNode(bracketId, treeLevels[i][j].id, null, treeLevels[i][j].playoffSeed, null, nodeIndex);
           balancedLeafIndices[playInAmount] = (nodeIndex * 2) + 1;
           playInAmount++;
+        } else if (!(treeLevels[i][j] instanceof Team) && !(treeLevels[i][j + 1] instanceof Team) && i === treeLevels.length - 2) {
+          newNode = new SinglesBracketNode(bracketId, null, null, null, null, nodeIndex);
+          balancedLeafIndices[playInAmount] = (nodeIndex * 2);
+          balancedLeafIndices[playInAmount + 1] = (nodeIndex * 2) + 1;
+          playInAmount += 2;
         } else {
           newNode = new DoublesBracketNode(bracketId, null, null, null, null, nodeIndex);
         }
