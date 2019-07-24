@@ -29,6 +29,7 @@ export class ViewPoolComponent implements OnInit {
   public poolGames = [];
   public letter: string;
   public participantsInPool = [];
+  public loading = true;
   public currentGame = undefined;
   public gameWinner: any;
 
@@ -99,6 +100,7 @@ export class ViewPoolComponent implements OnInit {
         this.participantsInPool.push(player2);
       }
     }
+    this.loading = false;
   }
 
   getPoolTeams() {
@@ -112,6 +114,7 @@ export class ViewPoolComponent implements OnInit {
         this.participantsInPool.push(team2);
       }
     }
+    this.loading = false;
   }
 
   gameIsPlayed(participant1Id: number, participant2Id: number) {

@@ -45,7 +45,7 @@
 <h3>Click on a pool to view details about it.</h3>
 <button *ngIf="numberOfRounds > 1 && currentRound === 1" (click)="openModal()" [ngClass]="{'app-btn': true, 'disabled': allGamesPlayed === false}">Start Next Round</button>
 <button *ngIf="currentRound === 2 || (currentRound === 1 && numberOfRounds === 1)" (click)="openModal()" [ngClass]="{'app-btn': true, 'disabled': allGamesPlayed === false}">Start Playoffs</button>
-<div class='pools' *ngIf="recordPools && !loading">
+<div class='pools' *ngIf="!loading">
   <div *ngFor="let pool of recordPools">
     <h2>{{getLetter(recordPools.indexOf(pool))}}</h2>
     <table class='table table-dark pool-table' (click)="routeToPool(pool[0].poolId, getLetter(recordPools.indexOf(pool)))">
@@ -70,13 +70,5 @@
   </div>
 </div>
 <div *ngIf="loading" class="loading-container">
-  <svg width="100" height="100">
-    <circle class="loading-outer" cx="50%" cy="50%" r="44">
-    </circle>
-    <circle class="loading-middle" cx="50" cy="50" r="28">
-
-    </circle>
-    <circle class="loading-inner" cx="50" cy="50" r="14">
-    </circle>
-  </svg>
+  <img class="loading-animation" src="../../../assets/images/gap-spinner-emerald.svg"/>
 </div>

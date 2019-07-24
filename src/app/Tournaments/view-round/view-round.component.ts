@@ -32,7 +32,7 @@ export class ViewRoundComponent implements OnInit {
   public numberOfRounds: number;
   public tournamentName: string;
   public playerPools = [];
-  public recordPools = undefined;
+  public recordPools = [];
   public roundId: number;
   public allGamesPlayed = false;
   public selectingAdvancements = false;
@@ -59,23 +59,28 @@ export class ViewRoundComponent implements OnInit {
               ) { }
 
   ngOnInit() {
-    this.recordPools = [];
+    this.retrieveRound();
+  }
+
+  retrieveRound() {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
+        this.recordPools = [];
+        this.loading = true;
+        this.allGamesPlayed = false;
         this.tournyType = this.active_route.snapshot.paramMap.get('type');
         this.tournamentName = this.active_route.snapshot.paramMap.get('name');
         this.tournamentId = parseInt(this.active_route.snapshot.paramMap.get('tourny_id'), 10);
         this.currentRound = parseInt(this.active_route.snapshot.paramMap.get('round'), 10);
       }
     });
+    this.recordPools = [];
+    this.loading = true;
+    this.allGamesPlayed = false;
     this.tournyType = this.active_route.snapshot.paramMap.get('type');
     this.tournamentName = this.active_route.snapshot.paramMap.get('name');
     this.tournamentId = parseInt(this.active_route.snapshot.paramMap.get('tourny_id'), 10);
     this.currentRound = parseInt(this.active_route.snapshot.paramMap.get('round'), 10);
-    this.retrieveRound();
-  }
-
-  retrieveRound() {
     console.log(this.currentRound);
     this._tournamentService.getTournament(this.tournamentId, this.tournyType).subscribe((tournament) => {
       this.tournament = tournament;
@@ -131,6 +136,7 @@ export class ViewRoundComponent implements OnInit {
         }
       );
     }
+    this.loading = false;
   }
 
   sortPlayoffPool(pool) {
@@ -182,7 +188,6 @@ export class ViewRoundComponent implements OnInit {
         playerPool[losingPlayerIndex].totalDiff -= game.differential;
       }
     }
-    this.loading = false;
   }
 
   calculateTeamRecords(games: DoublesGame[]) {
@@ -198,7 +203,6 @@ export class ViewRoundComponent implements OnInit {
         teamPool[losingTeamIndex].totalDiff -= game.differential;
       }
     }
-    this.loading = false;
   }
 
   setRoundAdvancements(plusOrMinus: string) {
@@ -282,10 +286,10 @@ export class ViewRoundComponent implements OnInit {
       if (playoffs) {
         this.startPlayoffs(nextRoundAdvancers);
       } else {
-        this.loading = true;
         this.tournyType === 'singles' ?
           this._setupService.createSinglesData(this.tournamentId, this.tournamentName, 2, nextRoundAdvancers)
           : this._setupService.createDoublesData(this.tournamentId, this.tournamentName, 2, nextRoundAdvancers);
+        this.retrieveRound();
       }
     });
   }
