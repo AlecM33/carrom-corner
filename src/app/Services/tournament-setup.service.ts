@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders} from '@angular/common/http';
 import {SinglesRound} from '../Rounds/singles-round';
 import {Observable} from 'rxjs/Observable';
+import {concatMap, tap} from 'rxjs/operators';
 import {DoublesRound} from '../Rounds/doubles-round';
 import {forkJoin} from 'rxjs/observable/forkJoin';
 import {SinglesPool} from '../Pools/singles-pool';
@@ -25,16 +26,17 @@ export class TournamentSetupService {
 
   // Creates rounds, pools, pool placements, and games for the created singles tournament
   createSinglesData(insertId: number, tournyName: string, roundNumber: number, players: Set<Player>): Observable<any> {
-    this.createSinglesRound(roundNumber, players.size, insertId).subscribe((response: any) => {
+    return this.createSinglesRound(roundNumber, players.size, insertId).pipe(concatMap((response: any) => {
       const roundId = response.insertId;
       this.configurePoolParameters(players.size);
-      this.createSinglesPools(roundId, this.sameSizePools).subscribe((response) => {
-        this.createSinglesPoolPlacements(response, Array.from(players), this.optimalGroupSize).subscribe(() => {
+      return this.createSinglesPools(roundId, this.sameSizePools).pipe(concatMap((res) => {
+        return this.createSinglesPoolPlacements(res, Array.from(players), this.optimalGroupSize).pipe(tap(() => {
           this.createSinglesGames(insertId, roundNumber);
           this.router.navigateByUrl('/tournaments/singles/' + tournyName + '/' + insertId + '/' + roundNumber);
-        });
-      });
-    });
+          console.log('All Singles Tournament data successfully created for the first round!');
+        }));
+      }));
+    }));
   }
 
   // Creates rounds, pools, pool placements, and games for the created doubles tournament

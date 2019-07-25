@@ -115,8 +115,7 @@ export class AddTournamentComponent implements OnInit {
       this.tournament = new SinglesTournament(this.tournamentName, this.playersInTourny.size, this.numberOfRounds);
       this._tournyService.addSinglesTournament(this.tournament).subscribe((result: any) => {
         this.tournament.id = result.insertId;
-        this._setupService.createSinglesData(result.insertId, this.tournamentName, 1, this.playersInTourny);
-        console.log('All Singles Tournament data successfully created for the first round!');
+        this._setupService.createSinglesData(result.insertId, this.tournamentName, 1, this.playersInTourny).subscribe();
       });
     }
   }
