@@ -24,7 +24,7 @@ export class TournamentSetupService {
   constructor(private http: HttpClient, private _gameService: GameService, private router: Router) {}
 
   // Creates rounds, pools, pool placements, and games for the created singles tournament
-  createSinglesData(insertId: number, tournyName: string, roundNumber: number, players: Set<Player>) {
+  createSinglesData(insertId: number, tournyName: string, roundNumber: number, players: Set<Player>): Observable<any> {
     this.createSinglesRound(roundNumber, players.size, insertId).subscribe((response: any) => {
       const roundId = response.insertId;
       this.configurePoolParameters(players.size);

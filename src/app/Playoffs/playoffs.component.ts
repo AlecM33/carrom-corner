@@ -128,8 +128,8 @@ export class PlayoffsComponent implements OnInit {
   buildD3Graph(tree) {
 
     const margin = {top: 65, right: 90, bottom: 50, left: 150},
-      width = (230 * this.bracketDepth) - margin.left - margin.right,
-      height = (180 * this.bracketDepth) - margin.top - margin.bottom,
+      width = (260 * this.bracketDepth) - margin.left - margin.right,
+      height = (210 * this.bracketDepth) - margin.top - margin.bottom,
       separationConstant = 1;
     // line connector between nodes
     const line = d3.line()
