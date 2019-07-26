@@ -1076,6 +1076,14 @@ input[type=text]:hover {
   border: 2px solid #009874;
 }
 
+#labels .clickable {
+  cursor: pointer;
+}
+
+#labels .clickable:hover {
+  transform: scale(1.03)
+}
+
 #labels .played {
   --border-width: 0px;
 }
