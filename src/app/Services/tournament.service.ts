@@ -159,7 +159,12 @@ export class TournamentService {
     // NOTE: Also deletes corresponding pools, games, and playoffs.
     deleteTournament(tournament, name) {
         const httpOptions = {headers: new HttpHeaders({ 'Content-Type': 'application/json' })};
-        return this.http.delete(environment.api_url + '/tournaments/' + tournament.id, httpOptions);
+        if(tournament instanceof SinglesTournament) {
+          return this.http.delete('/api/tournaments/singles/' + tournament.id, httpOptions);
+        }
+        if(tournament instanceof DoublesTournament) {
+          return this.http.delete('/api/tournaments/doubles/' + tournament.id, httpOptions);
+        }
     }
 
 }

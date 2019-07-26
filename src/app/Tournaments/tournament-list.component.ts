@@ -11,6 +11,8 @@ import 'rxjs/add/operator/do';
 import { Router } from '@angular/router';
 import {SinglesTournament} from './singles-tournament';
 import {DoublesTournament} from './doubles-tournament';
+import {catchError, tap} from 'rxjs/operators';
+import {of} from 'rxjs/observable/of';
 
 @Component({
   selector: 'cr-tournaments',
@@ -25,6 +27,19 @@ export class TournamentListComponent implements OnInit {
   constructor(public _tournyService: TournamentService, private http: HttpClient, private router: Router) {
   }
 
+  ngOnInit() {
+    this.refreshTournamentList();
+  }
+
+  refreshTournamentList() {
+    this._tournyService.getSinglesTournaments().subscribe((tournaments) => {
+      this.singlesTournaments = tournaments;
+    });
+    this._tournyService.getDoublesTournaments().subscribe((tournaments) => {
+      this.doublesTournaments = tournaments;
+    });
+  }
+
   viewPlayoff(e, tournament) {
     e.preventDefault();
     if (this.singlesTournaments.includes(tournament)) {
@@ -34,23 +49,19 @@ export class TournamentListComponent implements OnInit {
     }
   }
 
-  // delete(e, tournament) {
-  //   e.preventDefault();
-  //   swal({
-  //     title: "Delete Tournament",
-  //     text: "Are you sure you wish to delete this tournament? You will lose all associated game results. Player stats resulting from the tournament will be preserved.",
-  //     buttons: [true, true],
-  //   }).then((wantsToSave) => {
-  //     if (wantsToSave) {
-  //       this.tournaments = [];
-  //       this._tournyService.deleteTournament(tournament, tournament.name).do(() => {
-  //         this._tournyService.getTournaments().subscribe((tournaments) => {
-  //           this.tournaments = tournaments;
-  //         })
-  //       }).subscribe();
-  //     }
-  //   });
-  // }
+  deleteTournament(e, tournament) {
+      this._tournyService.deleteTournament(tournament, tournament.name).pipe(
+        tap((res) => {
+          console.log('Delete tournament result:');
+          console.dir(res);
+          this.refreshTournamentList();
+        },
+        catchError((err, obs) => {
+          console.error(err);
+          return of(err, obs);
+        }))
+      ).subscribe();
+  }
 
   viewTournament(e, tournament) {
     e.preventDefault();
@@ -59,14 +70,5 @@ export class TournamentListComponent implements OnInit {
     } else {
       this.router.navigateByUrl('/tournaments/doubles/' + tournament.name + '/' + tournament.id + '/' + tournament.currentRound);
     }
-  }
-
-  ngOnInit() {
-    this._tournyService.getSinglesTournaments().subscribe((tournaments) => {
-      this.singlesTournaments = tournaments;
-    });
-    this._tournyService.getDoublesTournaments().subscribe((tournaments) => {
-      this.doublesTournaments = tournaments;
-    });
   }
 }

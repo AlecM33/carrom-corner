@@ -31,7 +31,7 @@
     <td>{{player.losses}}</td>
     <td>{{player.wins / (player.singlesPlayed + player.doublesPlayed) | percent}}</td>
     <td>{{player.totalDiff / (player.singlesPlayed + player.doublesPlayed) | number: '1.1-2'}}</td>
-    <td><a href="/" (click)='delete($event, player)' class='link'>Delete</a></td>
+    <td><a (click)='delete($event, player)' class='link'>Delete</a></td>
   </tr>
   <tr *ngFor='let player of newPlayers'>
     <td>-</td>
@@ -43,7 +43,7 @@
     <td>{{player.losses}}</td>
     <td class="in-progress">N/A</td>
     <td class='in-progress'>N/A</td>
-    <td><a href="/" (click)='delete($event, player)' class='link'>Delete</a></td>
+    <td><a (click)='delete($event, player)' class='link'>Delete</a></td>
   </tr>
   </tbody>
 </table>

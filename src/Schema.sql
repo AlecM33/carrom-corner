@@ -61,7 +61,8 @@ CREATE TABLE `Singles_Tournaments`
   `winner` int,
   `size` int,
   `current_round` int,
-  `rounds` int
+  `rounds` int,
+  `active` boolean default true
 );
 
 CREATE TABLE `Doubles_Tournaments`
@@ -73,7 +74,8 @@ CREATE TABLE `Doubles_Tournaments`
   `winner2` int,
   `size` int,
   `current_round` int,
-  `rounds` int
+  `rounds` int,
+  `active` boolean default true
 );
 
 CREATE TABLE `Singles_Rounds`

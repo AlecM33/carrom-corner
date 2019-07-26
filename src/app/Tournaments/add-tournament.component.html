@@ -49,7 +49,7 @@
     <div class="player-list-table" [ngStyle]="{'height.px': (this.maxSize * 50) + 100}">
       <div class="player-pool-header">
         <h2>Player Pool</h2>
-        <a *ngIf="this.playersToAdd.size > 0" href="/" (click)="addAll($event)" class="link">+ Add All Players</a>
+        <a *ngIf="this.playersToAdd.size > 0" (click)="addAll($event)" class="link">+ Add All Players</a>
       </div>
       <div class="player-card" (click)="addPlayer(player)" *ngFor="let player of playersToAdd">
         <td>

@@ -47,7 +47,7 @@ import {PlayerService} from './Services/player.service';
       { path: 'tournaments/:type/:name/:tourny_id/:round', component: ViewRoundComponent},
       { path: 'tournaments/:type/:name/:tourny_id/:round/:round_id/:pool_id/:letter', component: ViewPoolComponent},
       { path: '', component: HomepageComponent}
-    ], { onSameUrlNavigation: 'reload' }),
+    ]),
     CoreModule.forRoot()
   ],
   providers: [ NgbTooltipConfig ],

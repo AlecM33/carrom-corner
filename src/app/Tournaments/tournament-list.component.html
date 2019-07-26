@@ -15,9 +15,9 @@
     <td>{{tournament.size}}</td>
     <td *ngIf="tournament.winner">{{tournament.winner}}</td>
     <td class='in-progress' *ngIf="!tournament.winner">In progress...</td>
-    <td><a href="/" (click)='delete($event, tournament)' class='link'>Delete</a></td>
-    <td *ngIf="tournament.playoffsStarted"><a href="/" (click)='viewPlayoff($event, tournament)' class='link'>View</a></td>
-    <td *ngIf="!tournament.playoffsStarted"><a href="/" (click)='viewTournament($event, tournament)' class='link'>View</a></td>
+    <td><a (click)='deleteTournament($event, tournament)' class='link'>Delete</a></td>
+    <td *ngIf="tournament.playoffsStarted"><a (click)='viewPlayoff($event, tournament)' class='link'>View</a></td>
+    <td *ngIf="!tournament.playoffsStarted"><a (click)='viewTournament($event, tournament)' class='link'>View</a></td>
   </tr>
   </tbody>
 </table>
@@ -38,10 +38,10 @@
     <td>{{tournament.name}}</td>
     <td>{{tournament.size}}</td>
     <td *ngIf="tournament.winner1">{{tournament.winner1}} and {{tournament.winner2}}</td>
-    <td class='in-progress' *ngIf="!tournament.winner">In progress...</td>
-    <td><a href="/" (click)='delete($event, tournament)' class='link'>Delete</a></td>
-    <td *ngIf="tournament.playoffsStarted"><a href="/" (click)='viewPlayoff($event, tournament.id)' class='link'>View</a></td>
-    <td *ngIf="!tournament.playoffsStarted"><a href="/" (click)='viewTournament($event, tournament)' class='link'>View</a></td>
+    <td class='in-progress' *ngIf="!(tournament.winner1 && tournament.winner2)">In progress...</td>
+    <td><a (click)='deleteTournament($event, tournament)' class='link'>Delete</a></td>
+    <td *ngIf="tournament.playoffsStarted"><a (click)='viewPlayoff($event, tournament.id)' class='link'>View</a></td>
+    <td *ngIf="!tournament.playoffsStarted"><a (click)='viewTournament($event, tournament)' class='link'>View</a></td>
   </tr>
   </tbody>
 </table>

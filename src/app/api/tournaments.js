@@ -6,7 +6,7 @@ const connection = require('./db');
 // POST singles tournament
 router.post('/singles/post', function(req, res) {
   const tournament_info = req.body;
-  const query = 'INSERT INTO Singles_Tournaments VALUES (NULL, ?, false, NULL, ?, 1, ?);';
+  const query = 'INSERT INTO Singles_Tournaments VALUES (NULL, ?, false, NULL, ?, 1, ?, true);';
   const filter = [tournament_info.name, tournament_info.size, tournament_info.rounds];
   connection.query(query, filter, function(err, result) {
     if (err) throw err;
@@ -19,7 +19,7 @@ router.post('/singles/post', function(req, res) {
 // POST doubles tournament
 router.post('/doubles/post', function(req, res) {
   const tournament_info = req.body;
-  const query = 'INSERT INTO Doubles_Tournaments VALUES (NULL, ?, false, NULL, NULL, ?, 1, ?);';
+  const query = 'INSERT INTO Doubles_Tournaments VALUES (NULL, ?, false, NULL, NULL, ?, 1, ?, true);';
   const filter = [tournament_info.name, tournament_info.size, tournament_info.rounds];
   connection.query(query, filter, function(err, result) {
     if (err) throw err;
@@ -31,7 +31,7 @@ router.post('/doubles/post', function(req, res) {
 
 // GET all singles tournaments
 router.get('/singles/get', function(req, res) {
-  const query = 'SELECT * FROM Singles_Tournaments';
+  const query = 'SELECT * FROM Singles_Tournaments where active=true';
   connection.query(query, function(err, result) {
     if (err) throw err;
     else {
@@ -42,7 +42,7 @@ router.get('/singles/get', function(req, res) {
 
 // GET all doubles tournaments
 router.get('/doubles/get', function(req, res) {
-  const query = 'SELECT * FROM Doubles_Tournaments';
+  const query = 'SELECT * FROM Doubles_Tournaments where active=true';
   connection.query(query, function(err, result) {
     if (err) throw err;
     else {
@@ -122,5 +122,37 @@ router.post('/doubles/update_playoffs/:tourny_id', function(req, res) {
     }
   })
 });
+
+router.delete('/singles/:tourny_id', function(req, res){
+  const query = 'UPDATE Singles_Tournaments set active=false where id = ?';
+  const filter = [req.params.tourny_id];
+  connection.query(query, filter, function(err, result) {
+    if (err) console.log(err);
+    else {
+      return res.status(200).send(JSON.stringify(result));
+    }
+  })
+});
+
+router.delete('/doubles/:tourny_id', function(req,res){
+  const query = 'UPDATE Doubles_Tournaments set active=false where id = ?';
+  const filter = [req.params.tourny_id];
+  debugQuery(query, filter);
+  connection.query(query, filter, function(err, result) {
+    if (err) console.log(err);
+    else {
+      return res.status(200).send(JSON.stringify(result));
+    }
+  })
+});
+
+debugQuery = (query, filter) => {
+  let output = query;
+  if(query.split('').filter((it)=>it==='?').length !== filter.length) return;
+  for(let item of filter){
+    output = output.replace('?',item);
+  }
+  console.log(output);
+};
 
 module.exports = router;

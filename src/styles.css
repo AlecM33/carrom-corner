@@ -168,6 +168,7 @@ input#name {
 .link:hover {
   color: darkgray !important;
   text-decoration: none;
+  cursor: pointer;
 }
 
 h3 {
