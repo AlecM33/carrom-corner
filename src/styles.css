@@ -107,6 +107,11 @@ html, body {
   font-weight: normal;
 }
 
+.icon {
+  width: 25px;
+  height: 20px;
+  margin-left: 10px;
+}
 
 .thank-you {
   text-align: left;
@@ -161,12 +166,27 @@ html, body {
 input#name {
 }
 
-.link {
+.nav-link {
+  color: #f7e5c5 !important;
+  align-items: center;
+  display: flex;
+  padding: 8px !important;
+  border: 1px solid #828181;
+  border-radius: 3px;
+}
+
+.content-link {
   color: #f7e5c5 !important;
 }
 
-.link:hover {
+.content-link:hover {
   color: darkgray !important;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.nav-link:hover {
+  background-color: rgba(133, 133, 133, 0.3);
   text-decoration: none;
   cursor: pointer;
 }
