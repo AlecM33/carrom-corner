@@ -107,6 +107,11 @@ html, body {
   font-weight: normal;
 }
 
+.icon {
+  width: 25px;
+  height: 20px;
+  margin-left: 10px;
+}
 
 .thank-you {
   text-align: left;
@@ -161,12 +166,27 @@ html, body {
 input#name {
 }
 
-.link {
+.nav-link {
+  color: #f7e5c5 !important;
+  align-items: center;
+  display: flex;
+  padding: 8px !important;
+  border: 1px solid #828181;
+  border-radius: 3px;
+}
+
+.content-link {
   color: #f7e5c5 !important;
 }
 
-.link:hover {
+.content-link:hover {
   color: darkgray !important;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.nav-link:hover {
+  background-color: rgba(133, 133, 133, 0.3);
   text-decoration: none;
   cursor: pointer;
 }
@@ -1074,6 +1094,14 @@ input[type=text]:hover {
   box-shadow: 0 2px 4px 1px rgba(34, 34, 34, 1);
   color: #a19f9f;
   border: 2px solid #009874;
+}
+
+#labels .clickable {
+  cursor: pointer;
+}
+
+#labels .clickable:hover {
+  transform: scale(1.03)
 }
 
 #labels .played {

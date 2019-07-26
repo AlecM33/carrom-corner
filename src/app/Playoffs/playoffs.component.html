@@ -1,21 +1,5 @@
 <h2>Playoffs - {{tournamentName}}</h2>
-<!--<div id="bracket">-->
-  <!--<div class="tree-level" *ngFor="let level of treeLevels; let i = index">-->
-    <!--<div *ngFor="let node of level">-->
-      <!--<div class="bracket-node" [ngStyle]="{'margin-top.px': (50 * (i - 1) + 10), 'margin-bottom.px': 50 * (i - 1) + 10}">-->
-        <!--<div class="bracket-member">-->
-          <!--<p class="seed" *ngIf="node.seed1">{{node.seed1}}</p>  <p *ngIf="node.seed1">{{convertToName(node.player1Id)}}</p>-->
-          <!--<p *ngIf="!node.seed1">empty</p>-->
-        <!--</div>-->
-        <!--<div class="bracket-member">-->
-          <!--<p class="seed" *ngIf="node.seed2">{{node.seed2}}</p>  <p *ngIf="node.seed2">{{convertToName(node.player2Id)}}</p>-->
-          <!--<p *ngIf="!node.seed2">empty</p>-->
-        <!--</div>-->
-      <!--</div>-->
-    <!--</div>-->
-  <!--</div>-->
-<!--</div>-->
-
+<h3>Click a node to enter details and advance a player.</h3>
 <div id="container">
   <svg id="bracket-svg"></svg>
   <div id="labels"></div>

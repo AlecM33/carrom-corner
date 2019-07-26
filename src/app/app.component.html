@@ -16,15 +16,28 @@
       <a class='navbar-brand app-title'>{{ title }}</a>
       <ul class='nav navbar-nav navbar-expand'>
         <li class='nav-links'>
-          <a class='link' [routerLink]="['/players']">Players</a>
+          <a class='nav-link' [routerLink]="['/tournaments']">Tournaments
+            <img class="icon icon-bracket" src="../assets/images/bracket_icon.svg"/>
+          </a>
         </li>
         <li class='nav-links'>
-          <a class='link' [routerLink]="['/tournaments']">Tournaments</a>
+          <a class='nav-link' [routerLink]="['/players']">Players
+            <img class="icon icon-players" src="../assets/images/players.svg"/>
+          </a>
+        </li>
+        <li class='nav-links'>
+          <a class='nav-link' [routerLink]="['/stats']">Stats
+            <img class="icon icon-stats" src="../assets/images/stats_logo_2.svg"/>
+          </a>
         </li>
       </ul>
       <span class="create-buttons">
-        <button class='main-buttons create-button' [routerLink]="['/tournament/singles/new']">+ Singles Tournament</button>
-        <button class='main-buttons create-button' [routerLink]="['/tournament/doubles/new']">+ Doubles Tournament</button>
+        <button class='main-buttons create-button' [routerLink]="['/tournament/singles/new']">+ Singles Tournament
+          <img class="icon icon-singles" src="../assets/images/singles_logo.svg"/>
+        </button>
+        <button class='main-buttons create-button' [routerLink]="['/tournament/doubles/new']">+ Doubles Tournament
+          <img class="icon icon-doubles" src="../assets/images/doubles_logo.svg"/>
+        </button>
       </span>
     </div>
   </nav>

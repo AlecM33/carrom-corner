@@ -34,8 +34,6 @@ export class PlayoffsComponent implements OnInit {
     public playoffId: string;
     public winner: Player;
     public playoff: Object;
-    public bracketSize = 0;
-    public numberOfRounds = 0;
     public bracket = [];
     public tournyType = 'singles';
     public playInRound = [];
@@ -49,7 +47,8 @@ export class PlayoffsComponent implements OnInit {
     public tournamentId: any;
     public tournamentName: any;
     public nodes = [];
-    public treeLevels = [];
+    public playoffGames = [];
+    public currentGame: any;
 
     // variables related to modal for playoff game result entry
     public modalOpen = false;
@@ -184,6 +183,18 @@ export class PlayoffsComponent implements OnInit {
       .style('left', d => (width - d.y + margin.left - 100) + 'px')
       .style('top', d => (d.x + 26) + 'px')
       .html(d => gameTemplate(d));
+
+    const labelDivs = d3.select('#labels').selectAll('div');
+    console.log(labelDivs);
+    labels.filter((div) => div.data.a && div.data.b).classed('node clickable', true).on('click', (node) => {
+      this.enterPlayoffGame(node);
+    });
+
+
+  }
+
+  enterPlayoffGame(node) {
+    node.parent.data.a = node.data.a;
   }
 
 
