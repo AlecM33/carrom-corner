@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import { PlayerService } from '../Services/player.service';
 import { TournamentService } from '../Services/tournament.service';
 import { HttpClient } from '@angular/common/http';
@@ -13,6 +13,8 @@ import {PlayoffService} from '../Services/playoff.service';
 import {BracketService} from '../Services/bracket.service';
 const swal: SweetAlert = _swal as any;
 import * as d3 from 'd3';
+import {SinglesGame} from '../Games/singles-game';
+import {DoublesGame} from '../Games/doubles-game';
 
 @Component({
     templateUrl: 'playoffs.component.html',
@@ -48,7 +50,8 @@ export class PlayoffsComponent implements OnInit {
     public tournamentName: any;
     public nodes = [];
     public playoffGames = [];
-    public currentGame: any;
+    public currentGame = undefined;
+    public currentNode = undefined;
 
     // variables related to modal for playoff game result entry
     public modalOpen = false;
@@ -59,22 +62,29 @@ export class PlayoffsComponent implements OnInit {
     scoreBlank = false;
     scoreInvalid = false;
 
+    @ViewChild('playoffModal') playoffModal: ElementRef;
+    @ViewChild('updateBtn') updateBtn: ElementRef;
+
     ngOnInit() {
       this.tournyType = this.active_route.snapshot.paramMap.get('type');
       this.tournamentId = this.active_route.snapshot.paramMap.get('tourny_id');
       this._tournyService.getTournament(this.tournamentId, this.tournyType).subscribe((tournament) => {
         this.tournamentName = tournament[0]['name'];
         this._playoffService.getPlayoff(tournament[0].id, this.tournyType).subscribe((playoff) => {
-          this._bracketService.getBracket(playoff[0].id, this.tournyType).subscribe((bracket) => {
+          const playoffId = playoff[0].id;
+          this._bracketService.getBracket(playoffId, this.tournyType).subscribe((bracket) => {
             this.bracketDepth = bracket[0]['depth'];
             this._bracketService.getBracketNodes(bracket[0]['id'], this.tournyType).subscribe((nodes) => {
-              this.nodes = nodes;
+              Object.assign(this.nodes, nodes);
               this.sortNodes();
-              const root = this.nodes.shift();
+              const root = nodes.shift();
               const tree = [{index: 1, a: this.convertToName(root.player1Id), b: this.convertToName(root.player2Id), aSeed: root.seed1,
                 bSeed: root.seed2, children: []}];
-              this.buildJSONTree(tree);
-              this.buildD3Graph(tree);
+              this._gameService.getPlayoffGames(this.tournyType, playoffId).subscribe((playoffGames: any) => {
+                this.playoffGames = playoffGames;
+                this.buildJSONTree(tree, nodes);
+                this.buildD3Graph(tree);
+              });
             });
           });
         });
@@ -94,38 +104,35 @@ export class PlayoffsComponent implements OnInit {
       );
     }
 
-  buildJSONTree(tree) {
+  buildJSONTree(tree, nodes) {
     if (tree[0]) {
-      this.buildJSONTree(tree[0].children);
+      this.buildJSONTree(tree[0].children, nodes);
     }
     if (tree[1]) {
-      this.buildJSONTree(tree[1].children);
+      this.buildJSONTree(tree[1].children, nodes);
     }
-    if (this.nodes.length > 0) {
-      const node = this.nodes.shift();
+    if (nodes.length > 0) {
+      const node = nodes.shift();
       const parent = tree.find((parentNode) => parentNode.index === Math.ceil((node.nodeIndex - 1) / 2));
-      console.log(node);
-      console.log(tree);
       if (parent) {
         parent.children.push({
           index: node.nodeIndex, a: this.convertToName(node.player1Id), b: this.convertToName(node.player2Id),
           aSeed: node.seed1, bSeed: node.seed2, children: []
         });
-        this.buildJSONTree(tree);
+        this.buildJSONTree(tree, nodes);
       } else {
-        this.nodes.unshift(node);
+        nodes.unshift(node);
         if (tree[0]) {
-          this.buildJSONTree(tree[0].children);
+          this.buildJSONTree(tree[0].children, nodes);
         }
         if (tree[1]) {
-          this.buildJSONTree(tree[1].children);
+          this.buildJSONTree(tree[1].children, nodes);
         }
       }
     }
   }
 
   buildD3Graph(tree) {
-
     const margin = {top: 65, right: 90, bottom: 50, left: 150},
       width = (260 * this.bracketDepth) - margin.left - margin.right,
       height = (210 * this.bracketDepth) - margin.top - margin.bottom,
@@ -174,6 +181,7 @@ export class PlayoffsComponent implements OnInit {
         '<span class=\'cell name\'>' + (d.data.b || ' ') + '</span>' +
         '</div>';
     }
+    console.log(nodes.descendants());
 
     const labels = d3.select('#labels').selectAll('div')
       .data(nodes.descendants())
@@ -184,8 +192,9 @@ export class PlayoffsComponent implements OnInit {
       .style('top', d => (d.x + 26) + 'px')
       .html(d => gameTemplate(d));
 
+    labels.exit();
+
     const labelDivs = d3.select('#labels').selectAll('div');
-    console.log(labelDivs);
     labels.filter((div) => div.data.a && div.data.b).classed('node clickable', true).on('click', (node) => {
       this.enterPlayoffGame(node);
     });
@@ -194,30 +203,98 @@ export class PlayoffsComponent implements OnInit {
   }
 
   enterPlayoffGame(node) {
-    node.parent.data.a = node.data.a;
+    this.currentNode = node;
+    this.currentGame = this.tournyType === 'singles' ?
+      this.currentGame = this.playoffGames.find((game) => game.player1Id === node.data.a && game.player2Id === node.data.b)
+      : this.currentGame = this.playoffGames.find((game) => game.team1Id === node.data.a && game.team2Id === node.data.b);
+    if (!this.currentGame) {
+      this.currentGame = this.tournyType === 'singles' ?
+        this.currentGame = new SinglesGame(this.tournamentId, null, null, true, this.getId(node.data.a), this.getId(node.data.b))
+        : this.currentGame = new DoublesGame(this.tournamentId, null, null, true, node.data.a, node.data.b);
+    }
+    this.openModal();
+  }
+
+  getId(name: string) {
+    return this.players.find((player) => player.name === name).id;
+  }
+
+  setGameWinner(winnerId: number, loserId: number) {
+    this.updateBtn.nativeElement.innerText = 'Update Game';
+    this.updateBtn.nativeElement.className = 'app-btn';
+    this.currentGame.winner = winnerId;
+    this.currentGame.loser = loserId;
+  }
+
+  setValidator(id) {
+    this.updateBtn.nativeElement.innerText = 'Update Game';
+    this.updateBtn.nativeElement.className = 'app-btn';
+    this.currentGame.validator = id;
+  }
+
+  setFlipWinner(id) {
+    this.updateBtn.nativeElement.innerText = 'Update Game';
+    this.updateBtn.nativeElement.className = 'app-btn';
+    this.currentGame.coinFlipWinner = id;
+  }
+
+  setGameDifferential(plusOrMinus: string) {
+    this.updateBtn.nativeElement.innerText = 'Update Game';
+    this.updateBtn.nativeElement.className = 'app-btn';
+    if (plusOrMinus === 'plus') {
+      if (this.currentGame.differential < 11) {
+        this.currentGame.differential += 1;
+      }
+    } else {
+      if (this.currentGame.differential > 1) {
+        this.currentGame.differential -= 1;
+      }
+    }
   }
 
 
-    goBack() {
-        this.router.navigateByUrl('/tournaments');
-    }
+  hideModal() {
+    this.playoffModal.nativeElement.className = 'modal hidden';
+  }
 
-    endTournament() {
-        this.playoff['ended'] = true;
-        if (this.newPlayoffGames.length > 0) {
-            this.saveBracket();
-        }
-        this._tournyService.endTournament(this.playoffId, this.tournamentWinner, this.convertToName(this.tournamentWinner))
-          .subscribe(() => this.router.navigateByUrl('/playoffs/' + this.playoffId + '/winner'));
-    }
+  openModal() {
+    this.playoffModal.nativeElement.className = 'modal';
+  }
 
-    viewGroupStage() {
-        let name;
-        // this._tournyService.getTournament(this.playoff['tournamentId']).subscribe((tourny) => {
-        //     name = tourny['name'];
-        //     this.router.navigateByUrl('/tournaments/' + this.tournyType + '/' + name);
-        // });
+  submitGame() {
+    this.playoffModal.nativeElement.className = 'modal hidden';
+    const parentNode = this.nodes.findIndex((node) => node.nodeIndex === Math.ceil((this.currentNode.data.index - 1) / 2));
+    if (this.currentNode.data.index % 2 === 0) {
+      this.nodes[parentNode].player1Id = this.currentGame.winner;
+      this.nodes[parentNode].seed1 = this.currentNode.data.aSeed;
+    } else {
+      this.nodes[parentNode].player2Id = this.currentGame.winner;
+      this.nodes[parentNode].seed2 = this.currentNode.data.bSeed;
     }
+    const newNodes = [];
+    Object.assign(newNodes, this.nodes);
+    const root = newNodes.shift();
+    const tree = [{index: 1, a: this.convertToName(root.player1Id), b: this.convertToName(root.player2Id), aSeed: root.seed1,
+      bSeed: root.seed2, children: []}];
+    d3.select('#labels').selectAll('div').remove();
+    this.buildJSONTree(tree, newNodes);
+    this.buildD3Graph(tree);
+    // if (this.validateGame()) {
+    //   this.updateBtn.nativeElement.innerText = 'Updating...';
+    //   this.updateBtn.nativeElement.className = 'app-btn';
+    //   const call = this.tournyType === 'singles' ? this._gameService.updateSinglesGame(this.currentGame)
+    //     : this._gameService.updateDoublesGame(this.currentGame);
+    //   call.subscribe(() => {
+    //     if (this.tournyType === 'doubles') {
+    //       //this.patchDoublesPlayers();
+    //     } else {
+    //       //this.patchSinglesPlayers();
+    //     }
+    //     this.updateBtn.nativeElement.innerText = 'Updated';
+    //     this.updateBtn.nativeElement.className = 'app-btn confirmed';
+    //   });
+    // }
+  }
 
     // Updates player database with results from entered doubles game
     patchDoublesPlayers(game) {
@@ -274,118 +351,10 @@ export class PlayoffsComponent implements OnInit {
 
     }
 
-    // Function for validating form
-    validateGame() {
-        this.validatorBlank = this.validator === undefined;
-        this.scoreBlank = this.scoreDifferential === undefined;
-        this.scoreInvalid = this.scoreDifferential < 1 || this.scoreDifferential > 8;
-        if (!this.validatorBlank && !this.scoreBlank && !this.scoreInvalid) {
-            this.advancePlayer();
-        }
-    }
-
-    // Submits game form, patches database, adds game to the database
-    submitGame() {
-        let validatingPlayer;
-        if (this.validator === 'team1') {
-            validatingPlayer = this.modalWinner.team;
-        } else {
-            validatingPlayer = this.modalLoser.team;
-        }
-        this.closeModal();
-    }
-
-    // resetBracket() {
-    //     swal({
-    //         title: 'Revert Changes',
-    //         text: 'Are you sure you wish to clear your changes? This will also delete any games you entered since your last save.',
-    //         buttons: [true, true],
-    //     }).then((wantsToSave) => {
-    //         if (wantsToSave) {
-    //             this._tournyService.getPlayoff(this.playoffId).subscribe((playoff) => {
-    //                 this.playoff = playoff;
-    //                 this.bracket = playoff['bracket'];
-    //                 this.playInRound = this.bracket.shift();
-    //                 this.tournamentWinner = playoff['winner'];
-    //                 this.newPlayoffGames = [];
-    //                 //this.getPlayoffGames();
-    //             });
-    //         }
-    //     });
-    // }
-
-    saveBracket() {
-        swal({
-            title: 'Save Bracket',
-            text: 'Save the bracket in its current state?',
-            buttons: [true, true],
-        }).then((wantsToSave) => {
-            if (wantsToSave) {
-                if (this.tournamentWinner) {
-                    this.playoff['winner'] = this.tournamentWinner;
-                }
-                for (const game of this.newPlayoffGames) {
-                    if (game.winner instanceof Array) {
-                        this.patchDoublesPlayers(game);
-                    } else {
-                        this.patchSinglesPlayers(game);
-                    }
-                    // this._gameService.addGame(game).subscribe(() => {
-                    //     this.getPlayoffGames();
-                    //     this.newPlayoffGames = [];
-                    // });
-                }
-                // this._tournyService.updatePlayoff(this.playoff, this.bracket, this.playInRound).subscribe(() => {
-                //     const notice = document.getElementById('notice');
-                //     notice.textContent = 'Bracket Successfully Saved \u2713';
-                // });
-            }
-        });
-    }
-
-    closeModal() {
-        this.modalOpen = false;
-        this.validatorBlank = false;
-        this.scoreBlank = false;
-        this.scoreInvalid = false;
-        this.scoreDifferential = undefined;
-    }
-
-    advancePlayer = () => {
-        this.submitGame();
-        if (this.round === -1) {
-            const openSpotNumber = Math.ceil((this.playInRound.indexOf(this.modalWinner) + 1) / 2);
-            let openSpotCount = 0;
-            let i = 0;
-            while (openSpotCount < openSpotNumber) {
-                if (this.playoff['playInSpots'].includes(i)) {
-                    openSpotCount ++;
-                }
-                i ++;
-            }
-            this.bracket[0][i - 1] = this.modalWinner;
-        } else if (this.bracket[this.round].length === 2) {
-            this.tournamentWinner = this.modalWinner.team;
-        } else {
-            const openSpot = Math.floor(this.bracket[this.round].indexOf(this.modalWinner) / 2);
-            this.bracket[this.round + 1][openSpot] = this.modalWinner;
-        }
-    }
-
-    openModal(winner, loser, round) {
-        this.modalLoser = loser;
-        this.modalWinner = winner;
-        this.round = round;
-        this.modalOpen = true;
-    }
-
-    isEmpty(obj) {
-        return JSON.stringify(obj) === '{}';
-    }
-
-    indexArray(n: number): any[] {
-        return Array(n);
-    }
+  // Function for validating form
+  validateGame() {
+    return !(this.currentGame.winner === undefined) && !(this.currentGame.differential === undefined);
+  }
 
   convertToName(id) {
     if (id) {
