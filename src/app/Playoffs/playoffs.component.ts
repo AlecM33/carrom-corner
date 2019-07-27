@@ -133,8 +133,6 @@ export class PlayoffsComponent implements OnInit {
   }
 
   buildD3Graph(tree) {
-    console.log(tree);
-    console.log('hey');
     const margin = {top: 65, right: 90, bottom: 50, left: 150},
       width = (260 * this.bracketDepth) - margin.left - margin.right,
       height = (210 * this.bracketDepth) - margin.top - margin.bottom,
@@ -197,7 +195,6 @@ export class PlayoffsComponent implements OnInit {
     labels.exit();
 
     const labelDivs = d3.select('#labels').selectAll('div');
-    console.log(labelDivs);
     labels.filter((div) => div.data.a && div.data.b).classed('node clickable', true).on('click', (node) => {
       this.enterPlayoffGame(node);
     });
