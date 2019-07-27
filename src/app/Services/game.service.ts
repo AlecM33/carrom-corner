@@ -155,13 +155,17 @@ export class GameService {
     }).map(this.populateWithDoublesGames);
   }
 
-    // addPool(newPool: SinglesPool) {
-    //     const httpOptions = {headers: new HttpHeaders({ 'Content-Type': 'application/json' })};
-    //     const payload = {
-    //       'tournamentId': newPool.tournamentId,
-    //       'pools': newPool.pools,
-    //       'tournyName': newPool.tournyName
-    //     };
-    //     return this.http.post(environment.api_url + '/pools', payload, httpOptions);
-    // }
+  getPlayoffGames(type: string, playoffId: number): Observable<any> {
+      console.log(playoffId);
+      return type === 'singles' ? this.http.request('get', '/api/games/get/singles/' + playoffId, {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }).map(this.populateWithSinglesGames)
+      : this.http.request('get', '/api/games/get/singles/' + playoffId, {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }).map(this.populateWithDoublesGames);
+  }
 }

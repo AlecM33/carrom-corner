@@ -6,7 +6,7 @@ const connection = require('./db');
 // POST Singles game
 router.post('/singles/post', function(req, res) {
   const game = req.body;
-  const query = 'INSERT INTO Singles_Games VALUES (NULL, ?, ?, ?, false, ?, ?, NULL, NULL, NULL, NULL, NULL);';
+  const query = 'INSERT INTO Singles_Games VALUES (NULL, ?, ?, ?, false, NULL, ?, ?, NULL, NULL, NULL, NULL, NULL);';
   const filter = [game.tournamentId, game.roundId, game.poolId, game.player1Id, game.player2Id];
   connection.query(query, filter, function(err, result) {
     if (err) throw err;
@@ -19,7 +19,7 @@ router.post('/singles/post', function(req, res) {
 // POST Doubles game
 router.post('/doubles/post', function(req, res) {
   const game = req.body;
-  const query = 'INSERT INTO Doubles_Games VALUES (NULL, ?, ?, ?, false, ?, ?, NULL, NULL, NULL, NULL, NULL);';
+  const query = 'INSERT INTO Doubles_Games VALUES (NULL, ?, ?, ?, false, NULL, ?, ?, NULL, NULL, NULL, NULL, NULL);';
   const filter = [game.tournamentId, game.roundId, game.poolId, game.team1Id, game.team2Id];
   connection.query(query, filter, function(err, result) {
     if (err) throw err;
@@ -103,5 +103,31 @@ router.post('/doubles/update/:game_id', function(req, res) {
     }
   })
 });
+
+// GET games for a singles playoff
+router.get('/get/singles/:playoff_id', function(req, res) {
+  const query = 'SELECT * FROM Singles_Games WHERE (playoff = true AND playoff_id = ?);';
+  const filter = [parseInt(req.params.playoff_id)];
+  console.log(filter);
+  connection.query(query, filter, function(err, result) {
+    if (err) throw err;
+    else {
+      return res.status(200).send(JSON.stringify(result));
+    }
+  })
+});
+
+// GET games for a doubles playoff
+router.get('/get/doubles/:playoff_id', function(req, res) {
+  const query = 'SELECT * FROM Doubles_Games WHERE (playoff = true AND playoff_id = ?);';
+  const filter = [parseInt(req.params.playoff_id)];
+  connection.query(query, filter, function(err, result) {
+    if (err) throw err;
+    else {
+      return res.status(200).send(JSON.stringify(result));
+    }
+  })
+});
+
 
 module.exports = router;

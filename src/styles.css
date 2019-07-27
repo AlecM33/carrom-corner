@@ -544,6 +544,10 @@ input[type=text]:hover {
   margin: 1em 3em 1em 0;
 }
 
+.playoff-choice-container {
+  width: 33%;
+}
+
 .selected {
   background-color: #f7e5c5;
   color: #343a40;
@@ -591,6 +595,12 @@ input[type=text]:hover {
 
 #game-result-form button {
   margin-top: 2em;
+}
+
+#game-result-form .choices {
+  display: flex;
+  width: 100%;
+  justify-content: space-evenly;
 }
 
 .number-input-container {
@@ -749,7 +759,7 @@ input[type=text]:hover {
 
 #game-result-form {
   width: 100%;
-  padding: 20px;
+  padding: 0px 20px;
   border-radius: 5px;
   color: #f7e5c5;
 }
@@ -1033,6 +1043,7 @@ input[type=text]:hover {
 }
 
 .modal-header {
+  padding: 0 20px;
   border: none;
   display: flex;
 }
