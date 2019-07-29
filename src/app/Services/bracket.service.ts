@@ -186,17 +186,48 @@ export class BracketService {
     }
   }
 
+  updateSinglesParentNode(node: SinglesBracketNode) {
+    const payload = {
+      'player1_id': node.player1Id,
+      'player2_id': node.player2Id,
+      'seed1': node.seed1,
+      'seed2': node.seed2
+    };
+    return this.http.request('post', '/api/brackets/singles/nodes/update/' + node.id, {
+      body: payload,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+  }
+
+  updateDoublesParentNode(node: DoublesBracketNode) {
+    const payload = {
+      'team1_id': node.team1Id,
+      'team2_id': node.team2Id,
+      'seed1': node.seed1,
+      'seed2': node.seed2
+    };
+    return this.http.request('post', '/api/brackets/doubles/nodes/update/' + node.id, {
+      body: payload,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+  }
+
   populateWithSinglesNodes(response: any[]): SinglesBracketNode[] {
     const nodes = [];
     for (const jsonNode of response) {
-      nodes.push(new SinglesBracketNode(
+      const newNode = new SinglesBracketNode(
         jsonNode['bracket_id'],
         jsonNode['player1_id'],
         jsonNode['player2_id'],
         jsonNode['seed1'],
         jsonNode['seed2'],
-        jsonNode['node_index'])
-      );
+        jsonNode['node_index']);
+      newNode.id = jsonNode['id'];
+      nodes.push(newNode);
     }
     return nodes;
   }
@@ -204,14 +235,15 @@ export class BracketService {
   populateWithDoublesNodes(response: any[]): DoublesBracketNode[] {
     const nodes = [];
     for (const jsonNode of response) {
-      nodes.push(new DoublesBracketNode(
+      const newNode = new DoublesBracketNode(
         jsonNode['bracket_id'],
         jsonNode['team1_id'],
         jsonNode['team2_id'],
         jsonNode['seed1'],
         jsonNode['seed2'],
-        jsonNode['node_index'])
-      );
+        jsonNode['node_index']);
+      newNode.id = jsonNode['id'];
+      nodes.push(newNode);
     }
     return nodes;
   }

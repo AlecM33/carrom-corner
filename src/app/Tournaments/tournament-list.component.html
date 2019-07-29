@@ -40,7 +40,7 @@
     <td *ngIf="tournament.winner1">{{tournament.winner1}} and {{tournament.winner2}}</td>
     <td class='in-progress' *ngIf="!(tournament.winner1 && tournament.winner2)">In progress...</td>
     <td><a (click)='deleteTournament($event, tournament)' class="content-link">Delete</a></td>
-    <td *ngIf="tournament.playoffsStarted"><a (click)='viewPlayoff($event, tournament.id)' class="content-link">View</a></td>
+    <td *ngIf="tournament.playoffsStarted"><a (click)='viewPlayoff($event, tournament)' class="content-link">View</a></td>
     <td *ngIf="!tournament.playoffsStarted"><a (click)='viewTournament($event, tournament)' class="content-link">View</a></td>
   </tr>
   </tbody>

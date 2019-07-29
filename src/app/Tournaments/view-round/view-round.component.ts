@@ -387,7 +387,8 @@ export class ViewRoundComponent implements OnInit {
   }
 
   // Converts the bracket tree into a balanced binary tree representation, where nodeIndex is the node number N starting from 1 at the root
-  createSinglesBracketNodes(bracketId: number, treeLevels) {
+  createSinglesBracketNodesAndGames(bracketId: number, playoffId: number, treeLevels) {
+    console.log(playoffId);
     let nodeIndex = 1;
     let playInAmount = 0;
     let currentPlayIn = 0;
@@ -420,12 +421,13 @@ export class ViewRoundComponent implements OnInit {
           newNode = new SinglesBracketNode(bracketId, null, null, null, null, nodeIndex);
         }
         this._bracketService.addSinglesBracketNode(newNode).subscribe();
+        this._gameService.addSinglesGame(new SinglesGame(this.tournamentId, null, null, true, playoffId, null, null)).subscribe();
         nodeIndex ++;
       }
     }
   }
 
-  createDoublesBracketNodes(bracketId: number, treeLevels) {
+  createDoublesBracketNodesAndGames(bracketId: number, playoffId: number, treeLevels) {
     let nodeIndex = 1;
     let playInAmount = 0;
     let currentPlayIn = 0;
@@ -453,19 +455,20 @@ export class ViewRoundComponent implements OnInit {
           newNode = new DoublesBracketNode(bracketId, null, null, null, null, nodeIndex);
         }
         this._bracketService.addDoublesBracketNode(newNode).subscribe();
+        this._gameService.addDoublesGame(new DoublesGame(this.tournamentId, null, null, true, playoffId, null, null)).subscribe();
         nodeIndex ++;
       }
     }
   }
 
-  postBracketInfo(insertId: number, treeLevels: Array<Array<any>>) {
+  postBracketInfo(playoffInsertId: number, treeLevels: Array<Array<any>>) {
     if (this.tournyType === 'singles') {
-      this._bracketService.addSinglesBracket(insertId, treeLevels.length).subscribe((bracket: any) => {
-        this.createSinglesBracketNodes(bracket.insertId, treeLevels);
+      this._bracketService.addSinglesBracket(playoffInsertId, treeLevels.length).subscribe((bracket: any) => {
+        this.createSinglesBracketNodesAndGames(bracket.insertId, playoffInsertId, treeLevels);
       });
     } else {
-      this._bracketService.addDoublesBracket(insertId, treeLevels.length).subscribe((bracket: any) => {
-        this.createDoublesBracketNodes(bracket.insertId, treeLevels);
+      this._bracketService.addDoublesBracket(playoffInsertId, treeLevels.length).subscribe((bracket: any) => {
+        this.createDoublesBracketNodesAndGames(bracket.insertId, playoffInsertId, treeLevels);
       });
     }
   }

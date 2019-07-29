@@ -80,7 +80,7 @@ router.post('/doubles/nodes/post', function(req, res) {
 });
 
 // UPDATE Singles node
-router.post('/singles/update/:node_id', function(req, res) {
+router.post('/singles/nodes/update/:node_id', function(req, res) {
   const node = req.body;
   const query = 'UPDATE Singles_Bracket_Nodes SET player1_id = ?, player2_id = ?, seed1 = ?, seed2 = ? WHERE id = ?';
   const filter = [node.player1_id, node.player2_id, node.seed1, node.seed2, req.params.node_id];
@@ -93,7 +93,7 @@ router.post('/singles/update/:node_id', function(req, res) {
 });
 
 // UPDATE Doubles node
-router.post('/doubles/update/:node_id', function(req, res) {
+router.post('/doubles/nodes/update/:node_id', function(req, res) {
   const node = req.body;
   const query = 'UPDATE Doubles_Bracket_Nodes SET team1_id = ?, team2_id = ?, seed1 = ?, seed2 = ? WHERE id = ?';
   const filter = [node.team1_id, node.team2_id, node.seed1, node.seed2, req.params.node_id];

@@ -20,6 +20,7 @@ export class GameService {
                                         jsonGame['round_id'],
                                         jsonGame['pool_id'],
                                         jsonGame['playoff'],
+                                        jsonGame['playoff_id'],
                                         jsonGame['player1_id'],
                                         jsonGame['player2_id']
                                         );
@@ -43,6 +44,7 @@ export class GameService {
         jsonGame['round_id'],
         jsonGame['pool_id'],
         jsonGame['playoff'],
+        jsonGame['playoff_id'],
         jsonGame['team1_id'],
         jsonGame['team2_id']
       );
@@ -60,6 +62,7 @@ export class GameService {
     addSinglesGame(newGame: SinglesGame) {
         const payload = {
                         'playoff': newGame.playoff,
+                        'playoffId': newGame.playoffId,
                         'tournamentId': newGame.tournamentId,
                         'roundId': newGame.roundId,
                         'poolId': newGame.poolId,
@@ -77,6 +80,7 @@ export class GameService {
   addDoublesGame(newGame: DoublesGame) {
     const payload = {
       'playoff': newGame.playoff,
+      'playoffId': newGame.playoffId,
       'tournamentId': newGame.tournamentId,
       'roundId': newGame.roundId,
       'poolId': newGame.poolId,
@@ -162,7 +166,7 @@ export class GameService {
             'Content-Type': 'application/json'
           }
         }).map(this.populateWithSinglesGames)
-      : this.http.request('get', '/api/games/get/singles/' + playoffId, {
+      : this.http.request('get', '/api/games/get/doubles/' + playoffId, {
           headers: {
             'Content-Type': 'application/json'
           }

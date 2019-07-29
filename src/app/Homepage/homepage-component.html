@@ -3,6 +3,17 @@
   <div *ngIf="playedSinglesGames.length > 0 || playedDoublesGames.length > 0" class="stats-container">
     <div class="stat-section">
       <div class="stat-container">
+        <div class="stat">{{playedSinglesGames.length + playedDoublesGames.length}}</div> games played
+      </div>
+      <div class="stat-container">
+        <div class="stat">{{coinsSank}}</div> coins sank
+      </div>
+      <div class="stat-container">
+        <div class="stat">{{averageDiff | number: '1.1-2'}}</div> average coin differential
+      </div>
+    </div>
+    <div class="stat-section">
+      <div class="stat-container">
         <div *ngIf="playedSinglesGames.length > 0" class="stat">{{singlesValidatorPct | percent}}</div>
         <div *ngIf="playedSinglesGames.length === 0" class="stat">--</div>
         of <span class="emphasis">singles</span> games are won by the player who <span class="smaller-emphasis"> validated the queen</span>.
