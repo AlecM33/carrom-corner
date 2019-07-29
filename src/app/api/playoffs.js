@@ -42,7 +42,7 @@ router.get('/singles/get/:tourny_id', function(req, res) {
 });
 
 // GET a doubles playoff
-router.get('/singles/get/:tourny_id', function(req, res) {
+router.get('/doubles/get/:tourny_id', function(req, res) {
   const query = 'SELECT * FROM Doubles_Playoffs WHERE tourny_id = ?';
   const filter = [req.params.tourny_id];
   connection.query(query, filter, function(err, result) {

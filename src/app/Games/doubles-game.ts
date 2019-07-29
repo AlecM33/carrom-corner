@@ -1,6 +1,7 @@
 export class DoublesGame {
   public id: number;
   public playoff: boolean;
+  public playoffId: number;
   public tournamentId: number;
   public roundId: number;
   public poolId: number;
@@ -17,6 +18,7 @@ export class DoublesGame {
     roundId: number,
     poolId: number,
     playoff: boolean,
+    playoffId: number,
     team1Id: number,
     team2Id: number
     ) {
@@ -25,6 +27,7 @@ export class DoublesGame {
     this.roundId = roundId;
     this.poolId = poolId;
     this.playoff = playoff;
+    this.playoffId = playoffId;
     this.team1Id = team1Id;
     this.team2Id = team2Id;
     this.winner = null;
