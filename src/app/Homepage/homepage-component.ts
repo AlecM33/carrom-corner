@@ -19,6 +19,8 @@ export class HomepageComponent implements OnInit {
     public doublesValidatorPct: number;
     public singlesCoinFlipPct: number;
     public doublesCoinFlipPct: number;
+    public coinsSank = 0;
+    public averageDiff = 0;
 
     ngOnInit() {
       this._gameService.getPlayedSinglesGames().subscribe((games) => {
@@ -27,13 +29,14 @@ export class HomepageComponent implements OnInit {
           this.playedDoublesGames = games2;
           if (this.playedSinglesGames && this.playedDoublesGames) {
             this.calculateWinPercentages();
+            this.calculateTotalStats();
           }
         });
       });
     }
 
     calculateWinPercentages() {
-      if(this.playedSinglesGames && this.playedSinglesGames.length > 0) {
+      if (this.playedSinglesGames && this.playedSinglesGames.length > 0) {
         this.singlesValidatorPct = this.playedSinglesGames.filter((game) => game.validator === game.winner).length
           / this.playedSinglesGames.length;
         this.singlesCoinFlipPct = this.playedSinglesGames.filter((game) => game.coinFlipWinner === game.winner).length
@@ -46,5 +49,31 @@ export class HomepageComponent implements OnInit {
         this.doublesCoinFlipPct = this.playedDoublesGames.filter((game) => game.coinFlipWinner === game.winner).length
           / this.playedDoublesGames.length;
       }
+    }
+
+  delay(ms: number) {
+    return new Promise( resolve => setTimeout(resolve, ms) );
+  }
+
+    async calculateTotalStats() {
+      let totalDiff = 0;
+      for (const game of this.playedSinglesGames) {
+        if (game.winner === game.validator) {
+          this.coinsSank += (10 + (9 - (game.differential - 2)));
+
+        } else {
+          this.coinsSank += (9 + (10 - (game.differential + 2)));
+        }
+        totalDiff += game.differential;
+      }
+      for (const game of this.playedDoublesGames) {
+        if (game.winner === game.validator) {
+          this.coinsSank += (10 + (9 - (game.differential - 2)));
+        } else {
+          this.coinsSank += (9 + (10 - (game.differential + 2)));
+        }
+        totalDiff += game.differential;
+      }
+      this.averageDiff = totalDiff / (this.playedSinglesGames.length + this.playedDoublesGames.length);
     }
 }

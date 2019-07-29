@@ -712,7 +712,8 @@ input[type=text]:hover {
   width: 700px;
   color: #999999;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
+  text-align: left;
   display: flex;
   flex-direction: column;
 }
