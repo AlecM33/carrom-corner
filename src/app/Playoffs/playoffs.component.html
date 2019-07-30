@@ -60,11 +60,12 @@
   </div>
 </div>
 <div class="playoff-header">
-  <h2>Playoffs - {{tournament.name}}</h2>
+  <h2 *ngIf="tournament">Playoffs - {{tournament.name}}</h2>
   <div class="winner-container">
     <div class="winner-box">
       <img id="trophy" src="../../assets/images/trophy.svg"/>
-      <span *ngIf="tournament && players && teams && tournament.winner">{{convertToName(tournament.winner)}}</span>
+      <span *ngIf="tournyType === 'singles' && tournament && tournament.winner && players">{{convertToName(tournament.winner)}}</span>
+      <span *ngIf="tournyType === 'doubles' && tournament && tournament.winner && players && teams">{{convertToName(tournament.winner)}}</span>
       <span *ngIf="tournament && !tournament.winner">--</span>
     </div>
     <button *ngIf="tournament && !tournament.ended" (click)="endTournament()" [ngClass]="{'app-btn': true, 'disabled': !tournament.winner}">End Tournament</button>
