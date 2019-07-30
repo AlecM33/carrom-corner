@@ -27,6 +27,7 @@
     <td>{{player.wins}}</td>
     <td>{{player.losses}}</td>
     <td *ngIf="player.wins > 0 || player.losses > 0">{{player.wins / (player.wins + player.losses) | percent}}</td>
+    <td *ngIf="player.wins <= 0 && player.losses <= 0"></td>
     <td>{{player.totalDiff / (player.singlesPlayed + player.doublesPlayed) | number: '1.1-2'}}</td>
     <td>{{player.tournamentWins}}</td>
     <td><a (click)='delete($event, player)' class="content-link">Delete</a></td>
