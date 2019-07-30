@@ -140,13 +140,11 @@ export class AddTournamentComponent implements OnInit {
   changeRobinTypeSingle() {
     this.robinType = 'Single';
     this.singleRoundRobin = true;
-    console.log(this.robinType);
   }
 
   changeRobinTypeDouble() {
     this.robinType = 'Double';
     this.singleRoundRobin = false;
-    console.log(this.robinType);
   }
 
   changeRoundNumber() {

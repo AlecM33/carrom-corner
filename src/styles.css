@@ -546,6 +546,7 @@ input[type=text]:hover {
 
 .playoff-choice-container {
   width: 33%;
+  margin-right: 20px;
 }
 
 .selected {
@@ -766,12 +767,26 @@ input[type=text]:hover {
 }
 
 #game-result-form .choice-button-container .choice {
-  width: 40%;
-  height: 36px;
-  font-size: 1em;
-  display: flex;
+  width: 100%;
+  height: 45px;
+  font-size: 15px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  -webkit-box-pack: center;
+  text-overflow: ellipsis;
+  -ms-flex-pack: center;
   justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
+}
+
+#game-result-form .choice-button-container {
+  margin-left: 0;
+  margin-right: 0;
 }
 
 #game-result-form .radio-container:hover input ~ .radio-button {
@@ -882,6 +897,7 @@ input[type=text]:hover {
   justify-content: center;
   border: 1px solid #f7e5c5;
   height: 580px;
+  width: 500px;
   background-color: rgba(120,120,120,0.15);
 }
 
@@ -909,7 +925,7 @@ input[type=text]:hover {
 }
 
 .axis-label-y {
-  font-size: 11px;
+  font-size: 12px;
   margin-right: 1em;
   color: #f7e5c5;
   width: 97px;
@@ -924,7 +940,7 @@ input[type=text]:hover {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 11px;
+  font-size: 12px;
   color: #f7e5c5;
   width: 97px;
   height: 97px;
@@ -1087,6 +1103,54 @@ input[type=text]:hover {
   stroke-width: 2px;
 }
 
+.playoff-header {
+  display: flex;
+  justify-content: space-around;
+}
+
+.winner-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 500px;
+}
+
+.winner-box {
+  width: 100%;
+  margin-bottom: 1em;
+  display: flex;
+  color: lightgray;
+  justify-content: flex-start;
+  align-items: center;
+  font-family: sans-serif;
+  border: 1px solid #f7e5c5;
+  -webkit-box-shadow: 0 2px 3px 2px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 3px 2px rgba(0, 0, 0, 0.3);
+  /* font-weight: bold; */
+  border-radius: 5px;
+  font-size: 18px;
+  height: 100px;
+  text-align: center;
+  padding: 1em;
+}
+
+.congrats-container {
+  display: flex;
+  justify-content: center;
+}
+
+img#trophy {
+  width: 45px;
+  height: 45px;
+  margin-right: 2em;
+}
+
+img#trophy-large {
+  width: 300px;
+  height: 300px;
+}
+
+
 .node div:nth-child(1) {
   border-bottom: 1px solid #828181;
 }
@@ -1094,6 +1158,7 @@ input[type=text]:hover {
 #container {
   position: relative;
   text-align: initial;
+  display: flex;
 }
 
 #labels .node {
@@ -1293,11 +1358,6 @@ table {
 
 }
 
-img#trophy {
-  filter: invert(100%);
-  filter: hue-rotate(120);
-}
-
 .play-in-line {
   stroke-width: 2px;
   stroke: orange;
@@ -1450,15 +1510,6 @@ h3 {
   100% {
     transform: translate(730px,-157.5px);
   }
-}
-
-
-.winner-container {
-  background-color: #343a40;
-  border: 1px solid gold;
-  border-radius: 6px;
-  width: 100%;
-  box-shadow: -3px 4px 10px 2px rgb(71, 71, 71);
 }
 
 .flex-container {

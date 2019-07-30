@@ -4,8 +4,10 @@ export class SinglesTournament {
   public name: string;
   public playoffsStarted: boolean;
   public winner;
+  public winnerName: string;
   public size: number;
   public rounds: number;
+  public ended: boolean;
   public currentRound: number;
 
   constructor(
@@ -19,6 +21,8 @@ export class SinglesTournament {
     this.playoffsStarted = false;
     this.winner = null;
     this.size = size;
+    this.winnerName = null;
+    this.ended = null;
     this.rounds = rounds;
     this.currentRound = 0;
   }

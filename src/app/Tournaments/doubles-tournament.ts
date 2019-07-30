@@ -3,11 +3,12 @@ export class DoublesTournament {
   public id: number;
   public name: string;
   public playoffsStarted: boolean;
-  public winner1: number;
-  public winner2: number;
+  public winner: number;
   public size: number;
   public rounds: number;
+  public ended: boolean;
   public currentRound: number;
+  public winnerName: string;
 
   constructor(
     name: string,
@@ -18,10 +19,11 @@ export class DoublesTournament {
     this.id = null;
     this.name = name;
     this.playoffsStarted = false;
-    this.winner1 = null;
-    this.winner2 = null;
+    this.winner = null;
     this.size = size;
     this.rounds = rounds;
+    this.ended = null;
     this.currentRound = 0;
+    this.winnerName = null;
   }
 }

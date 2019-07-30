@@ -58,25 +58,28 @@ CREATE TABLE `Doubles_Games`
 CREATE TABLE `Singles_Tournaments`
 (
   `id` int PRIMARY KEY AUTO_INCREMENT,
-  `name` varchar(255) UNIQUE NOT NULL,
+  `name` varchar(255) NOT NULL,
   `playoffs_started` boolean,
   `winner` int,
+  `winner_name` varchar(255),
   `size` int,
   `current_round` int,
   `rounds` int,
+  `ended` boolean default false,
   `active` boolean default true
 );
 
 CREATE TABLE `Doubles_Tournaments`
 (
   `id` int PRIMARY KEY AUTO_INCREMENT,
-  `name` varchar(255) UNIQUE NOT NULL,
+  `name` varchar(255) NOT NULL,
   `playoffs_started` boolean,
-  `winner1` int,
-  `winner2` int,
+  `winner` int,
+  `winner_name` varchar(255),
   `size` int,
   `current_round` int,
   `rounds` int,
+  `ended` boolean default false,
   `active` boolean default true
 );
 
@@ -203,9 +206,7 @@ ALTER TABLE `Doubles_Games` ADD FOREIGN KEY (`winner`) REFERENCES `Teams` (`id`)
 
 ALTER TABLE `Singles_Tournaments` ADD FOREIGN KEY (`winner`) REFERENCES `Players` (`id`);
 
-ALTER TABLE `Doubles_Tournaments` ADD FOREIGN KEY (`winner1`) REFERENCES `Players` (`id`);
-
-ALTER TABLE `Doubles_Tournaments` ADD FOREIGN KEY (`winner2`) REFERENCES `Players` (`id`);
+ALTER TABLE `Doubles_Tournaments` ADD FOREIGN KEY (`winner`) REFERENCES `Teams` (`id`);
 
 ALTER TABLE `Singles_Rounds` ADD FOREIGN KEY (`tourny_id`) REFERENCES `Singles_Tournaments` (`id`);
 

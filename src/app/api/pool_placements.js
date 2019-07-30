@@ -9,7 +9,6 @@ router.post('/singles/post', function(req, res) {
   for (let i = 0; i < Object.keys(req.body).length; i++) {
     placements[i] = [req.body[i].poolId, req.body[i].playerId]
   }
-  console.log(placements);
   const query = 'INSERT INTO Singles_Pool_Placements (pool_id, player_id) VALUES ?;';
   connection.query(query, [placements], function(err, result) {
     if (err) throw err;

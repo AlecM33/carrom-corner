@@ -115,7 +115,6 @@ export class ViewRoundComponent implements OnInit {
             this.recordPools.push(playerRecords);
           });
           this._gameService.getSinglesGamesInPool(poolId, this.tournamentId, this.roundId).subscribe((games) => {
-            console.log(games);
             this.allGamesPlayed = !games.find((game) => !game.winner);
             this.gamePools.push(games);
             this.calculatePlayerRecords(games);
@@ -216,12 +215,10 @@ export class ViewRoundComponent implements OnInit {
         this.numberToAdvance -= 1;
       }
     }
-    console.log(this.numberToAdvance);
   }
 
   changeExtraPlayerChoice() {
     this.extraPlayer = !this.extraPlayer;
-    console.log(this.extraPlayer);
   }
 
   findLargestPool() {
@@ -293,7 +290,9 @@ export class ViewRoundComponent implements OnInit {
           this._setupService.createSinglesData(this.tournamentId, this.tournamentName, 2, nextRoundAdvancers).subscribe((nav) => {
             this.prepareRound();
           })
-          : this._setupService.createDoublesData(this.tournamentId, this.tournamentName, 2, nextRoundAdvancers);
+          : this._setupService.createDoublesDataForSecondRound(this.tournamentId, this.tournamentName, 2, nextRoundAdvancers).subscribe((nav) => {
+            this.prepareRound();
+          });
       }
     });
   }
@@ -364,7 +363,6 @@ export class ViewRoundComponent implements OnInit {
       this._bracketService.getNodesAtLevel(bracket.winnerNode, i, nodesAtLevel);
       treeLevels.push(nodesAtLevel);
     }
-    console.log(treeLevels);
     this.createPlayoffs(treeLevels, playoffArray.length);
   }
 
@@ -388,7 +386,6 @@ export class ViewRoundComponent implements OnInit {
 
   // Converts the bracket tree into a balanced binary tree representation, where nodeIndex is the node number N starting from 1 at the root
   createSinglesBracketNodesAndGames(bracketId: number, playoffId: number, treeLevels) {
-    console.log(playoffId);
     let nodeIndex = 1;
     let playInAmount = 0;
     let currentPlayIn = 0;

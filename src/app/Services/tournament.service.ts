@@ -23,6 +23,8 @@ export class TournamentService {
           retrievedTourny.id = jsonTourny['id'];
           retrievedTourny.playoffsStarted = jsonTourny['playoffs_started'];
           retrievedTourny.winner = jsonTourny['winner'];
+          retrievedTourny.winnerName = jsonTourny['winner_name'];
+          retrievedTourny.ended = jsonTourny['ended'];
           retrievedTourny.currentRound = jsonTourny['current_round'];
           tournaments.push(retrievedTourny);
         }
@@ -35,8 +37,9 @@ export class TournamentService {
         const retrievedTourny = new DoublesTournament(jsonTourny['name'], jsonTourny['size'], jsonTourny['rounds']);
         retrievedTourny.id = jsonTourny['id'];
         retrievedTourny.playoffsStarted = jsonTourny['playoffs_started'];
-        retrievedTourny.winner1 = jsonTourny['winner1'];
-        retrievedTourny.winner2 = jsonTourny['winner2'];
+        retrievedTourny.winner = jsonTourny['winner'];
+        retrievedTourny.winnerName = jsonTourny['winner_name'];
+        retrievedTourny.ended = jsonTourny['ended'];
         retrievedTourny.currentRound = jsonTourny['current_round'];
         tournaments.push(retrievedTourny);
       }
@@ -106,6 +109,48 @@ export class TournamentService {
     };
     return this.http.request('post', '/api/tournaments/doubles/update_round/' + tournyId, {
       body: payload,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+  }
+
+  updateSinglesTournamentWinner(tournyId: number, winner: number, winnerName: string): Observable<any> {
+    const payload = {
+      'winner': winner,
+      'winner_name': winnerName
+    };
+    return this.http.request('post', '/api/tournaments/singles/winner/' + tournyId, {
+      body: payload,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+  }
+
+  updateDoublesTournamentWinner(tournyId: number, winner: number, winnerName: string): Observable<any> {
+    const payload = {
+      'winner': winner,
+      'winner_name': winnerName
+    };
+    return this.http.request('post', '/api/tournaments/doubles/winner/' + tournyId, {
+      body: payload,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+  }
+
+  updateSinglesTournamentEnded(tournyId: number): Observable<any> {
+    return this.http.request('post', '/api/tournaments/singles/ended/' + tournyId, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+  }
+
+  updateDoublesTournamentEnded(tournyId: number): Observable<any> {
+    return this.http.request('post', '/api/tournaments/doubles/ended/' + tournyId, {
       headers: {
         'Content-Type': 'application/json'
       }
