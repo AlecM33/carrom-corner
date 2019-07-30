@@ -160,7 +160,6 @@ export class GameService {
   }
 
   getPlayoffGames(type: string, playoffId: number): Observable<any> {
-      console.log(playoffId);
       return type === 'singles' ? this.http.request('get', '/api/games/get/singles/' + playoffId, {
           headers: {
             'Content-Type': 'application/json'

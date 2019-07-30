@@ -72,7 +72,6 @@ export class PlayoffsComponent implements OnInit {
       this.tournamentId = this.active_route.snapshot.paramMap.get('tourny_id');
       this._tournyService.getTournament(this.tournamentId, this.tournyType).subscribe((tournament) => {
         this.tournament = tournament[0];
-        console.log(this.tournament);
         this._playoffService.getPlayoff(tournament[0].id, this.tournyType).subscribe((playoff) => {
           this.playoffId = playoff[0].id;
           this._gameService.getPlayoffGames(this.tournyType, parseInt(this.playoffId, 10)).subscribe((playoffGames: any) => {
@@ -237,7 +236,6 @@ export class PlayoffsComponent implements OnInit {
         this.currentGame = this.playoffGames.find((game) => game.player1Id === null && game.player2Id === null)
         : this.currentGame = this.playoffGames.find((game) => game.team1Id === null && game.team2Id === null);
     }
-    console.log(this.currentGame);
     if (this.tournyType === 'singles') {
       this.currentGame.player1Id = node.data.a;
       this.currentGame.player2Id = node.data.b;
@@ -304,7 +302,6 @@ export class PlayoffsComponent implements OnInit {
       }
     } else {
       const parentIndex = this.nodes.findIndex((node) => node.nodeIndex === Math.ceil((this.currentNode.data.index - 1) / 2));
-      console.log(this.nodes);
       if (this.currentNode.data.index % 2 === 0) {
         this.tournyType === 'singles' ? this.nodes[parentIndex].player1Id = this.currentGame.winner
           : this.nodes[parentIndex].team1Id = this.currentGame.winner;
