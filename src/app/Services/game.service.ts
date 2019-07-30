@@ -143,6 +143,14 @@ export class GameService {
     }).map(this.populateWithSinglesGames);
   }
 
+  getWonSinglesGames(playerId: number) {
+    return this.http.request('get', '/api/games/singles/wins/' + playerId, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).map(this.populateWithSinglesGames);
+  }
+
   getPlayedDoublesGames() {
     return this.http.request('get', '/api/games/get/doubles', {
       headers: {

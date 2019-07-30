@@ -12,6 +12,7 @@ export class WinnerComponent implements OnInit {
 
   playoffId: any;
   tournamentId: any;
+  tournamentName: any;;
   tournyType: any;
   winner: any;
   players: any;
@@ -26,6 +27,7 @@ export class WinnerComponent implements OnInit {
     this.winner = parseInt(this.active_route.snapshot.paramMap.get('winner_id'), 10);
     this.tournyType = this.active_route.snapshot.paramMap.get('type');
     this.tournamentId = this.active_route.snapshot.paramMap.get('tourny_id');
+    this.tournamentName = this.active_route.snapshot.paramMap.get('tourny_name');
     this._playerService.getPlayers().subscribe((players) => {
       this.players = players;
       if (this.tournyType === 'doubles') {

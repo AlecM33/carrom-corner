@@ -35,4 +35,12 @@ export class TeamService {
         'Content-Type': 'application/json'}
     }).map(this.populateWithTeams);
   }
+
+  // Sends a GET request to the database for all players
+  getPlayerTeams(playerId: number): Observable<Team[]> {
+    return this.http.request('get', '/api/teams/player/' + playerId, {
+      headers: {
+        'Content-Type': 'application/json'}
+    }).map(this.populateWithTeams);
+  }
 }

@@ -6,44 +6,34 @@
     <a class="content-link" [routerLink]="['/players/add']">+ Add a player</a>
   </div>
 </div>
-<table class='table table-dark app-table'>
+<table *ngIf="!loading" class='table table-dark app-table'>
   <thead>
   <tr>
-    <th>Office Rank *</th>
+    <th>Office Rank</th>
     <th>Name</th>
-    <th>Singles Elo</th>
-    <th>Doubles Elo</th>
     <th>Wins</th>
     <th>Losses</th>
     <th>Winrate</th>
     <th>Avg Coin +/-</th>
+    <th>Tournament Wins</th>
     <th></th>
   </tr>
   </thead>
   <tbody>
-  <tr *ngFor='let player of sortablePlayers'>
-    <td>{{sortablePlayers.indexOf(player) + 1}}</td>
+  <tr *ngFor='let player of players'>
+    <td>{{players.indexOf(player) + 1}}</td>
     <td *ngIf="!player.nickname">{{player.name}}</td>
     <td *ngIf="player.nickname">{{player.nickname}}</td>
-    <td>{{player.elo | number: '1.0-0'}}</td>
-    <td>{{player.doublesElo | number: '1.0-0'}}</td>
     <td>{{player.wins}}</td>
     <td>{{player.losses}}</td>
-    <td>{{player.wins / (player.singlesPlayed + player.doublesPlayed) | percent}}</td>
+    <td *ngIf="player.wins > 0 || player.losses > 0">{{player.wins / (player.wins + player.losses) | percent}}</td>
     <td>{{player.totalDiff / (player.singlesPlayed + player.doublesPlayed) | number: '1.1-2'}}</td>
-    <td><a (click)='delete($event, player)' class="content-link">Delete</a></td>
-  </tr>
-  <tr *ngFor='let player of newPlayers'>
-    <td>-</td>
-    <td *ngIf="!player.nickname">{{player.name}}</td>
-    <td *ngIf="player.nickname">{{player.nickname}}</td>
-    <td>{{player.elo | number: '1.0-0'}}</td>
-    <td>{{player.doublesElo | number: '1.0-0'}}</td>
-    <td>{{player.wins}}</td>
-    <td>{{player.losses}}</td>
-    <td class="in-progress">N/A</td>
-    <td class='in-progress'>N/A</td>
+    <td>{{player.tournamentWins}}</td>
     <td><a (click)='delete($event, player)' class="content-link">Delete</a></td>
   </tr>
   </tbody>
 </table>
+<div *ngIf="loading" class="loading-container">
+  <img class="loading-animation" src="../../../assets/images/gap-spinner-emerald.svg"/>
+  <h3>Calculating the latest player stats, please wait...</h3>
+</div>

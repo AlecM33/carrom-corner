@@ -125,5 +125,29 @@ router.get('/get/doubles/:playoff_id', function(req, res) {
   })
 });
 
+// GET won singles games for a player
+router.get('/singles/wins/:player_id', function(req, res) {
+  const query = 'SELECT * FROM Singles_Games WHERE (player1_id = ? OR player2_id = ?) AND winner = ?;';
+  const filter = [parseInt(req.params.player_id), parseInt(req.params.player_id), parseInt(req.params.player_id)];
+  connection.query(query, filter, function(err, result) {
+    if (err) throw err;
+    else {
+      return res.status(200).send(JSON.stringify(result));
+    }
+  })
+});
+
+// GET won doubles games for a team
+router.get('/doubles/wins/:team_id', function(req, res) {
+  const query = 'SELECT * FROM Doubles_Games WHERE (team1_id = ? OR team2_id = ?) AND winner = ?;';
+  const filter = [parseInt(req.params.team_id), parseInt(req.params.team_id), parseInt(req.params.team_id)];
+  connection.query(query, filter, function(err, result) {
+    if (err) throw err;
+    else {
+      return res.status(200).send(JSON.stringify(result));
+    }
+  })
+});
+
 
 module.exports = router;

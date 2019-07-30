@@ -43,7 +43,7 @@ import {PlayerService} from './Services/player.service';
       { path: 'tournaments', component: TournamentListComponent},
       { path: ':name/:type/games/:id/enter_result', component: AddGameComponent},
       { path: 'playoffs/:type/:tourny_id', component: PlayoffsComponent},
-      { path: 'winner/:type/:tourny_id/:winner_id', component: WinnerComponent},
+      { path: 'winner/:type/:tourny_id/:tourny_name/:winner_id', component: WinnerComponent},
       { path: 'tournaments/:type/:name/:tourny_id/:round', component: ViewRoundComponent},
       { path: 'tournaments/:type/:name/:tourny_id/:round/:round_id/:pool_id/:letter', component: ViewPoolComponent},
       { path: 'stats', component: HomepageComponent}

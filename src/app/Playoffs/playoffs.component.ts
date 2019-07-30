@@ -355,11 +355,12 @@ export class PlayoffsComponent implements OnInit {
   }
 
   endTournament() {
-      const endObs = this.tournyType === 'singles ' ?
+      const endObs = this.tournyType === 'singles' ?
         this._tournyService.updateSinglesTournamentEnded(this.tournamentId)
         : this._tournyService.updateDoublesTournamentEnded(this.tournamentId);
-      endObs.subscribe((resp) => {
-        this.router.navigateByUrl('/winner/' + this.tournyType + '/' + this.tournamentId + '/' + this.tournament.winner);
+      endObs.subscribe(() => {
+        this.router.navigateByUrl('/winner/' + this.tournyType + '/' + this.tournament.id + '/' + this.tournament.name
+          + '/' + this.tournament.winner);
       });
   }
 }

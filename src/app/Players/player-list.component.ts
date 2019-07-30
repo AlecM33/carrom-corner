@@ -8,6 +8,8 @@ import { HttpClient } from '@angular/common/http';
 import { Config } from 'protractor';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/do';
+import {GameService} from '../Services/game.service';
+import {TeamService} from '../Services/team.service';
 
 @Component({
   selector: 'cr-players',
@@ -20,16 +22,16 @@ export class PlayerListComponent implements OnInit {
   public players = [];
   public newPlayers = [];
   public sortablePlayers = [];
+  public loading = true;
 
-  constructor(private _playerService: PlayerService, private http: HttpClient) {}
+  constructor(private _playerService: PlayerService, private http: HttpClient, public _gameService: GameService, public _teamService: TeamService) {}
 
   // gets player list for list view
   ngOnInit() {
     this._playerService.getPlayers().subscribe((players) => {
       this.players = players;
-      this.sortablePlayers = this.players.filter((player) => player.singlesPlayed > 0 || player.doublesPlayed > 0);
-      this.newPlayers = this.players.filter((player) => player.singlesPlayed === 0 && player.doublesPlayed === 0);
       this.sortPlayers();
+      this.calculatePlayerStats();
     });
   }
 
@@ -40,8 +42,6 @@ export class PlayerListComponent implements OnInit {
     this._playerService.deletePlayer(player).do(() => {
       this._playerService.getPlayers().subscribe((players) => {
         this.players = players;
-        this.sortablePlayers = this.players.filter((player) => player.singlesPlayed > 0 || player.doublesPlayed > 0);
-        this.newPlayers = this.players.filter((player) => player.singlesPlayed === 0 && player.doublesPlayed === 0);
       });
     }).subscribe();
   }
@@ -64,6 +64,44 @@ export class PlayerListComponent implements OnInit {
       } else {
         return 1;
       }
-    })
+    });
+  }
+
+  calculatePlayerStats() {
+    for (const player of this.players) {
+      this._gameService.getPlayedSinglesGames().subscribe((games) => {
+        const playerSinglesGames = games.filter((game) => game.player1Id === player.id
+          || game.player2Id === player.id);
+        player.singlesPlayed = playerSinglesGames.length;
+        for (const game of playerSinglesGames.filter((game2) => game2.winner === player.id)) {
+          player.wins ++;
+          player.totalDiff += game.differential;
+        }
+        for (const game of playerSinglesGames.filter((game3) => game3.winner !== player.id)) {
+          player.losses ++;
+          player.totalDiff -= game.differential;
+        }
+      });
+      this._gameService.getPlayedDoublesGames().subscribe((games) => {
+        this._teamService.getPlayerTeams(player.id).subscribe((teams) => {
+          for (const team of teams) {
+            const teamGames = games.filter((game) => game.team1Id === team.id
+              || game.team2Id === team.id);
+            player.doublesPlayed += teamGames.length;
+            for (const game of teamGames.filter((game2) => game2.winner === team.id)) {
+              player.wins ++;
+              player.totalDiff += game.differential;
+            }
+            for (const game of teamGames.filter((game3) => game3.winner !== team.id)) {
+              player.losses ++;
+              player.totalDiff -= game.differential;
+            }
+          }
+          this.loading = false;
+        });
+      });
+    }
+    this.sortablePlayers = this.players.filter((player) => player.singlesPlayed > 0 || player.doublesPlayed > 0);
+    this.newPlayers = this.players.filter((player) => player.singlesPlayed === 0 && player.doublesPlayed === 0);
   }
 }
