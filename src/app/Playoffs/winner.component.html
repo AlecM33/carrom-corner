@@ -1,8 +1,7 @@
-<div class='winner-container'>
-    <div class="winner-content">
-        <h2 *ngIf="winner" class='winner'> Congratulations, {{winner}}!</h2>
-        <h3 class='winner-subheader'>Wildlings Carrom Tournament Champion</h3>
-        <img class='winner-image' src="../../assets/images/cup.png" />
-        <button (click)="goHome()" class="btn winner-button btn-warning btn-xs">Home</button>
+<div class='congrats-container'>
+    <div class="congrats-content">
+        <h2 *ngIf="winner && players && teams"> Congratulations, {{convertToName(winner)}}!</h2>
+        <h3>Carrom Tournament Champion</h3>
+        <img id="trophy-large" src="../../assets/images/trophy.svg" />
     </div>
 </div>

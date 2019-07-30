@@ -293,7 +293,9 @@ export class ViewRoundComponent implements OnInit {
           this._setupService.createSinglesData(this.tournamentId, this.tournamentName, 2, nextRoundAdvancers).subscribe((nav) => {
             this.prepareRound();
           })
-          : this._setupService.createDoublesData(this.tournamentId, this.tournamentName, 2, nextRoundAdvancers);
+          : this._setupService.createDoublesDataForSecondRound(this.tournamentId, this.tournamentName, 2, nextRoundAdvancers).subscribe((nav) => {
+            this.prepareRound();
+          });
       }
     });
   }

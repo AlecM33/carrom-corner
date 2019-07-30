@@ -64,16 +64,17 @@ export class TournamentSetupService {
   }
 
   createDoublesDataForSecondRound(insertId: number, tournyName: string, roundNumber: number, members: Set<Team>) {
-    this.createDoublesRound(roundNumber, members.size, insertId).subscribe((resp: any) => {
-      const roundId = resp.insertId;
+    return this.createDoublesRound(roundNumber, members.size, insertId).pipe(concatMap((response: any) => {
+      const roundId = response.insertId;
       this.configurePoolParameters(members.size);
-      this.createDoublesPools(roundId, this.sameSizePools).subscribe((resp: any) => {
-        this.createDoublesPoolPlacements(resp, Array.from(members), this.optimalGroupSize).subscribe((resp: any) => {
+      return this.createDoublesPools(roundId, this.sameSizePools).pipe(concatMap((res) => {
+        return this.createDoublesPoolPlacements(res, Array.from(members), this.optimalGroupSize).pipe(tap(() => {
           this.createDoublesGames(insertId, roundNumber);
           this.router.navigateByUrl('/tournaments/doubles/' + tournyName + '/' + insertId + '/' + roundNumber);
-        });
-      });
-    });
+          console.log('All Doubles Tournament data successfully created for the first round!');
+        }));
+      }));
+    }));
   }
 
   generateTeams(players: Player[], tournamentId: number): Team[] {

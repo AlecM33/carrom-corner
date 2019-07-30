@@ -43,14 +43,12 @@ export class PlayoffsComponent implements OnInit {
     public tournyType = 'singles';
     public playInRound = [];
     public newPlayoffGames = [];
-    public tournamentWinner: any;
     public scoreDifferential: number;
     public round: number;
     public isOver = true;
     public bracketDepth: number;
-    tournament: any;
+    public tournament: any;
     public tournamentId: any;
-    public tournamentName: any;
     public nodes = [];
     public playoffGames = [];
     public currentGame = undefined;
@@ -73,7 +71,8 @@ export class PlayoffsComponent implements OnInit {
       this.tournyType = this.active_route.snapshot.paramMap.get('type');
       this.tournamentId = this.active_route.snapshot.paramMap.get('tourny_id');
       this._tournyService.getTournament(this.tournamentId, this.tournyType).subscribe((tournament) => {
-        this.tournamentName = tournament[0]['name'];
+        this.tournament = tournament[0];
+        console.log(this.tournament);
         this._playoffService.getPlayoff(tournament[0].id, this.tournyType).subscribe((playoff) => {
           this.playoffId = playoff[0].id;
           this._gameService.getPlayoffGames(this.tournyType, parseInt(this.playoffId, 10)).subscribe((playoffGames: any) => {
@@ -161,7 +160,7 @@ export class PlayoffsComponent implements OnInit {
   }
 
   buildD3Graph(tree) {
-    const margin = {top: 65, right: 90, bottom: 50, left: 150},
+    const margin = {top: 0, right: 90, bottom: 50, left: 150},
       width = (260 * this.bracketDepth) - margin.left - margin.right,
       height = (210 * this.bracketDepth) - margin.top - margin.bottom,
       separationConstant = 1;
@@ -215,17 +214,17 @@ export class PlayoffsComponent implements OnInit {
       .append('div')
       .classed('node', true)
       .style('left', d => (width - d.y + margin.left - 100) + 'px')
-      .style('top', d => (d.x + 26) + 'px')
+      .style('top', d => (d.x - 40) + 'px')
       .html(d => gameTemplate(d));
 
     labels.exit();
 
     const labelDivs = d3.select('#labels').selectAll('div');
-    labels.filter((div) => div.data.a && div.data.b).classed('node clickable', true).on('click', (node) => {
-      this.enterPlayoffGame(node);
-    });
-
-
+    if (!this.tournament.ended) {
+      labels.filter((div) => div.data.a && div.data.b).classed('node clickable', true).on('click', (node) => {
+        this.enterPlayoffGame(node);
+      });
+    }
   }
 
   enterPlayoffGame(node) {
@@ -294,22 +293,33 @@ export class PlayoffsComponent implements OnInit {
   }
 
   updateD3Graph() {
-    const parentIndex = this.nodes.findIndex((node) => node.nodeIndex === Math.ceil((this.currentNode.data.index - 1) / 2));
-    console.log(this.nodes);
-    if (this.currentNode.data.index % 2 === 0) {
-      this.tournyType === 'singles' ? this.nodes[parentIndex].player1Id = this.currentGame.winner
-        : this.nodes[parentIndex].team1Id = this.currentGame.winner;
-      this.nodes[parentIndex].seed1 = this.currentNode.data.aSeed;
+    if (this.currentNode.data.index === 1) {
+      this.tournament.winner = this.currentGame.winner;
+      if (this.tournyType === 'singles') {
+        this._tournyService.updateSinglesTournamentWinner(this.tournamentId, this.currentGame.winner,
+          this.convertToName(this.currentGame.winner)).subscribe();
+      } else {
+        this._tournyService.updateDoublesTournamentWinner(this.tournamentId, this.currentGame.winner,
+          this.convertToName(this.currentGame.winner)).subscribe();
+      }
     } else {
-      this.tournyType === 'singles' ? this.nodes[parentIndex].player2Id = this.currentGame.winner
-        : this.nodes[parentIndex].team2Id = this.currentGame.winner;
-      this.nodes[parentIndex].seed2 = this.currentNode.data.bSeed;
+      const parentIndex = this.nodes.findIndex((node) => node.nodeIndex === Math.ceil((this.currentNode.data.index - 1) / 2));
+      console.log(this.nodes);
+      if (this.currentNode.data.index % 2 === 0) {
+        this.tournyType === 'singles' ? this.nodes[parentIndex].player1Id = this.currentGame.winner
+          : this.nodes[parentIndex].team1Id = this.currentGame.winner;
+        this.nodes[parentIndex].seed1 = this.currentNode.data.aSeed;
+      } else {
+        this.tournyType === 'singles' ? this.nodes[parentIndex].player2Id = this.currentGame.winner
+          : this.nodes[parentIndex].team2Id = this.currentGame.winner;
+        this.nodes[parentIndex].seed2 = this.currentNode.data.bSeed;
+      }
+      this.tournyType === 'singles' ? this._bracketService.updateSinglesParentNode(this.nodes[parentIndex]).subscribe()
+        : this._bracketService.updateDoublesParentNode(this.nodes[parentIndex]).subscribe();
+      const newNodes = JSON.parse(JSON.stringify(this.nodes));
+      d3.select('#labels').selectAll('div').remove();
+      this.constructBracketFromNodes(newNodes, this.playoffId);
     }
-    this.tournyType === 'singles' ? this._bracketService.updateSinglesParentNode(this.nodes[parentIndex]).subscribe()
-      : this._bracketService.updateDoublesParentNode(this.nodes[parentIndex]).subscribe();
-    const newNodes = JSON.parse(JSON.stringify(this.nodes));
-    d3.select('#labels').selectAll('div').remove();
-    this.constructBracketFromNodes(newNodes, this.playoffId);
   }
 
   submitGame() {
@@ -344,5 +354,14 @@ export class PlayoffsComponent implements OnInit {
     } else {
       return undefined;
     }
+  }
+
+  endTournament() {
+      const endObs = this.tournyType === 'singles ' ?
+        this._tournyService.updateSinglesTournamentEnded(this.tournamentId)
+        : this._tournyService.updateDoublesTournamentEnded(this.tournamentId);
+      endObs.subscribe((resp) => {
+        this.router.navigateByUrl('/winner/' + this.tournyType + '/' + this.tournamentId + '/' + this.tournament.winner);
+      });
   }
 }
