@@ -88,12 +88,13 @@ export class PlayoffsComponent implements OnInit {
 
       this._playerService.getPlayers().subscribe((players) => {
           this.players = players;
-          if (this.tournyType === 'doubles') {
-            this._teamService.getTeams(this.tournamentId).subscribe((teams) => {
-              this.teams = teams;
-            });
-          }
       });
+
+      if (this.tournyType === 'doubles') {
+        this._teamService.getTeams(this.tournamentId).subscribe((teams) => {
+          this.teams = teams;
+        });
+      }
 
     }
 
