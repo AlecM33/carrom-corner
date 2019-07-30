@@ -6,7 +6,7 @@
         <div class="stat">{{playedSinglesGames.length + playedDoublesGames.length}}</div> games played
       </div>
       <div class="stat-container">
-        <div class="stat">{{coinsSank}}</div> coins sank
+        <div class="stat">{{coinsSank | number }}</div> coins sank
       </div>
       <div class="stat-container">
         <div class="stat">{{averageDiff | number: '1.1-2'}}</div> average coin differential

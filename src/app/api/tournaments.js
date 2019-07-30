@@ -101,7 +101,7 @@ router.post('/doubles/winner/:tourny_id', function(req, res) {
 
 // UPDATE Singles Tournament ended
 router.post('/singles/ended/:tourny_id', function(req, res) {
-  const query = 'UPDATE Singles_Tournaments SET ended = 1 WHERE id = ?';
+  const query = 'UPDATE Singles_Tournaments SET ended = true WHERE id = ?';
   const filter = [req.params.tourny_id];
   connection.query(query, filter, function(err, result) {
     if (err) throw err;
