@@ -68,6 +68,10 @@ export class PlayerListComponent implements OnInit {
   }
 
   calculatePlayerStats() {
+    if(this.players.length < 1) {
+      this.loading = false;
+      return;
+    }
     for (const player of this.players) {
       this._gameService.getPlayedSinglesGames().subscribe((games) => {
         const playerSinglesGames = games.filter((game) => game.player1Id === player.id
