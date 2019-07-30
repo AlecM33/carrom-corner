@@ -1,8 +1,8 @@
 <div class='congrats-container'>
     <div class="congrats-content">
-        <h2 *ngIf="tournyType === 'singles' && winner && players"> Congratulations, {{convertToName(winner)}}!</h2>
+      <h2 id="congrats-message" *ngIf="tournyType === 'singles' && winner && players"> Congratulations, {{convertToName(winner)}}!</h2>
       <h2 *ngIf="tournyType === 'doubles' && winner && players && teams"> Congratulations, {{convertToName(winner)}}!</h2>
-        <h3>Carrom Tournament Champion</h3>
-        <img id="trophy-large" src="../../assets/images/trophy.svg" />
+      <h3>{{tournamentName}} Champion</h3>
+      <img id="trophy-large" src="../../assets/images/trophy-large.svg" />
     </div>
 </div>

@@ -359,7 +359,8 @@ export class PlayoffsComponent implements OnInit {
         this._tournyService.updateSinglesTournamentEnded(this.tournamentId)
         : this._tournyService.updateDoublesTournamentEnded(this.tournamentId);
       endObs.subscribe(() => {
-        this.router.navigateByUrl('/winner/' + this.tournyType + '/' + this.tournamentId + '/' + this.tournament.winner);
+        this.router.navigateByUrl('/winner/' + this.tournyType + '/' + this.tournament.id + '/' + this.tournament.name
+          + '/' + this.tournament.winner);
       });
   }
 }
