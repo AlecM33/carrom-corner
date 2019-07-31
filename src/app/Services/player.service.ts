@@ -5,49 +5,59 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 import { EloService } from './elo.service';
 import { environment } from 'environments/environment';
+import {map, tap} from 'rxjs/operators';
 
 /* This service provides useful methods in regards to manipulating player data and
 making calls to the database */
 @Injectable()
 export class PlayerService {
 
-    public players: Player[];
+  private _players: Player[];
+
+  // Convert Object[] => Player[] (Object must represent a real player, though. No funny business.)
+  private static ingestRawPlayerData(retrievedPlayers: any[]): Player[] {
+    const result: Player[] = [];
+    const expectedProperties = [
+      'id', 'name', 'nickname', 'elo', 'doubles_elo', 'wins', 'losses',
+      'total_diff', 'singles_played', 'doubles_played', 'tournament_wins'
+    ];
+    for (const jsonPlayers of retrievedPlayers) {
+      if(!expectedProperties.every((prop) => jsonPlayers.hasOwnProperty(prop))) continue;
+      result.push(new Player(
+        jsonPlayers['id'],
+        jsonPlayers['name'],
+        jsonPlayers['nickname'],
+        jsonPlayers['elo'],
+        jsonPlayers['doubles_elo'],
+        jsonPlayers['wins'],
+        jsonPlayers['losses'],
+        jsonPlayers['total_diff'],
+        jsonPlayers['singles_played'],
+        jsonPlayers['doubles_played'],
+        jsonPlayers['tournament_wins']
+        )
+      );
+    }
+    return result;
+  }
 
     constructor(private http: HttpClient, private elo_adjuster: EloService) {
-    }
-
-    // Takes an observable and creates player objects from the data observed
-    populateWithPlayers(retrievedPlayers: any[]): Player[] {
-      this.players = [];
-        for (const jsonPlayers of retrievedPlayers) {
-            this.players.push(new Player(
-                                    jsonPlayers['id'],
-                                    jsonPlayers['name'],
-                                    jsonPlayers['nickname'],
-                                    jsonPlayers['elo'],
-                                    jsonPlayers['doubles_elo'],
-                                    jsonPlayers['wins'],
-                                    jsonPlayers['losses'],
-                                    jsonPlayers['total_diff'],
-                                    jsonPlayers['singles_played'],
-                                    jsonPlayers['doubles_played'],
-                                    jsonPlayers['tournament_wins']
-                                    )
-                                );
-        }
-        return this.players;
+      this._players = [];
     }
 
     // Sends a GET request to the database for all players
-    getPlayers(): Observable<Player[]> {
-      if (!this.players) {
+    public getPlayers(forceRefresh= false): Observable<Player[]> {
+      if (forceRefresh || this._players.length < 1) {
         return this.http.request('get', '/api/players/get', {
           headers: {
             'Content-Type': 'application/json'
           }
-        }).map(this.populateWithPlayers);
+        }).pipe(
+          map(PlayerService.ingestRawPlayerData),
+          tap((players) => this._players = players)
+        );
       }
-      return Observable.of(this.players);
+      return Observable.of(this._players);
     }
 
     updatePlayer(id, elo, doublesElo, wins, losses, totalDiff, singlesPlayed, doublesPlayed): Observable<any> {
