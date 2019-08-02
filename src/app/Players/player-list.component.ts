@@ -34,8 +34,6 @@ export class PlayerListComponent implements OnInit {
   ngOnInit() {
     this._playerService.getPlayers(true).subscribe((players) => {
       this.players = players;
-      console.log(this.players);
-      //this.sortPlayers();
       this.calculatePlayerStats();
     });
   }
@@ -53,27 +51,61 @@ export class PlayerListComponent implements OnInit {
 
   changeStatFilter(filter) {
     this.statChoice = filter;
+    this.sortPlayers(filter);
   }
 
   // Sorts players by an average of their singles and doubles elo
-  sortPlayers() {
-    this.sortablePlayers.sort((a, b) => {
-      let aAvg = (a.elo + a.doublesElo) / 2;
-      let bAvg = (b.elo + b.doublesElo) / 2;
-      if (b.gamesPlayed === 0) {
-        return 1;
-      } else if (aAvg > bAvg) {
-        return -1;
-      } else if (aAvg === bAvg) {
-        if (a.gamesPlayed >= b.gamesPlayed) {
-          return -1;
-        } else {
-          return 1;
-        }
-      } else {
-        return 1;
+  sortPlayers(filter: string) {
+    if (filter === 'singles') {
+      this.sortBySinglesStats(this.players);
+    } else if (filter === 'doubles') {
+      this.sortByDoublesStats(this.players);
+    } else {
+      this.sortByTotalStats(this.players);
+    }
+    this.loading = false;
+  }
+
+  sortBySinglesStats(pool) {
+    pool.sort((a, b) => {
+        if (a === undefined) return 1;
+        if (a.singlesWinPtg > b.singlesWinPtg) return -1;
+        if (b.singlesWinPtg > a.singlesWinPtg) return 1;
+        if (a.singlesWins > b.singlesWins) return -1;
+        if (b.singlesWins > a.singlesWins) return 1;
+        if (a.singlesAvgDiff > b.singlesAvgDiff) return -1;
+        if (b.singlesAvgDiff > a.singlesAvgDiff) return 1;
+        return a.singlesAvgDiff >= b.singlesAvgDiff ? -1 : 1;
       }
-    });
+    );
+  }
+
+  sortByDoublesStats(pool) {
+    pool.sort((a, b) => {
+        if (a === undefined) return 1;
+        if (a.doublesWinPtg > b.doublesWinPtg) return -1;
+        if (b.doublesWinPtg > a.doublesWinPtg) return 1;
+        if (a.doublesWins > b.doublesWins) return -1;
+        if (b.doublesWins > a.doublesWins) return 1;
+        if (a.doublesAvgDiff > b.doublesAvgDiff) return -1;
+        if (b.doublesAvgDiff > a.doublesAvgDiff) return 1;
+        return a.doublesAvgDiff >= b.doublesAvgDiff ? -1 : 1;
+      }
+    );
+  }
+
+  sortByTotalStats(pool) {
+    pool.sort((a, b) => {
+        if (a === undefined) return 1;
+        if (a.totalWinPtg > b.totalWinPtg) return -1;
+        if (b.totalWinPtg > a.totalWinPtg) return 1;
+        if (a.totalWins > b.totalWins) return -1;
+        if (b.totalWins > a.totalWins) return 1;
+        if (a.totalAvgDiff > b.totalAvgDiff) return -1;
+        if (b.totalAvgDiff > a.totalAvgDiff) return 1;
+        return a.totalAvgDiff >= b.totalAvgDiff ? -1 : 1;
+      }
+    );
   }
 
   calculatePlayerStats() {
@@ -86,7 +118,7 @@ export class PlayerListComponent implements OnInit {
         player.totalLosses = player.singlesLosses + player.doublesLosses;
         player.totalWinPtg = this.setTotalWinPtg(player.singlesWinPtg, player.doublesWinPtg);
         player.totalAvgDiff = this.setTotalAvgDiff(player.singlesAvgDiff, player.doublesAvgDiff);
-        this.loading = false;
+        this.sortPlayers('total');
       });
     }
   }
