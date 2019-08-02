@@ -569,17 +569,22 @@ input[type=text]:hover {
 #stats-filter-choice div:nth-child(2) {
   border-top-right-radius: 0px;
   border-bottom-right-radius: 0px;
-  width: 125px;
+  width: 100px;
 }
 
 #stats-filter-choice div:nth-child(3) {
   border-top-right-radius: 7px;
   border-bottom-right-radius: 7px;
-  width: 125px;
+  width: 100px;
 }
 
 #stats-filter-choice {
   margin: 0;
+}
+
+#stats-filter-choice .choice {
+  font-size: 14px;
+  width: 100px;
 }
 
 .choice-button-container {

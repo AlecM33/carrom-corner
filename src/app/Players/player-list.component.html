@@ -20,7 +20,6 @@
     <th>Losses</th>
     <th>Winrate</th>
     <th>Avg Coin +/-</th>
-    <th>Tournament Wins</th>
     <th></th>
   </tr>
   </thead>
@@ -48,7 +47,6 @@
     <th>Losses</th>
     <th>Winrate</th>
     <th>Avg Coin +/-</th>
-    <th>Tournament Wins</th>
     <th></th>
   </tr>
   </thead>
@@ -76,7 +74,6 @@
     <th>Losses</th>
     <th>Winrate</th>
     <th>Avg Coin +/-</th>
-    <th>Tournament Wins</th>
     <th></th>
   </tr>
   </thead>
@@ -91,7 +88,6 @@
     <td *ngIf="!player.totalWinPtg">N/A</td>
     <td *ngIf="player.totalAvgDiff">{{player.totalAvgDiff | number: '1.1-2'}}</td>
     <td *ngIf="!player.totalAvgDiff">N/A</td>
-    <td>{{player.tournamentWins}}</td>
     <td><a (click)='delete($event, player)' class="content-link">Delete</a></td>
   </tr>
   </tbody>
