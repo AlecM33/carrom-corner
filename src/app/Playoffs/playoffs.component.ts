@@ -101,6 +101,7 @@ export class PlayoffsComponent implements OnInit {
     constructBracketFromNodes(nodes, playoffId) {
       this.nodes = JSON.parse(JSON.stringify(nodes));
       const root = nodes.shift();
+      console.log(root);
       let tree;
       if (this.tournyType === 'singles') {
         tree = [{

@@ -1,12 +1,17 @@
-
-
 <div class="player-header-container">
   <h2 class="player-list-header">Players</h2>
   <div class="add-player-container">
     <a class="content-link" [routerLink]="['/players/add']">+ Add a player</a>
   </div>
+  <div class="choice-container">
+    <div id="stats-filter-choice" class="choice-button-container">
+      <div (click)="changeStatFilter('singles')" [className]="statChoice === 'singles' ? 'choice selected' : 'choice'">Singles</div>
+      <div (click)="changeStatFilter('doubles')" [className]="statChoice === 'doubles' ? 'choice selected' : 'choice'">Doubles</div>
+      <div (click)="changeStatFilter('total')" [className]="statChoice === 'total' ? 'choice selected' : 'choice'">Total</div>
+    </div>
+  </div>
 </div>
-<table *ngIf="!loading" class='table table-dark app-table'>
+<table *ngIf="!loading && statChoice === 'singles'" class='table table-dark app-table'>
   <thead>
   <tr>
     <th>Office Rank</th>
@@ -15,7 +20,6 @@
     <th>Losses</th>
     <th>Winrate</th>
     <th>Avg Coin +/-</th>
-    <th>Tournament Wins</th>
     <th></th>
   </tr>
   </thead>
@@ -24,12 +28,66 @@
     <td>{{players.indexOf(player) + 1}}</td>
     <td *ngIf="!player.nickname">{{player.name}}</td>
     <td *ngIf="player.nickname">{{player.nickname}}</td>
-    <td>{{player.wins}}</td>
-    <td>{{player.losses}}</td>
-    <td *ngIf="player.wins > 0 || player.losses > 0">{{player.wins / (player.wins + player.losses) | percent}}</td>
-    <td *ngIf="player.wins <= 0 && player.losses <= 0"></td>
-    <td>{{player.totalDiff / (player.singlesPlayed + player.doublesPlayed) | number: '1.1-2'}}</td>
-    <td>{{player.tournamentWins}}</td>
+    <td *ngIf="player.singlesWins !==undefined">{{player.singlesWins}}</td>
+    <td *ngIf="player.singlesLosses !== undefined">{{player.singlesLosses}}</td>
+    <td *ngIf="player.singlesWinPtg">{{player.singlesWinPtg | percent}}</td>
+    <td *ngIf="!player.singlesWinPtg">N/A</td>
+    <td *ngIf="player.singlesAvgDiff">{{player.singlesAvgDiff | number: '1.1-2'}}</td>
+    <td *ngIf="!player.singlesAvgDiff">N/A</td>
+    <td><a (click)='delete($event, player)' class="content-link">Delete</a></td>
+  </tr>
+  </tbody>
+</table>
+<table *ngIf="!loading && statChoice === 'doubles'" class='table table-dark app-table'>
+  <thead>
+  <tr>
+    <th>Office Rank</th>
+    <th>Name</th>
+    <th>Wins</th>
+    <th>Losses</th>
+    <th>Winrate</th>
+    <th>Avg Coin +/-</th>
+    <th></th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor='let player of players'>
+    <td>{{players.indexOf(player) + 1}}</td>
+    <td *ngIf="!player.nickname">{{player.name}}</td>
+    <td *ngIf="player.nickname">{{player.nickname}}</td>
+    <td *ngIf="player.doublesWins !==undefined">{{player.doublesWins}}</td>
+    <td *ngIf="player.doublesLosses !== undefined">{{player.doublesLosses}}</td>
+    <td *ngIf="player.doublesWinPtg">{{player.doublesWinPtg | percent}}</td>
+    <td *ngIf="!player.doublesWinPtg">N/A</td>
+    <td *ngIf="player.doublesAvgDiff">{{player.doublesAvgDiff | number: '1.1-2'}}</td>
+    <td *ngIf="!player.doublesAvgDiff">N/A</td>
+    <td><a (click)='delete($event, player)' class="content-link">Delete</a></td>
+  </tr>
+  </tbody>
+</table>
+<table *ngIf="!loading && statChoice === 'total'" class='table table-dark app-table'>
+  <thead>
+  <tr>
+    <th>Office Rank</th>
+    <th>Name</th>
+    <th>Wins</th>
+    <th>Losses</th>
+    <th>Winrate</th>
+    <th>Avg Coin +/-</th>
+    <th></th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor='let player of players'>
+    <td>{{players.indexOf(player) + 1}}</td>
+    <td *ngIf="!player.nickname">{{player.name}}</td>
+    <td *ngIf="player.nickname">{{player.nickname}}</td>
+    <td *ngIf="player.totalWins !==undefined">{{player.totalWins}}</td>
+    <td *ngIf="player.totalLosses !== undefined">{{player.totalLosses}}</td>
+    <td *ngIf="player.totalWinPtg">{{player.totalWinPtg | percent}}</td>
+    <td *ngIf="!player.totalWinPtg">N/A</td>
+    <td *ngIf="player.totalAvgDiff">{{player.totalAvgDiff | number: '1.1-2'}}</td>
+    <td *ngIf="!player.totalAvgDiff">N/A</td>
     <td><a (click)='delete($event, player)' class="content-link">Delete</a></td>
   </tr>
   </tbody>

@@ -49,7 +49,7 @@ export class AddPlayerComponent implements OnInit {
 
     // Function for adding a new player to the database when user submits
     onSubmit() {
-        const newPlayer = new Player(undefined, this.newPlayerName, this.newPlayerNickname, 1200, 1200, 0, 0, 0, 0, 0, 0);
+        const newPlayer = new Player(this.newPlayerName, this.newPlayerNickname);
         this._playerService.addPlayer(newPlayer).subscribe(() => {
             this.router.navigateByUrl('/players');
         });
