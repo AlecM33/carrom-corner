@@ -143,12 +143,20 @@ export class GameService {
     }).map(this.populateWithSinglesGames);
   }
 
-  getWonSinglesGames(playerId: number) {
-    return this.http.request('get', '/api/games/singles/wins/' + playerId, {
+  getPlayerSinglesWinsAndLosses(playerId: number): Observable<any> {
+    return this.http.request('get', '/api/games/singles/record/' + playerId, {
       headers: {
         'Content-Type': 'application/json'
       }
-    }).map(this.populateWithSinglesGames);
+    });
+  }
+
+  getPlayerDoublesWinsAndLosses(playerId: number): Observable<any> {
+    return this.http.request('get', '/api/games/doubles/record/' + playerId, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
   }
 
   getPlayedDoublesGames() {

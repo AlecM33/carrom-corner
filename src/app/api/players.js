@@ -6,7 +6,7 @@ const connection = require('./db');
 // POST player
 router.post('/post', function(req, res) {
   const player_info = req.body;
-  const query = 'INSERT INTO Players VALUES (NULL, ?, ?, 1200, 1200, 0, 0, 0.0, 0, 0, 0);';
+  const query = 'INSERT INTO Players VALUES (NULL, ?, ?, 0);';
   const filter = [player_info.name, player_info.nickname];
   connection.query(query, filter, function(err, result) {
     if (err) throw err;

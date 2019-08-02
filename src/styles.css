@@ -566,6 +566,22 @@ input[type=text]:hover {
   width: 125px;
 }
 
+#stats-filter-choice div:nth-child(2) {
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+  width: 125px;
+}
+
+#stats-filter-choice div:nth-child(3) {
+  border-top-right-radius: 7px;
+  border-bottom-right-radius: 7px;
+  width: 125px;
+}
+
+#stats-filter-choice {
+  margin: 0;
+}
+
 .choice-button-container {
   display: flex;
   margin-top: 1em;
@@ -1701,7 +1717,7 @@ text {
 .add-player-container {
   display: flex;
   justify-content: flex-start;
-  margin-left: 2em;
+  margin: 0 2em 0 2em;
 }
 
 .winner-loser {

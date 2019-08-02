@@ -11,7 +11,6 @@ import { environment } from '../environments/environment';
 import { AddTournamentComponent } from './Tournaments/add-tournament.component'
 import { CoreModule } from './core.module';
 import { TournamentListComponent } from './Tournaments/tournament-list.component';
-import { AddGameComponent } from './Games/add-game.component';
 import { PlayoffsComponent } from './Playoffs/playoffs.component';
 import { WinnerComponent } from './Playoffs/winner.component';
 import { HomepageComponent } from './Homepage/homepage-component';
@@ -24,7 +23,7 @@ import {PlayerService} from './Services/player.service';
 @NgModule({
   declarations: [
     AppComponent, PlayerListComponent, AddPlayerComponent, AddTournamentComponent,
-    TournamentListComponent, AddGameComponent, PlayoffsComponent,
+    TournamentListComponent, PlayoffsComponent,
     WinnerComponent, HomepageComponent, ViewPoolComponent, ViewRoundComponent
   ],
   imports: [
@@ -41,7 +40,6 @@ import {PlayerService} from './Services/player.service';
       { path: 'players', component: PlayerListComponent},
       { path: 'tournament/:type/new', component: AddTournamentComponent},
       { path: 'tournaments', component: TournamentListComponent},
-      { path: ':name/:type/games/:id/enter_result', component: AddGameComponent},
       { path: 'playoffs/:type/:tourny_id', component: PlayoffsComponent},
       { path: 'winner/:type/:tourny_id/:tourny_name/:winner_id', component: WinnerComponent},
       { path: 'tournaments/:type/:name/:tourny_id/:round', component: ViewRoundComponent},
