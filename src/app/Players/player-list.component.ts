@@ -43,7 +43,7 @@ export class PlayerListComponent implements OnInit {
     e.preventDefault();
     this.players = [];
     this._playerService.deletePlayer(player).do(() => {
-      this._playerService.getPlayers().subscribe((players) => {
+      this._playerService.getPlayers(true).subscribe((players) => {
         this.players = players;
       });
     }).subscribe();
@@ -109,18 +109,19 @@ export class PlayerListComponent implements OnInit {
   }
 
   calculatePlayerStats() {
+    console.log(this.players);
     for (const player of this.players) {
       const singlesDoublesObservables: Observable<Object>[] = [];
       singlesDoublesObservables.push(this.fetchCalculatedSinglesStats(player));
       singlesDoublesObservables.push(this.fetchCalculatedDoublesStats(player));
-      forkJoin(...singlesDoublesObservables).subscribe((result) => {
+      forkJoin(singlesDoublesObservables).subscribe((result) => {
         player.totalWins = player.singlesWins + player.doublesWins;
         player.totalLosses = player.singlesLosses + player.doublesLosses;
         player.totalWinPtg = this.setTotalWinPtg(player.singlesWinPtg, player.doublesWinPtg);
         player.totalAvgDiff = this.setTotalAvgDiff(player.singlesAvgDiff, player.doublesAvgDiff);
-        this.sortPlayers('total');
       });
     }
+    this.sortPlayers('total');
   }
 
   setTotalWinPtg(singlesPtg, doublesPtg) {
@@ -156,7 +157,9 @@ export class PlayerListComponent implements OnInit {
       for (const team of teams) {
         observablesArray.push(this._gameService.getPlayerDoublesWinsAndLosses(team.id));
       }
-      return forkJoin(...observablesArray).pipe(tap((teamRecords) => {
+      return observablesArray.length === 0
+      ? Observable.of([]) // if the player is new or was not in any doubles tournaments, we don't want to forkjoin an empty observable
+      : forkJoin(...observablesArray).pipe(tap((teamRecords) => {
         let totalPlus = 0, totalMinus = 0;
         for (const record of teamRecords) {
           player.doublesWins += record[0].win_count;
