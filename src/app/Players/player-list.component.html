@@ -30,10 +30,10 @@
     <td *ngIf="player.nickname">{{player.nickname}}</td>
     <td *ngIf="player.singlesWins !==undefined">{{player.singlesWins}}</td>
     <td *ngIf="player.singlesLosses !== undefined">{{player.singlesLosses}}</td>
-    <td *ngIf="player.singlesWinPtg">{{player.singlesWinPtg | percent}}</td>
-    <td *ngIf="!player.singlesWinPtg">N/A</td>
-    <td *ngIf="player.singlesAvgDiff">{{player.singlesAvgDiff | number: '1.1-2'}}</td>
-    <td *ngIf="!player.singlesAvgDiff">N/A</td>
+    <td *ngIf="player.singlesWinPtg !== undefined">{{player.singlesWinPtg | percent}}</td>
+    <td *ngIf="player.singlesWinPtg === undefined">N/A</td>
+    <td *ngIf="player.singlesAvgDiff !== undefined">{{player.singlesAvgDiff | number: '1.1-2'}}</td>
+    <td *ngIf="player.singlesAvgDiff === undefined">N/A</td>
     <td><a (click)='delete($event, player)' class="content-link">Delete</a></td>
   </tr>
   </tbody>
@@ -57,10 +57,10 @@
     <td *ngIf="player.nickname">{{player.nickname}}</td>
     <td *ngIf="player.doublesWins !==undefined">{{player.doublesWins}}</td>
     <td *ngIf="player.doublesLosses !== undefined">{{player.doublesLosses}}</td>
-    <td *ngIf="player.doublesWinPtg">{{player.doublesWinPtg | percent}}</td>
-    <td *ngIf="!player.doublesWinPtg">N/A</td>
-    <td *ngIf="player.doublesAvgDiff">{{player.doublesAvgDiff | number: '1.1-2'}}</td>
-    <td *ngIf="!player.doublesAvgDiff">N/A</td>
+    <td *ngIf="player.doublesWinPtg !== undefined">{{player.doublesWinPtg | percent}}</td>
+    <td *ngIf="player.doublesWinPtg === undefined">N/A</td>
+    <td *ngIf="player.doublesAvgDiff !== undefined">{{player.doublesAvgDiff | number: '1.1-2'}}</td>
+    <td *ngIf="player.doublesAvgDiff === undefined">N/A</td>
     <td><a (click)='delete($event, player)' class="content-link">Delete</a></td>
   </tr>
   </tbody>
@@ -84,10 +84,10 @@
     <td *ngIf="player.nickname">{{player.nickname}}</td>
     <td *ngIf="player.totalWins !==undefined">{{player.totalWins}}</td>
     <td *ngIf="player.totalLosses !== undefined">{{player.totalLosses}}</td>
-    <td *ngIf="player.totalWinPtg">{{player.totalWinPtg | percent}}</td>
-    <td *ngIf="!player.totalWinPtg">N/A</td>
-    <td *ngIf="player.totalAvgDiff">{{player.totalAvgDiff | number: '1.1-2'}}</td>
-    <td *ngIf="!player.totalAvgDiff">N/A</td>
+    <td *ngIf="player.totalWinPtg !== undefined">{{player.totalWinPtg | percent}}</td>
+    <td *ngIf="player.totalWinPtg === undefined">N/A</td>
+    <td *ngIf="player.totalAvgDiff !== undefined">{{player.totalAvgDiff | number: '1.1-2'}}</td>
+    <td *ngIf="player.totalAvgDiff === undefined">N/A</td>
     <td><a (click)='delete($event, player)' class="content-link">Delete</a></td>
   </tr>
   </tbody>

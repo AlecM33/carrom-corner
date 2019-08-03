@@ -65,24 +65,24 @@ export class HomepageComponent implements OnInit {
     }
 
   setTotalValidationPtc(singlesPtc, doublesPtc) {
-    if (!singlesPtc && ! doublesPtc) { return undefined; }
-    if (singlesPtc && !doublesPtc) { return singlesPtc; }
-    if (!singlesPtc && doublesPtc) { return doublesPtc; }
-    if (singlesPtc && doublesPtc) { return (singlesPtc + doublesPtc) / 2; }
+    if (!(typeof singlesPtc === 'number') && !(typeof doublesPtc === 'number')) { return undefined; }
+    if (typeof singlesPtc === 'number' && !(typeof doublesPtc === 'number')) { return singlesPtc; }
+    if (!(typeof singlesPtc === 'number') && typeof doublesPtc === 'number') { return doublesPtc; }
+    if (typeof singlesPtc === 'number' && typeof doublesPtc === 'number') { return (singlesPtc + doublesPtc) / 2; }
   }
 
   setTotalCoinFlipPtc(singlesPtc, doublesPtc) {
-    if (!singlesPtc && ! doublesPtc) { return '--'; }
-    if (singlesPtc && !doublesPtc) { return singlesPtc; }
-    if (!singlesPtc && doublesPtc) { return doublesPtc; }
-    if (singlesPtc && doublesPtc) { return (singlesPtc + doublesPtc) / 2; }
+    if (!(typeof singlesPtc === 'number') && !(typeof doublesPtc === 'number')) { return undefined; }
+    if (typeof singlesPtc === 'number' && !(typeof doublesPtc === 'number')) { return singlesPtc; }
+    if (!(typeof singlesPtc === 'number') && typeof doublesPtc === 'number') { return doublesPtc; }
+    if (typeof singlesPtc === 'number' && typeof doublesPtc === 'number') { return (singlesPtc + doublesPtc) / 2; }
   }
 
   setTotalAvgDiff(singlesDiff, doublesDiff) {
-    if (!singlesDiff && ! doublesDiff) { return undefined; }
-    if (singlesDiff && !doublesDiff) { return singlesDiff; }
-    if (!singlesDiff && doublesDiff) { return doublesDiff; }
-    if (singlesDiff && doublesDiff) { return (singlesDiff + doublesDiff) / 2; }
+    if (!(typeof singlesDiff === 'number') && !(typeof doublesDiff === 'number')) { return undefined; }
+    if (typeof singlesDiff === 'number' && !(typeof doublesDiff === 'number')) { return singlesDiff; }
+    if (!(typeof singlesDiff === 'number') && typeof doublesDiff === 'number') { return doublesDiff; }
+    if (typeof singlesDiff === 'number' && typeof doublesDiff === 'number') { return (singlesDiff + doublesDiff) / 2; }
   }
 
   calculateTotalStats() {

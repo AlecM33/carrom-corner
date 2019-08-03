@@ -70,7 +70,7 @@ export class PlayerListComponent implements OnInit {
 
   sortBySinglesStats(pool) {
     pool.sort((a, b) => {
-        if (a === undefined) return 1;
+        if (a.singlesWinPtg === undefined) return 1;
         if (a.singlesWinPtg > b.singlesWinPtg) return -1;
         if (b.singlesWinPtg > a.singlesWinPtg) return 1;
         if (a.singlesWins > b.singlesWins) return -1;
@@ -84,7 +84,7 @@ export class PlayerListComponent implements OnInit {
 
   sortByDoublesStats(pool) {
     pool.sort((a, b) => {
-        if (a === undefined) return 1;
+        if (a.doublesWinPtg === undefined) return 1;
         if (a.doublesWinPtg > b.doublesWinPtg) return -1;
         if (b.doublesWinPtg > a.doublesWinPtg) return 1;
         if (a.doublesWins > b.doublesWins) return -1;
@@ -98,7 +98,7 @@ export class PlayerListComponent implements OnInit {
 
   sortByTotalStats(pool) {
     pool.sort((a, b) => {
-        if (a === undefined) return 1;
+        if (a.totalWinPtg === undefined) return 1;
         if (a.totalWinPtg > b.totalWinPtg) return -1;
         if (b.totalWinPtg > a.totalWinPtg) return 1;
         if (a.totalWins > b.totalWins) return -1;
@@ -130,18 +130,20 @@ export class PlayerListComponent implements OnInit {
     });
   }
 
-  setTotalWinPtg(singlesPtg, doublesPtg) {
-    if (!singlesPtg && ! doublesPtg) { return undefined; }
-    if (singlesPtg && !doublesPtg) { return singlesPtg; }
-    if (!singlesPtg && doublesPtg) { return doublesPtg; }
-    if (singlesPtg && doublesPtg) { return (singlesPtg + doublesPtg) / 2; }
+  setTotalWinPtg(singlesPtc, doublesPtc) {
+    if (!(typeof singlesPtc === 'number') && !(typeof doublesPtc === 'number')) { return undefined; }
+    if (typeof singlesPtc === 'number' && !(typeof doublesPtc === 'number')) { return singlesPtc; }
+    if (!(typeof singlesPtc === 'number') && typeof doublesPtc === 'number') { return doublesPtc; }
+    if (typeof singlesPtc === 'number' && typeof doublesPtc === 'number') { return (singlesPtc + doublesPtc) / 2; }
   }
 
   setTotalAvgDiff(singlesDiff, doublesDiff) {
-    if (!singlesDiff && ! doublesDiff) { return undefined; }
-    if (singlesDiff && !doublesDiff) { return singlesDiff; }
-    if (!singlesDiff && doublesDiff) { return doublesDiff; }
-    if (singlesDiff && doublesDiff) { return (singlesDiff + doublesDiff) / 2; }
+    console.log(singlesDiff);
+    console.log(doublesDiff);
+    if (!(typeof singlesDiff === 'number') && !(typeof doublesDiff === 'number')) { return undefined; }
+    if (typeof singlesDiff === 'number' && !(typeof doublesDiff === 'number')) { return singlesDiff; }
+    if (!(typeof singlesDiff === 'number') && typeof doublesDiff === 'number') { return doublesDiff; }
+    if (typeof singlesDiff === 'number' && typeof doublesDiff === 'number') { return (singlesDiff + doublesDiff) / 2; }
   }
 
   fetchCalculatedSinglesStats(player): Observable<any> {
@@ -158,8 +160,8 @@ export class PlayerListComponent implements OnInit {
     return this._teamService.getPlayerTeams(player.id).pipe(concatMap((teams) => {
       player.doublesWins = 0;
       player.doublesLosses = 0;
-      player.doublesWinPtg = 0;
-      player.doublesAvgDiff = 0;
+      player.doublesWinPtg = undefined;
+      player.doublesAvgDiff = undefined;
       const observablesArray: Observable<Object>[] = [];
       for (const team of teams) {
         observablesArray.push(this._gameService.getPlayerDoublesWinsAndLosses(team.id));

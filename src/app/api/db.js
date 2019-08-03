@@ -4,8 +4,8 @@ port = process.env.PORT || 3001;
 // TODO: Configure environments.ts, import environment object, and use that instead
 var connection = mysql.createConnection({
   host: 'localhost',
-  user: 'CHANGEME',
-  password: 'CHANGEME',
+  user: 'root',
+  password: 'Ellie112196',
   database: 'carrom-corner'
 });
 

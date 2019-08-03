@@ -523,14 +523,12 @@ input[type=text]:hover {
 .stat {
   font-size: 60px;
   color: #f7e5c5;
-  font-weight: bold;
-  margin-right: 0.3em;
+  margin: 0 0.3em;
 }
 
 .stat-secondary {
   font-size: 40px;
   color: #888888;
-  font-weight: bold;
   margin: 0 0.3em;
 }
 
@@ -555,7 +553,6 @@ input[type=text]:hover {
 }
 
 .stats-container {
-  border: 1px solid #828181;
   padding: 20px;
   color: #999999;
   justify-content: center;
@@ -1105,6 +1102,7 @@ img#trophy-large {
   height: 100px;
   align-self: center;
   align-items: center;
+  filter: drop-shadow(3px 3px 3px rgba(0,0,0,0.35));
 }
 
 .cell.name {

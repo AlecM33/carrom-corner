@@ -35,7 +35,7 @@ router.get('/doubles/get/:tourny_id', function(req, res) {
 
 
 // UPDATE Singles playoff
-router.patch('/singles/update/:tourny_id', function(req, res) {
+router.post('/singles/update/:tourny_id', function(req, res) {
   const playoff = req.body;
   const query = 'UPDATE Singles_Playoffs SET winner = ?, ended = ? WHERE id = ?';
   const filter = [playoff.winner, playoff.ended, req.params.tourny_id];
@@ -44,7 +44,7 @@ router.patch('/singles/update/:tourny_id', function(req, res) {
 
 
 // UPDATE Doubles playoff
-router.patch('/doubles/update/:tourny_id', function(req, res) {
+router.post('/doubles/update/:tourny_id', function(req, res) {
   const playoff = req.body;
   const query = 'UPDATE Doubles_Playoffs SET winner = ?, ended = ? WHERE id = ?';
   const filter = [playoff.winner, playoff.ended, req.params.tourny_id];

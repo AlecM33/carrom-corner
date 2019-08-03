@@ -21,46 +21,46 @@
     </div>
     <div class="stat-container">
       <div class="primary-stat">
-        <div *ngIf="totalAvgDiff" class="stat">{{totalAvgDiff | number: '1.1-2'}}</div>
-        <div *ngIf="!totalAvgDiff" class="stat">--</div>
-        average coin differential
+        <div *ngIf="totalAvgDiff !== undefined" class="stat">{{totalAvgDiff | number: '1.1-2'}}</div>
+        <div *ngIf="totalAvgDiff === undefined" class="stat">--</div>
+        average coin margin of victory
       </div>
       <div class="secondary-stats">
-        <div *ngIf="singlesAvgDiff" class="stat-secondary">{{singlesAvgDiff | number: '1.1-2'}}</div>
-        <div *ngIf="!singlesAvgDiff" class="stat">--</div>
+        <div *ngIf="singlesAvgDiff !== undefined" class="stat-secondary">{{singlesAvgDiff | number: '1.1-2'}}</div>
+        <div *ngIf="singlesAvgDiff === undefined" class="stat-secondary">--</div>
         singles
-        <div *ngIf="doublesAvgDiff" class="stat-secondary">{{doublesAvgDiff | number: '1.1-2'}}</div>
-        <div *ngIf="!doublesAvgDiff" class="stat">--</div>
+        <div *ngIf="doublesAvgDiff !== undefined" class="stat-secondary">{{doublesAvgDiff | number: '1.1-2'}}</div>
+        <div *ngIf="doublesAvgDiff === undefined" class="stat-secondary">--</div>
         doubles
       </div>
     </div>
     <div class="stat-container">
       <div class="primary-stat">
-        <div *ngIf="totalValidatorPct" class="stat">{{this.totalValidatorPct | percent}}</div>
-        <div *ngIf="!totalValidatorPct" class="stat">--</div>
+        <div *ngIf="totalValidatorPct !== undefined" class="stat">{{totalValidatorPct | percent}}</div>
+        <div *ngIf="totalValidatorPct === undefined" class="stat">--</div>
         queen validator win-rate
       </div>
       <div class="secondary-stats">
-        <div *ngIf="singlesValidatorPct" class="stat-secondary">{{singlesValidatorPct | percent}}</div>
-        <div *ngIf="!singlesValidatorPct" class="stat">--</div>
+        <div *ngIf="singlesValidatorPct !== undefined" class="stat-secondary">{{singlesValidatorPct | percent}}</div>
+        <div *ngIf="singlesValidatorPct === undefined" class="stat-secondary">--</div>
         singles
-        <div *ngIf="doublesValidatorPct" class="stat-secondary">{{doublesValidatorPct | percent}}</div>
-        <div *ngIf="!doublesValidatorPct" class="stat">--</div>
+        <div *ngIf="doublesValidatorPct !== undefined" class="stat-secondary">{{doublesValidatorPct | percent}}</div>
+        <div *ngIf="doublesValidatorPct === undefined" class="stat-secondary">--</div>
         doubles
       </div>
     </div>
     <div class="stat-container">
       <div class="primary-stat">
-        <div *ngIf="totalCoinFlipPct" class="stat">{{totalCoinFlipPct | percent}}</div>
-        <div *ngIf="!totalCoinFlipPct" class="stat">--</div>
+        <div *ngIf="totalCoinFlipPct !== undefined" class="stat">{{totalCoinFlipPct | percent}}</div>
+        <div *ngIf="totalCoinFlipPct === undefined" class="stat">--</div>
         coin-flip winner win-rate
       </div>
       <div class="secondary-stats">
-        <div *ngIf="singlesCoinFlipPct" class="stat-secondary">{{singlesCoinFlipPct | percent}}</div>
-        <div *ngIf="!singlesCoinFlipPct" class="stat">--</div>
+        <div *ngIf="singlesCoinFlipPct !== undefined" class="stat-secondary">{{singlesCoinFlipPct | percent}}</div>
+        <div *ngIf="singlesCoinFlipPct === undefined" class="stat-secondary">--</div>
         singles
-        <div *ngIf="doublesCoinFlipPct" class="stat-secondary">{{doublesCoinFlipPct | percent}}</div>
-        <div *ngIf="!doublesCoinFlipPct" class="stat">--</div>
+        <div *ngIf="doublesCoinFlipPct !== undefined" class="stat-secondary">{{doublesCoinFlipPct | percent}}</div>
+        <div *ngIf="doublesCoinFlipPct === undefined" class="stat-secondary">--</div>
         doubles
       </div>
     </div>
