@@ -76,17 +76,37 @@ router.get('/get/doubles/:playoff_id', function(req, res) {
 });
 
 // GET won singles games for a player
-router.get('/singles/wins/:player_id', function(req, res) {
-  const query = 'SELECT * FROM Singles_Games WHERE (player1_id = ? OR player2_id = ?) AND winner = ?;';
-  const filter = [parseInt(req.params.player_id), parseInt(req.params.player_id), parseInt(req.params.player_id)];
-  connection.query(query, filter, connection.handleRequest(res,'GET singles wins'));
+router.get('/singles/record/:player_id', function(req, res) {
+  const query = 'select sum(case when (player1_id = ? OR player2_id = ?) AND winner = ? then 1 else 0 end) win_count,' +
+    'sum(case when (player1_id = ? OR player2_id = ?) AND winner != ? then 1 else 0 end) loss_count,' +
+    'sum(case when (player1_id = ? OR player2_id = ?) AND winner = ? then differential else 0 end) plus,' +
+    'sum(case when (player1_id = ? OR player2_id = ?) AND winner != ? then -differential else 0 end) minus from singles_games';
+  const filter = [req.params.player_id, req.params.player_id, req.params.player_id, req.params.player_id,
+    req.params.player_id, req.params.player_id, req.params.player_id, req.params.player_id, req.params.player_id,
+    req.params.player_id, req.params.player_id, req.params.player_id];
+  connection.query(query, filter, function(err, result) {
+    if (err) throw err;
+    else {
+      return res.status(200).send(JSON.stringify(result));
+    }
+  })
 });
 
 // GET won doubles games for a team
-router.get('/doubles/wins/:team_id', function(req, res) {
-  const query = 'SELECT * FROM Doubles_Games WHERE (team1_id = ? OR team2_id = ?) AND winner = ?;';
-  const filter = [parseInt(req.params.team_id), parseInt(req.params.team_id), parseInt(req.params.team_id)];
-  connection.query(query, filter, connection.handleRequest(res,'GET doubles wins'));
+router.get('/doubles/record/:team_id', function(req, res) {
+  const query = 'select sum(case when (team1_id = ? OR team2_id = ?) AND winner = ? then 1 else 0 end) win_count,' +
+    'sum(case when (team1_id = ? OR team2_id = ?) AND winner != ? then 1 else 0 end) loss_count,' +
+    'sum(case when (team1_id = ? OR team2_id = ?) AND winner = ? then differential else 0 end) plus,' +
+    'sum(case when (team1_id = ? OR team2_id = ?) AND winner != ? then -differential else 0 end) minus from doubles_games';
+  const filter = [req.params.team_id, req.params.team_id, req.params.team_id, req.params.team_id,
+    req.params.team_id, req.params.team_id, req.params.team_id, req.params.team_id, req.params.team_id,
+    req.params.team_id, req.params.team_id, req.params.team_id];
+  connection.query(query, filter, function(err, result) {
+    if (err) throw err;
+    else {
+      return res.status(200).send(JSON.stringify(result));
+    }
+  })
 });
 
 
