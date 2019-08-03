@@ -109,19 +109,22 @@ export class PlayerListComponent implements OnInit {
   }
 
   calculatePlayerStats() {
-    console.log(this.players);
+    const playerStatFetches: Observable<Object>[] = [];
     for (const player of this.players) {
       const singlesDoublesObservables: Observable<Object>[] = [];
       singlesDoublesObservables.push(this.fetchCalculatedSinglesStats(player));
       singlesDoublesObservables.push(this.fetchCalculatedDoublesStats(player));
-      forkJoin(singlesDoublesObservables).subscribe((result) => {
+      playerStatFetches.push(forkJoin(singlesDoublesObservables));
+    }
+    forkJoin(...playerStatFetches).subscribe(() => {
+      for (const player of this.players) {
         player.totalWins = player.singlesWins + player.doublesWins;
         player.totalLosses = player.singlesLosses + player.doublesLosses;
         player.totalWinPtg = this.setTotalWinPtg(player.singlesWinPtg, player.doublesWinPtg);
         player.totalAvgDiff = this.setTotalAvgDiff(player.singlesAvgDiff, player.doublesAvgDiff);
-      });
-    }
-    this.sortPlayers('total');
+      }
+      this.sortPlayers('total');
+    });
   }
 
   setTotalWinPtg(singlesPtg, doublesPtg) {
