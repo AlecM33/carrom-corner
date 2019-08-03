@@ -34,7 +34,9 @@ export class PlayerListComponent implements OnInit {
   ngOnInit() {
     this._playerService.getPlayers(true).subscribe((players) => {
       this.players = players;
-      this.calculatePlayerStats();
+      this.players.length < 1 ?
+        this.loading = false
+        : this.calculatePlayerStats();
     });
   }
 
@@ -118,6 +120,7 @@ export class PlayerListComponent implements OnInit {
     }
     forkJoin(...playerStatFetches).subscribe(() => {
       for (const player of this.players) {
+        console.log(player);
         player.totalWins = player.singlesWins + player.doublesWins;
         player.totalLosses = player.singlesLosses + player.doublesLosses;
         player.totalWinPtg = this.setTotalWinPtg(player.singlesWinPtg, player.doublesWinPtg);
@@ -143,6 +146,7 @@ export class PlayerListComponent implements OnInit {
 
   fetchCalculatedSinglesStats(player): Observable<any> {
     return this._gameService.getPlayerSinglesWinsAndLosses(player.id).pipe(tap((result) => {
+      console.log(result);
       player.singlesWins = result[0].win_count;
       player.singlesLosses = result[0].loss_count;
       player.singlesWinPtg = (player.singlesWins + player.singlesLosses) > 0 ? player.singlesWins / (player.singlesWins + player.singlesLosses) : undefined;

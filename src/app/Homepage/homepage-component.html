@@ -1,43 +1,74 @@
 <div id="homepage-container">
   <h2>Office Stats</h2>
-  <div *ngIf="playedSinglesGames.length > 0 || playedDoublesGames.length > 0" class="stats-container">
-    <div class="stat-section">
-      <div class="stat-container">
+  <div *ngIf="!loading && (playedSinglesGames.length > 0 || playedDoublesGames.length > 0)" class="stats-container">
+    <div class="stat-container">
+      <div class="primary-stat">
         <div class="stat">{{playedSinglesGames.length + playedDoublesGames.length}}</div> games played
       </div>
-      <div class="stat-container">
-        <div class="stat">{{coinsSank | number }}</div> coins sank
-      </div>
-      <div class="stat-container">
-        <div class="stat">{{averageDiff | number: '1.1-2'}}</div> average coin differential
+      <div class="secondary-stats">
+        <div class="stat-secondary">{{playedSinglesGames.length}}</div> singles
+        <div class="stat-secondary">{{playedDoublesGames.length}}</div> doubles
       </div>
     </div>
-    <div class="stat-section">
-      <div class="stat-container">
-        <div *ngIf="playedSinglesGames.length > 0" class="stat">{{singlesValidatorPct | percent}}</div>
-        <div *ngIf="playedSinglesGames.length === 0" class="stat">--</div>
-        of <span class="emphasis">singles</span> games are won by the player who <span class="smaller-emphasis"> validated the queen</span>.
+    <div class="stat-container">
+      <div class="primary-stat">
+        <div class="stat">{{singlesCoinsSank + doublesCoinsSank | number }}</div> coins sank
       </div>
-      <div class="stat-container">
-        <div *ngIf="playedDoublesGames.length > 0" class="stat">{{doublesValidatorPct | percent}}</div>
-        <div *ngIf="playedDoublesGames.length === 0" class="stat">--</div>
-        of <span class="emphasis">doubles</span> games are won by the team that <span class="smaller-emphasis"> validated the queen</span>.
+      <div class="secondary-stats">
+        <div class="stat-secondary">{{singlesCoinsSank}}</div> singles
+        <div class="stat-secondary">{{doublesCoinsSank}}</div> doubles
       </div>
     </div>
-    <div class="stat-section">
-      <div class="stat-container">
-        <div *ngIf="playedSinglesGames.length > 0" class="stat">{{singlesCoinFlipPct | percent}}</div>
-        <div *ngIf="playedSinglesGames.length === 0" class="stat">--</div>
-        of <span class="emphasis">singles</span> games are won by the player who <span class="smaller-emphasis"> won the coin toss</span>.
+    <div class="stat-container">
+      <div class="primary-stat">
+        <div *ngIf="totalAvgDiff" class="stat">{{totalAvgDiff | number: '1.1-2'}}</div>
+        <div *ngIf="!totalAvgDiff" class="stat">--</div>
+        average coin differential
       </div>
-      <div class="stat-container">
-        <div *ngIf="playedDoublesGames.length > 0" class="stat">{{doublesCoinFlipPct | percent}}</div>
-        <div *ngIf="playedDoublesGames.length === 0" class="stat">--</div>
-        of <span class="emphasis">doubles</span> games are won by the team that <span class="smaller-emphasis"> won the coin toss</span>.
+      <div class="secondary-stats">
+        <div *ngIf="singlesAvgDiff" class="stat-secondary">{{singlesAvgDiff | number: '1.1-2'}}</div>
+        <div *ngIf="!singlesAvgDiff" class="stat">--</div>
+        singles
+        <div *ngIf="doublesAvgDiff" class="stat-secondary">{{doublesAvgDiff | number: '1.1-2'}}</div>
+        <div *ngIf="!doublesAvgDiff" class="stat">--</div>
+        doubles
+      </div>
+    </div>
+    <div class="stat-container">
+      <div class="primary-stat">
+        <div *ngIf="totalValidatorPct" class="stat">{{this.totalValidatorPct | percent}}</div>
+        <div *ngIf="!totalValidatorPct" class="stat">--</div>
+        queen validator win-rate
+      </div>
+      <div class="secondary-stats">
+        <div *ngIf="singlesValidatorPct" class="stat-secondary">{{singlesValidatorPct | percent}}</div>
+        <div *ngIf="!singlesValidatorPct" class="stat">--</div>
+        singles
+        <div *ngIf="doublesValidatorPct" class="stat-secondary">{{doublesValidatorPct | percent}}</div>
+        <div *ngIf="!doublesValidatorPct" class="stat">--</div>
+        doubles
+      </div>
+    </div>
+    <div class="stat-container">
+      <div class="primary-stat">
+        <div *ngIf="totalCoinFlipPct" class="stat">{{totalCoinFlipPct | percent}}</div>
+        <div *ngIf="!totalCoinFlipPct" class="stat">--</div>
+        coin-flip winner win-rate
+      </div>
+      <div class="secondary-stats">
+        <div *ngIf="singlesCoinFlipPct" class="stat-secondary">{{singlesCoinFlipPct | percent}}</div>
+        <div *ngIf="!singlesCoinFlipPct" class="stat">--</div>
+        singles
+        <div *ngIf="doublesCoinFlipPct" class="stat-secondary">{{doublesCoinFlipPct | percent}}</div>
+        <div *ngIf="!doublesCoinFlipPct" class="stat">--</div>
+        doubles
       </div>
     </div>
   </div>
-  <div *ngIf="playedSinglesGames.length === 0 && playedDoublesGames.length === 0" class="stats-container">
+  <div *ngIf="noGamesPlayed" class="stats-container">
     Play some games to reveal stats.
+  </div>
+  <div *ngIf="loading" class="stats-container">
+    <img class="loading-animation" src="../../../assets/images/gap-spinner-emerald.svg"/>
   </div>
 </div>

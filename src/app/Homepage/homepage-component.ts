@@ -19,8 +19,15 @@ export class HomepageComponent implements OnInit {
     public doublesValidatorPct: number;
     public singlesCoinFlipPct: number;
     public doublesCoinFlipPct: number;
-    public coinsSank = 0;
-    public averageDiff = 0;
+    public singlesCoinsSank = 0;
+    public doublesCoinsSank = 0;
+    public singlesAvgDiff;
+    public doublesAvgDiff;
+    public totalAvgDiff;
+    public totalValidatorPct;
+    public totalCoinFlipPct;
+    public loading = true;
+    public noGamesPlayed = false;
 
     ngOnInit() {
       this._gameService.getPlayedSinglesGames().subscribe((games) => {
@@ -28,8 +35,12 @@ export class HomepageComponent implements OnInit {
         this._gameService.getPlayedDoublesGames().subscribe((games2) => {
           this.playedDoublesGames = games2;
           if (this.playedSinglesGames && this.playedDoublesGames) {
-            this.calculateWinPercentages();
+            if (this.playedSinglesGames.length === 0 && this.playedDoublesGames.length === 0) {
+              this.noGamesPlayed = true;
+            }
             this.calculateTotalStats();
+            this.calculateWinPercentages();
+            this.loading = false;
           }
         });
       });
@@ -42,38 +53,58 @@ export class HomepageComponent implements OnInit {
         this.singlesCoinFlipPct = this.playedSinglesGames.filter((game) => game.coinFlipWinner === game.winner).length
           / this.playedSinglesGames.length;
       }
-
-      if(this.playedDoublesGames && this.playedDoublesGames.length > 0) {
+      if (this.playedDoublesGames && this.playedDoublesGames.length > 0) {
         this.doublesValidatorPct = this.playedDoublesGames.filter((game) => game.validator === game.winner).length
           / this.playedDoublesGames.length;
         this.doublesCoinFlipPct = this.playedDoublesGames.filter((game) => game.coinFlipWinner === game.winner).length
           / this.playedDoublesGames.length;
       }
+      this.totalValidatorPct = this.setTotalValidationPtc(this.singlesValidatorPct, this.doublesValidatorPct);
+      this.totalCoinFlipPct = this.setTotalCoinFlipPtc(this.singlesCoinFlipPct, this.doublesCoinFlipPct);
+      this.totalAvgDiff = this.setTotalAvgDiff(this.singlesAvgDiff, this.doublesAvgDiff);
     }
 
-  delay(ms: number) {
-    return new Promise( resolve => setTimeout(resolve, ms) );
+  setTotalValidationPtc(singlesPtc, doublesPtc) {
+    if (!singlesPtc && ! doublesPtc) { return undefined; }
+    if (singlesPtc && !doublesPtc) { return singlesPtc; }
+    if (!singlesPtc && doublesPtc) { return doublesPtc; }
+    if (singlesPtc && doublesPtc) { return (singlesPtc + doublesPtc) / 2; }
   }
 
-    async calculateTotalStats() {
-      let totalDiff = 0;
-      for (const game of this.playedSinglesGames) {
-        if (game.winner === game.validator) {
-          this.coinsSank += (10 + (9 - (game.differential - 2)));
+  setTotalCoinFlipPtc(singlesPtc, doublesPtc) {
+    if (!singlesPtc && ! doublesPtc) { return '--'; }
+    if (singlesPtc && !doublesPtc) { return singlesPtc; }
+    if (!singlesPtc && doublesPtc) { return doublesPtc; }
+    if (singlesPtc && doublesPtc) { return (singlesPtc + doublesPtc) / 2; }
+  }
 
-        } else {
-          this.coinsSank += (9 + (10 - (game.differential + 2)));
-        }
-        totalDiff += game.differential;
+  setTotalAvgDiff(singlesDiff, doublesDiff) {
+    if (!singlesDiff && ! doublesDiff) { return undefined; }
+    if (singlesDiff && !doublesDiff) { return singlesDiff; }
+    if (!singlesDiff && doublesDiff) { return doublesDiff; }
+    if (singlesDiff && doublesDiff) { return (singlesDiff + doublesDiff) / 2; }
+  }
+
+  calculateTotalStats() {
+    let singlesTotalDiff = 0, doublesTotalDiff = 0;
+    for (const game of this.playedSinglesGames) {
+      if (game.winner === game.validator) {
+        this.singlesCoinsSank += (10 + (9 - (game.differential - 2)));
+
+      } else {
+        this.singlesCoinsSank += (9 + (10 - (game.differential + 2)));
       }
-      for (const game of this.playedDoublesGames) {
-        if (game.winner === game.validator) {
-          this.coinsSank += (10 + (9 - (game.differential - 2)));
-        } else {
-          this.coinsSank += (9 + (10 - (game.differential + 2)));
-        }
-        totalDiff += game.differential;
-      }
-      this.averageDiff = totalDiff / (this.playedSinglesGames.length + this.playedDoublesGames.length);
+      singlesTotalDiff += game.differential;
     }
+    for (const game of this.playedDoublesGames) {
+      if (game.winner === game.validator) {
+        this.doublesCoinsSank += (10 + (9 - (game.differential - 2)));
+      } else {
+        this.doublesCoinsSank += (9 + (10 - (game.differential + 2)));
+      }
+      doublesTotalDiff += game.differential;
+    }
+    if (singlesTotalDiff) this.singlesAvgDiff = singlesTotalDiff / this.playedSinglesGames.length;
+    if (doublesTotalDiff) this.doublesAvgDiff = doublesTotalDiff / this.playedDoublesGames.length;
+  }
 }
