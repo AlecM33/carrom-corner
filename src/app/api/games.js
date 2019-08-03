@@ -46,7 +46,7 @@ router.get('/get/doubles', function(req, res) {
 });
 
 // UPDATE Singles Game
-router.patch('/singles/update/:game_id', function(req, res) {
+router.post('/singles/update/:game_id', function(req, res) {
   const game = req.body;
   const query = 'UPDATE Singles_Games SET winner = ?, loser = ?, validator = ?, coin_flip_winner = ?, differential = ? WHERE id = ?';
   const filter = [game.winner, game.loser, game.validator, game.coin_flip_winner, game.differential, req.params.game_id];
