@@ -12,9 +12,9 @@
       </div>
       <div id="round-robin-graph">
         <div class="graph-rows" *ngFor="let participant of participantsInPool; let i = index">
-          <div class="graph-columns" *ngFor="let element of returnArrayOfLength(i + 1); let j = index">
+          <div class="graph-columns" *ngFor="let element of returnArrayBasedOnRobinType(i + 1); let j = index">
             <div *ngIf="!(j === i)" [ngClass]="{'graph-square': !gameIsPlayed(participantsInPool[j].id, participantsInPool[i].id),
-            'graph-square-filled': gameIsPlayed(participantsInPool[j].id, participantsInPool[i].id)}" (click)="setCurrentGame(participantsInPool[j].id, participantsInPool[i].id)"></div>
+            'graph-square-filled': gameIsPlayed(participantsInPool[j].id, participantsInPool[i].id)}" (click)="setCurrentGame(participantsInPool[j].id, participantsInPool[i].id, (i * participantsInPool.length) + j)"></div>
             <div *ngIf="j === i" class="graph-square-empty"></div>
           </div>
         </div>

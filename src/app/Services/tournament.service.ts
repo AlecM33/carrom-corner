@@ -19,7 +19,7 @@ export class TournamentService {
     populateWithSinglesTournaments(response: any[]): SinglesTournament[] {
         const tournaments = [];
         for (const jsonTourny of response) {
-          const retrievedTourny = new SinglesTournament(jsonTourny['name'], jsonTourny['size'], jsonTourny['rounds']);
+          const retrievedTourny = new SinglesTournament(jsonTourny['name'], jsonTourny['size'], jsonTourny['rounds'], jsonTourny['robin_type']);
           retrievedTourny.id = jsonTourny['id'];
           retrievedTourny.playoffsStarted = jsonTourny['playoffs_started'];
           retrievedTourny.winner = jsonTourny['winner'];
@@ -34,7 +34,7 @@ export class TournamentService {
   populateWithDoublesTournaments(response: any[]): DoublesTournament[] {
       const tournaments = [];
       for (const jsonTourny of response) {
-        const retrievedTourny = new DoublesTournament(jsonTourny['name'], jsonTourny['size'], jsonTourny['rounds']);
+        const retrievedTourny = new DoublesTournament(jsonTourny['name'], jsonTourny['size'], jsonTourny['rounds'], jsonTourny['robin_type']);
         retrievedTourny.id = jsonTourny['id'];
         retrievedTourny.playoffsStarted = jsonTourny['playoffs_started'];
         retrievedTourny.winner = jsonTourny['winner'];
@@ -165,7 +165,8 @@ export class TournamentService {
   addSinglesTournament(newTournament: SinglesTournament): Observable<Object> {
       const payload = { 'name': newTournament.name,
                         'size': newTournament.size,
-                        'rounds': newTournament.rounds
+                        'rounds': newTournament.rounds,
+                        'robin_type': newTournament.robinType
                       };
       return this.http.request('post', '/api/tournaments/singles/post', {
         body: payload,
@@ -178,7 +179,8 @@ export class TournamentService {
   addDoublesTournament(newTournament: DoublesTournament) {
     const payload = { 'name': newTournament.name,
       'size': newTournament.size,
-      'rounds': newTournament.rounds
+      'rounds': newTournament.rounds,
+      'robin_type': newTournament.robinType
     };
     return this.http.request('post', '/api/tournaments/doubles/post', {
       body: payload,

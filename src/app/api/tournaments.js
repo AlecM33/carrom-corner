@@ -6,16 +6,16 @@ const connection = require('./db');
 // POST singles tournament
 router.post('/singles/post', function(req, res) {
   const tournament_info = req.body;
-  const query = 'INSERT INTO Singles_Tournaments VALUES (NULL, ?, false, NULL, NULL, ?, 1, ?, false, true);';
-  const filter = [tournament_info.name, tournament_info.size, tournament_info.rounds];
+  const query = 'INSERT INTO Singles_Tournaments VALUES (NULL, ?, false, NULL, NULL, ?, 1, ?, ?, false, true);';
+  const filter = [tournament_info.name, tournament_info.size, tournament_info.rounds, tournament_info.robin_type];
   connection.query(query, filter, connection.handleRequest(res,'POST singles tournament'));
 });
 
 // POST doubles tournament
 router.post('/doubles/post', function(req, res) {
   const tournament_info = req.body;
-  const query = 'INSERT INTO Doubles_Tournaments VALUES (NULL, ?, false, NULL, NULL, ?, 1, ?, false, true);';
-  const filter = [tournament_info.name, tournament_info.size, tournament_info.rounds];
+  const query = 'INSERT INTO Doubles_Tournaments VALUES (NULL, ?, false, NULL, NULL, ?, 1, ?, ?, false, true);';
+  const filter = [tournament_info.name, tournament_info.size, tournament_info.rounds, tournament_info.robin_type];
   connection.query(query, filter, connection.handleRequest(res,'POST doubles tournament'));
 });
 

@@ -8,6 +8,7 @@ export class DoublesGame {
   public team1Id: number;
   public team2Id: number;
   public winner: number;
+  public graphId: number;
   public loser: number;
   public differential: number;
   public validator: number;

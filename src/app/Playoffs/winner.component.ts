@@ -12,7 +12,7 @@ export class WinnerComponent implements OnInit {
 
   playoffId: any;
   tournamentId: any;
-  tournamentName: any;;
+  tournamentName: any;
   tournyType: any;
   winner: any;
   players: any;

@@ -9,6 +9,7 @@ export class SinglesGame {
   public player2Id: number;
   public winner: number;
   public loser: number;
+  public graphId: number;
   public differential: number;
   public validator: number;
   public coinFlipWinner: number;

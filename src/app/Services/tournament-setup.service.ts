@@ -25,13 +25,16 @@ export class TournamentSetupService {
   constructor(private http: HttpClient, private _gameService: GameService, private router: Router) {}
 
   // Creates rounds, pools, pool placements, and games for the created singles tournament
-  createSinglesData(insertId: number, tournyName: string, roundNumber: number, players: Set<Player>): Observable<any> {
+  createSinglesData(insertId: number, tournyName: string, roundNumber: number, players: Set<Player>, robinType: string): Observable<any> {
     return this.createSinglesRound(roundNumber, players.size, insertId).pipe(concatMap((response: any) => {
       const roundId = response.insertId;
       this.configurePoolParameters(players.size);
       return this.createSinglesPools(roundId, this.sameSizePools).pipe(concatMap((res) => {
         return this.createSinglesPoolPlacements(res, Array.from(players), this.optimalGroupSize).pipe(tap(() => {
           this.createSinglesGames(insertId, roundNumber);
+          if (robinType === 'Double') {
+            this.createSinglesGames(insertId, roundNumber);
+          }
           this.router.navigateByUrl('/tournaments/singles/' + tournyName + '/' + insertId + '/' + roundNumber);
           console.log('All Singles Tournament data successfully created for the first round!');
         }));
@@ -40,9 +43,9 @@ export class TournamentSetupService {
   }
 
   // Creates rounds, pools, pool placements, and games for the created doubles tournament
-  createDoublesData(insertId: number, tournyName: string, roundNumber: number, members: Set<any>) {
+  createDoublesData(insertId: number, tournyName: string, roundNumber: number, members: Set<any>, robinType: string) {
     if (Array.from(members)[0] instanceof Team) {
-      this.createDoublesDataForSecondRound(insertId, tournyName, roundNumber, members);
+      this.createDoublesDataForSecondRound(insertId, tournyName, roundNumber, members, robinType);
     } else {
       const teams: Team[] = this.generateTeams(Array.from(members), insertId);
       this.postTeams(teams).subscribe((response: any) => {
@@ -55,6 +58,9 @@ export class TournamentSetupService {
           this.createDoublesPools(roundId, this.sameSizePools).subscribe((resp: any) => {
             this.createDoublesPoolPlacements(resp, teams, this.optimalGroupSize).subscribe((resp: any) => {
               this.createDoublesGames(insertId, roundNumber);
+              if (robinType === 'Double') {
+                this.createDoublesGames(insertId, roundNumber);
+              }
               this.router.navigateByUrl('/tournaments/doubles/' + tournyName + '/' + insertId + '/' + roundNumber);
             });
           });
@@ -63,13 +69,16 @@ export class TournamentSetupService {
     }
   }
 
-  createDoublesDataForSecondRound(insertId: number, tournyName: string, roundNumber: number, members: Set<Team>) {
+  createDoublesDataForSecondRound(insertId: number, tournyName: string, roundNumber: number, members: Set<Team>, robinType: string) {
     return this.createDoublesRound(roundNumber, members.size, insertId).pipe(concatMap((response: any) => {
       const roundId = response.insertId;
       this.configurePoolParameters(members.size);
       return this.createDoublesPools(roundId, this.sameSizePools).pipe(concatMap((res) => {
         return this.createDoublesPoolPlacements(res, Array.from(members), this.optimalGroupSize).pipe(tap(() => {
           this.createDoublesGames(insertId, roundNumber);
+          if (robinType === 'Double') {
+            this.createDoublesGames(insertId, roundNumber);
+          }
           this.router.navigateByUrl('/tournaments/doubles/' + tournyName + '/' + insertId + '/' + roundNumber);
           console.log('All Doubles Tournament data successfully created for the first round!');
         }));

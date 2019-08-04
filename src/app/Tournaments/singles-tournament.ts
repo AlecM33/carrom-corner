@@ -7,13 +7,15 @@ export class SinglesTournament {
   public winnerName: string;
   public size: number;
   public rounds: number;
+  public robinType: string;
   public ended: boolean;
   public currentRound: number;
 
   constructor(
     name: string,
     size: number,
-    rounds: number
+    rounds: number,
+    robinType: string
   ) {
 
     this.id = null;
@@ -22,6 +24,7 @@ export class SinglesTournament {
     this.winner = null;
     this.size = size;
     this.winnerName = null;
+    this.robinType = robinType;
     this.ended = null;
     this.rounds = rounds;
     this.currentRound = 0;

@@ -70,7 +70,7 @@ export class PlayerListComponent implements OnInit {
 
   sortBySinglesStats(pool) {
     pool.sort((a, b) => {
-        if (a.singlesWinPtg === undefined) return 1;
+        if (a.singlesWinPtg !== undefined && b.singlesWinPtg === undefined) return -1;
         if (a.singlesWinPtg > b.singlesWinPtg) return -1;
         if (b.singlesWinPtg > a.singlesWinPtg) return 1;
         if (a.singlesWins > b.singlesWins) return -1;
@@ -84,7 +84,7 @@ export class PlayerListComponent implements OnInit {
 
   sortByDoublesStats(pool) {
     pool.sort((a, b) => {
-        if (a.doublesWinPtg === undefined) return 1;
+        if (a.doublesWinPtg !== undefined && b.doublesWinPtg === undefined) return -1;
         if (a.doublesWinPtg > b.doublesWinPtg) return -1;
         if (b.doublesWinPtg > a.doublesWinPtg) return 1;
         if (a.doublesWins > b.doublesWins) return -1;
@@ -98,7 +98,7 @@ export class PlayerListComponent implements OnInit {
 
   sortByTotalStats(pool) {
     pool.sort((a, b) => {
-        if (a.totalWinPtg === undefined) return 1;
+        if (a.totalWinPtg !== undefined && b.totalWinPtg === undefined) return -1;
         if (a.totalWinPtg > b.totalWinPtg) return -1;
         if (b.totalWinPtg > a.totalWinPtg) return 1;
         if (a.totalWins > b.totalWins) return -1;

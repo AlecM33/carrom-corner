@@ -65,6 +65,7 @@ CREATE TABLE `Singles_Tournaments`
   `size` int,
   `current_round` int,
   `rounds` int,
+  `robin_type` varchar(255),
   `ended` boolean default false,
   `active` boolean default true
 );
@@ -79,6 +80,7 @@ CREATE TABLE `Doubles_Tournaments`
   `size` int,
   `current_round` int,
   `rounds` int,
+  `robin_type` varchar(255),
   `ended` boolean default false,
   `active` boolean default true
 );

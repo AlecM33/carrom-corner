@@ -34,8 +34,6 @@ export class AddTournamentComponent implements OnInit {
   public players = [];
   public tournament: any;
   public numberOfRounds = 1;
-  public optimalGroupSize: number;
-  public sameSizePools: number;
   public robinType = 'Single';
   public oneRound = true;
   public singleRoundRobin = true;
@@ -105,17 +103,17 @@ export class AddTournamentComponent implements OnInit {
   createTourny() {
     this.createBtn.nativeElement.innerText = 'Creating...';
     if (this.tournyType === 'doubles') {
-      this.tournament = new DoublesTournament(this.tournamentName, this.playersInTourny.size / 2, this.numberOfRounds);
+      this.tournament = new DoublesTournament(this.tournamentName, this.playersInTourny.size / 2, this.numberOfRounds, this.robinType);
       this._tournyService.addDoublesTournament(this.tournament).subscribe((result: any) => {
         this.tournament.id = result.insertId;
-        this._setupService.createDoublesData(result.insertId, this.tournamentName, 1, this.playersInTourny);
+        this._setupService.createDoublesData(result.insertId, this.tournamentName, 1, this.playersInTourny, this.robinType);
         console.log('All Doubles Tournament data successfully created for the first round!');
       });
     } else {
-      this.tournament = new SinglesTournament(this.tournamentName, this.playersInTourny.size, this.numberOfRounds);
+      this.tournament = new SinglesTournament(this.tournamentName, this.playersInTourny.size, this.numberOfRounds, this.robinType);
       this._tournyService.addSinglesTournament(this.tournament).subscribe((result: any) => {
         this.tournament.id = result.insertId;
-        this._setupService.createSinglesData(result.insertId, this.tournamentName, 1, this.playersInTourny).subscribe();
+        this._setupService.createSinglesData(result.insertId, this.tournamentName, 1, this.playersInTourny, this.robinType).subscribe();
       });
     }
   }

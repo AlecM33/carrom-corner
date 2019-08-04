@@ -10,6 +10,7 @@ import {GameService} from '../../Services/game.service';
 import {TeamService} from '../../Services/team.service';
 import {SinglesGame} from '../../Games/singles-game';
 import {environment} from '../../../environments/environment';
+import {TournamentService} from '../../Services/tournament.service';
 
 @Component({
   selector: 'app-view-pool',
@@ -32,6 +33,7 @@ export class ViewPoolComponent implements OnInit {
   public loading = true;
   public currentGame = undefined;
   public gameWinner: any;
+  public robinType: string;
 
   @ViewChild('updateBtn') updateBtn: ElementRef;
 
@@ -39,9 +41,9 @@ export class ViewPoolComponent implements OnInit {
               public http: HttpClient,
               public active_route: ActivatedRoute,
               public router: Router,
-              public _setupService: TournamentSetupService,
               public _gameService: GameService,
               public _teamService: TeamService,
+              public _tournyService: TournamentService
   ) { }
 
   ngOnInit() {
@@ -55,6 +57,9 @@ export class ViewPoolComponent implements OnInit {
       }
     });
     this.tournamentId = parseInt(this.active_route.snapshot.paramMap.get('tourny_id'), 10);
+    this._tournyService.getTournament(this.tournamentId, this.tournyType).subscribe((tourny) => {
+      this.robinType = tourny[0]['robin_type'];
+    });
     this.roundId = parseInt(this.active_route.snapshot.paramMap.get('round_id'), 10);
     this.poolId = parseInt(this.active_route.snapshot.paramMap.get('pool_id'), 10);
     this._playerService.getPlayers().subscribe((players) => {
@@ -200,8 +205,10 @@ export class ViewPoolComponent implements OnInit {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
-  returnArrayOfLength(length) {
-    return new Array(length);
+  returnArrayBasedOnRobinType(length) {
+    return this.robinType === 'Single' ?
+      new Array(length)
+      : new Array(this.participantsInPool.length);
   }
 
   convertToName(id) {
