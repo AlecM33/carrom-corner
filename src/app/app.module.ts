@@ -44,7 +44,8 @@ import {PlayerService} from './Services/player.service';
       { path: 'winner/:type/:tourny_id/:tourny_name/:winner_id', component: WinnerComponent},
       { path: 'tournaments/:type/:name/:tourny_id/:round', component: ViewRoundComponent},
       { path: 'tournaments/:type/:name/:tourny_id/:round/:round_id/:pool_id/:letter', component: ViewPoolComponent},
-      { path: 'stats', component: HomepageComponent}
+      { path: 'stats', component: HomepageComponent},
+      { path: '', component: HomepageComponent}
     ]),
     CoreModule.forRoot()
   ],
