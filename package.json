@@ -6,11 +6,11 @@
     "local": "ng serve --proxy-config proxy.conf.json",
     "start": "node server.js",
     "startbg": "node server.js &",
-    "build": "ng build",
+    "build": "ng build --prod",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "heroku-postbuild": "ng build --aot --prod"
+    "postinstall": "ng build --aot --prod"
   },
   "private": true,
   "dependencies": {
