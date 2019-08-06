@@ -1,6 +1,5 @@
 const environment_prod =  require("../../environments/environment_prod");
 
-port = process.ENV.PORT || 3001;
 var mysql = require('mysql');
 
 // TODO: Configure environments.ts, import environment object, and use that instead
