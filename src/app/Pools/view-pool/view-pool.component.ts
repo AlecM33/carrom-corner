@@ -183,7 +183,7 @@ export class ViewPoolComponent implements OnInit {
         this.currentGame.differential += 1;
       }
     } else {
-      if (this.currentGame.differential > 1) {
+      if (this.currentGame.differential > 0) {
         this.currentGame.differential -= 1;
       }
     }
