@@ -33,9 +33,8 @@ app.use("/api/pools", pool);
 app.use("/api/pool_placements", pool_placements);
 app.use("/api/games", games);
 
-app.get('*', function (req, res) {
-  const index = path.join(__dirname, 'build', 'index.html');
-  res.sendFile(index);
+app.get('/*', function(req,res) {
+  res.sendFile(path.join(__dirname+'/dist/index.html'));
 });
 
 app.use(function(req, res, next) {
