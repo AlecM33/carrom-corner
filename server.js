@@ -35,8 +35,9 @@ app.use("/api/games", games);
 
 app.use(express.static('build'));
 
-app.get('/*', function(req,res) {
-  res.sendFile(path.join(__dirname+'/dist/index.html'));
+app.get('*',function(req,res){
+  res.sendFile(path.join(__dirname+'/build/index.html'));
+  //__dirname : It will resolve to your project folder.
 });
 
 app.use(function(req, res, next) {
