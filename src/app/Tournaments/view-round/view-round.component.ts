@@ -286,11 +286,12 @@ export class ViewRoundComponent implements OnInit {
         this.recordPools = [];
         this.loading = true;
         this.allGamesPlayed = false;
+        console.log(this.tournament);
         this.tournyType === 'singles' ?
-          this._setupService.createSinglesData(this.tournamentId, this.tournamentName, 2, nextRoundAdvancers, this.tournament.robinType).subscribe((nav) => {
+          this._setupService.createSinglesData(this.tournamentId, this.tournamentName, 2, nextRoundAdvancers, this.tournament[0]['robin_type']).subscribe((nav) => {
             this.prepareRound();
           })
-          : this._setupService.createDoublesDataForSecondRound(this.tournamentId, this.tournamentName, 2, nextRoundAdvancers, this.tournament.robinType).subscribe((nav) => {
+          : this._setupService.createDoublesDataForSecondRound(this.tournamentId, this.tournamentName, 2, nextRoundAdvancers, this.tournament[0]['robin_type']).subscribe((nav) => {
             this.prepareRound();
           });
       }
