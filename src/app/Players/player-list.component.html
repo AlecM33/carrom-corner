@@ -45,7 +45,6 @@
     <th>Losses</th>
     <th>Winrate</th>
     <th>Avg Coin +/-</th>
-    <th></th>
   </tr>
   </thead>
   <tbody>
@@ -59,7 +58,6 @@
     <td *ngIf="player.doublesWinPtg === undefined">N/A</td>
     <td *ngIf="player.doublesAvgDiff !== undefined">{{player.doublesAvgDiff | number: '1.1-2'}}</td>
     <td *ngIf="player.doublesAvgDiff === undefined">N/A</td>
-    <td><a (click)='delete($event, player)' class="content-link">Delete</a></td>
   </tr>
   </tbody>
 </table>
@@ -72,7 +70,6 @@
     <th>Losses</th>
     <th>Winrate</th>
     <th>Avg Coin +/-</th>
-    <th></th>
   </tr>
   </thead>
   <tbody>
@@ -86,7 +83,6 @@
     <td *ngIf="player.totalWinPtg === undefined">N/A</td>
     <td *ngIf="player.totalAvgDiff !== undefined">{{player.totalAvgDiff | number: '1.1-2'}}</td>
     <td *ngIf="player.totalAvgDiff === undefined">N/A</td>
-    <td><a (click)='delete($event, player)' class="content-link">Delete</a></td>
   </tr>
   </tbody>
 </table>

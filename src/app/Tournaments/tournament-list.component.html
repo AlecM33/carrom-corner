@@ -6,7 +6,6 @@
     <th>Players</th>
     <th>Winner</th>
     <th></th>
-    <th></th>
   </tr>
   </thead>
   <tbody>
@@ -15,7 +14,6 @@
     <td>{{tournament.size}}</td>
     <td *ngIf="tournament.winner">{{tournament.winnerName}}</td>
     <td class='in-progress' *ngIf="!tournament.winner">In progress...</td>
-    <td><a (click)='deleteTournament($event, tournament)' class="content-link">Delete</a></td>
     <td *ngIf="tournament.playoffsStarted"><a (click)='viewPlayoff($event, tournament)' class="content-link">View</a></td>
     <td *ngIf="!tournament.playoffsStarted"><a (click)='viewTournament($event, tournament)' class="content-link">View</a></td>
   </tr>
