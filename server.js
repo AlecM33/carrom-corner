@@ -34,10 +34,10 @@ app.use("/api/pool_placements", pool_placements);
 app.use("/api/games", games);
 
 // Serve only the static files form the dist directory
-app.use(express.static('/dist'));
+app.use(express.static('./dist/carrom-app'));
 
 app.get('/*', function(req,res) {
-  res.sendFile(path.join(__dirname,'/dist/index.html'));
+  res.sendFile(path.join(__dirname,'/dist/carrom-app/index.html'));
 });
 
 app.use(function(req, res, next) {

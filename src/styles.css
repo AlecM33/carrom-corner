@@ -761,8 +761,8 @@ input[type=text]:hover {
 }
 
 .filler {
-  width: 97px;
-  height: 107px;
+  width: 77px;
+  height: 87px;
 }
 
 .y-axis {
@@ -772,8 +772,8 @@ input[type=text]:hover {
   font-size: 12px;
   margin-right: 1em;
   color: #f7e5c5;
-  width: 97px;
-  height: 97px;
+  width: 75px;
+  height: 75px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -786,8 +786,8 @@ input[type=text]:hover {
   align-items: center;
   font-size: 12px;
   color: #f7e5c5;
-  width: 97px;
-  height: 97px;
+  width: 77px;
+  height: 77px;
 }
 
 #round-robin-graph {
@@ -797,15 +797,15 @@ input[type=text]:hover {
 
 .graph-square {
   cursor: pointer;
-  width: 95px;
-  height: 95px;
+  width: 75px;
+  height: 75px;
   border: 1px solid #828181;
 }
 
 .graph-square-filled {
   cursor: pointer;
-  width: 95px;
-  height: 95px;
+  width: 75px;
+  height: 75px;
   border: 1px solid #828181;
   background-image: url('/assets/images/checkmark-gold.svg');
   background-repeat: no-repeat;
@@ -818,8 +818,8 @@ input[type=text]:hover {
 
 .graph-square-empty {
   pointer-events: none;
-  width: 95px;
-  height: 95px;
+  width: 75px;
+  height: 75px;
   border: 1px solid #828181;
   background-color: #17191c;
   border-collapse: collapse;
