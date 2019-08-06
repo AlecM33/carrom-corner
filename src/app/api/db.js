@@ -1,4 +1,4 @@
-const environment_prod =  require("../../environments/environment.prod");
+const environment_prod =  require("../../environments/environment_prod");
 
 port = process.ENV.PORT || 3001;
 var mysql = require('mysql');
