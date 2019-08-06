@@ -20,7 +20,6 @@
     <th>Losses</th>
     <th>Winrate</th>
     <th>Avg Coin +/-</th>
-    <th></th>
   </tr>
   </thead>
   <tbody>
@@ -34,7 +33,6 @@
     <td *ngIf="player.singlesWinPtg === undefined">N/A</td>
     <td *ngIf="player.singlesAvgDiff !== undefined">{{player.singlesAvgDiff | number: '1.1-2'}}</td>
     <td *ngIf="player.singlesAvgDiff === undefined">N/A</td>
-    <td><a (click)='delete($event, player)' class="content-link">Delete</a></td>
   </tr>
   </tbody>
 </table>

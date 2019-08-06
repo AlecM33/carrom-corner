@@ -142,7 +142,7 @@ export class ViewPoolComponent implements OnInit {
     } else {
       game = this.poolGames.find((game) => game.team1Id === participant1Id && game.team2Id === participant2Id);
     }
-    return game && game.winner && game.differential;
+    return game && game.winner && (game.differential !== undefined);
   }
 
   setCurrentGame(participant1Id: number, participant2Id: number) {
