@@ -151,8 +151,8 @@ export class PlayerListComponent implements OnInit {
     player.singlesLosses = 0;
     return this._gameService.getPlayerSinglesWinsAndLosses(player.id).pipe(tap((result) => {
       console.log(result);
-      if (result[0].win_count !== null)  player.singlesWins = result[0].win_count;
-      if (result[0].loss_count !== null) player.singlesLosses = result[0].loss_count;
+      if (result[0].win_count > 0)  player.singlesWins = result[0].win_count;
+      if (result[0].loss_count > 0) player.singlesLosses = result[0].loss_count;
       player.singlesWinPtg = (player.singlesWins + player.singlesLosses) > 0 ? player.singlesWins / (player.singlesWins + player.singlesLosses) : undefined;
       player.singlesAvgDiff = (player.singlesWins + player.singlesLosses) > 0 ? ((result[0].plus + result[0].minus) / (player.singlesWins + player.singlesLosses)) : undefined;
     }));
