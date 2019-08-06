@@ -36,6 +36,8 @@ export class ViewPoolComponent implements OnInit {
   public robinType: string;
 
   @ViewChild('updateBtn') updateBtn: ElementRef;
+  @ViewChild('poolModal') poolModal: ElementRef;
+
 
   constructor(public _playerService: PlayerService,
               public http: HttpClient,
@@ -75,6 +77,17 @@ export class ViewPoolComponent implements OnInit {
       }
     });
   }
+
+  hideModal() {
+    this.poolModal.nativeElement.className = 'modal hidden';
+  }
+
+  openModal() {
+    this.updateBtn.nativeElement.innerText = 'Update Game';
+    this.updateBtn.nativeElement.className = 'app-btn';
+    this.poolModal.nativeElement.className = 'modal';
+  }
+
 
   backToRound() {
     this.router.navigateByUrl('/tournaments/' + this.tournyType + '/' + this.tournamentName + '/' + this.tournamentId + '/' + this.currentRound);
@@ -140,6 +153,7 @@ export class ViewPoolComponent implements OnInit {
     } else {
       this.currentGame = this.poolGames.find((game) => game.team1Id === participant1Id && game.team2Id === participant2Id);
     }
+    this.openModal();
   }
 
   setGameWinner(winnerId: number, loserId: number) {
@@ -194,6 +208,7 @@ export class ViewPoolComponent implements OnInit {
           }
         this.updateBtn.nativeElement.innerText = 'Updated';
         this.updateBtn.nativeElement.className = 'app-btn confirmed';
+        this.hideModal();
       });
     }
   }
