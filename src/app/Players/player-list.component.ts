@@ -147,6 +147,8 @@ export class PlayerListComponent implements OnInit {
   }
 
   fetchCalculatedSinglesStats(player): Observable<any> {
+    player.singlesWins = 0;
+    player.singlesLosses = 0;
     return this._gameService.getPlayerSinglesWinsAndLosses(player.id).pipe(tap((result) => {
       console.log(result);
       player.singlesWins = result[0].win_count;
