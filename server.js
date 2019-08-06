@@ -33,6 +33,8 @@ app.use("/api/pools", pool);
 app.use("/api/pool_placements", pool_placements);
 app.use("/api/games", games);
 
+app.use(express.static('build'));
+
 app.get('/*', function(req,res) {
   res.sendFile(path.join(__dirname+'/dist/index.html'));
 });
