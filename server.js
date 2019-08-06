@@ -33,13 +33,12 @@ app.use("/api/pools", pool);
 app.use("/api/pool_placements", pool_placements);
 app.use("/api/games", games);
 
-app.use(express.static('build'));
 
-app.get('*',function(req,res){
-  res.sendFile(path.join(__dirname+'/build/index.html'));
-  //__dirname : It will resolve to your project folder.
+app.use(express.static(__dirname + '/dist/carrom-app'));
+app.get('/*', function(req,res) {
+  res.sendFile(path.join(__dirname + '/dist/carrom-app/index.html'));
+
 });
-
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
