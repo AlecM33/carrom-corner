@@ -10,8 +10,8 @@ if (process.env.NODE_ENV === 'production') {
   connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: 'CHANGEME',
-    database: 'CHANGEME'
+    password: 'Ellie112196',
+    database: 'carrom-corner'
   });
 }
 
