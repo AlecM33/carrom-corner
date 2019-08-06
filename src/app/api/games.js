@@ -80,7 +80,7 @@ router.get('/singles/record/:player_id', function(req, res) {
   const query = 'select sum(case when (player1_id = ? OR player2_id = ?) AND winner = ? then 1 else 0 end) win_count,' +
     'sum(case when (player1_id = ? OR player2_id = ?) AND winner != ? then 1 else 0 end) loss_count,' +
     'sum(case when (player1_id = ? OR player2_id = ?) AND winner = ? then differential else 0 end) plus,' +
-    'sum(case when (player1_id = ? OR player2_id = ?) AND winner != ? then -differential else 0 end) minus from singles_games';
+    'sum(case when (player1_id = ? OR player2_id = ?) AND winner != ? then -differential else 0 end) minus from Singles_Games';
   const filter = [req.params.player_id, req.params.player_id, req.params.player_id, req.params.player_id,
     req.params.player_id, req.params.player_id, req.params.player_id, req.params.player_id, req.params.player_id,
     req.params.player_id, req.params.player_id, req.params.player_id];
@@ -97,7 +97,7 @@ router.get('/doubles/record/:team_id', function(req, res) {
   const query = 'select sum(case when (team1_id = ? OR team2_id = ?) AND winner = ? then 1 else 0 end) win_count,' +
     'sum(case when (team1_id = ? OR team2_id = ?) AND winner != ? then 1 else 0 end) loss_count,' +
     'sum(case when (team1_id = ? OR team2_id = ?) AND winner = ? then differential else 0 end) plus,' +
-    'sum(case when (team1_id = ? OR team2_id = ?) AND winner != ? then -differential else 0 end) minus from doubles_games';
+    'sum(case when (team1_id = ? OR team2_id = ?) AND winner != ? then -differential else 0 end) minus from Doubles_Games';
   const filter = [req.params.team_id, req.params.team_id, req.params.team_id, req.params.team_id,
     req.params.team_id, req.params.team_id, req.params.team_id, req.params.team_id, req.params.team_id,
     req.params.team_id, req.params.team_id, req.params.team_id];
