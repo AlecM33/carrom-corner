@@ -142,7 +142,6 @@ export class TournamentService {
   }
 
   updateSinglesTournamentEnded(tournyId: number): Observable<any> {
-      console.log(tournyId);
     const payload = {};
     return this.http.request('post', '/api/tournaments/singles/ended/' + tournyId, {
       body: payload,

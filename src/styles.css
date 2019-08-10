@@ -81,7 +81,7 @@
     margin-left: 1rem;
   }
 
-  .player-table {
+  .player-table, .tourny-table {
     display: none;
   }
 
@@ -112,6 +112,15 @@
 
   .player-list-table {
     width: 100%;
+  }
+
+  .mobile-tourny-table .mobile-table-header {
+    font-size: 1rem;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: block;
+    text-align: left;
   }
 
 }
@@ -162,7 +171,7 @@
     margin: 0 auto;
   }
 
-  .mobile-player-table {
+  .mobile-player-table, .mobile-tourny-table {
     display: none;
   }
 
