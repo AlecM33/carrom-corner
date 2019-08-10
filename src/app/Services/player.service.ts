@@ -36,7 +36,6 @@ export class PlayerService {
 
     // Sends a GET request to the database for all players
     public getPlayers(forceRefresh= false): Observable<Player[]> {
-    console.log(forceRefresh);
       if (forceRefresh || this._players.length < 1) {
         return this.http.request('get', '/api/players/get', {
           headers: {

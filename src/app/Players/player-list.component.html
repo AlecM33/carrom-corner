@@ -11,7 +11,7 @@
     </div>
   </div>
 </div>
-<table *ngIf="!loading && statChoice === 'singles'" class='table table-dark app-table'>
+<table *ngIf="!loading && statChoice === 'singles'" class='table table-dark app-table player-table'>
   <thead>
   <tr>
     <th>Office Rank</th>
@@ -20,7 +20,6 @@
     <th>Losses</th>
     <th>Winrate</th>
     <th>Avg Coin +/-</th>
-    <th></th>
   </tr>
   </thead>
   <tbody>
@@ -34,11 +33,26 @@
     <td *ngIf="player.singlesWinPtg === undefined">N/A</td>
     <td *ngIf="player.singlesAvgDiff !== undefined">{{player.singlesAvgDiff | number: '1.1-2'}}</td>
     <td *ngIf="player.singlesAvgDiff === undefined">N/A</td>
-    <td><a (click)='delete($event, player)' class="content-link">Delete</a></td>
   </tr>
   </tbody>
 </table>
-<table *ngIf="!loading && statChoice === 'doubles'" class='table table-dark app-table'>
+<div *ngIf="!loading && statChoice === 'singles'" class='mobile-player-table'>
+  <div *ngFor='let player of players'>
+    <div class="mobile-table-header">
+      <span>{{players.indexOf(player) + 1}}</span>
+      <span *ngIf="!player.nickname">{{player.name}}</span>
+      <span *ngIf="player.nickname">{{player.nickname}}</span>
+    </div>
+    <div class="mobile-table-content">
+      <span *ngIf="player.singlesWins !==undefined">{{player.singlesWins}} Wins</span>
+      <span *ngIf="player.singlesLosses !== undefined">{{player.singlesLosses}} Losses</span>
+      <span *ngIf="player.singlesWinPtg === undefined">N/A</span>
+      <span *ngIf="player.singlesAvgDiff !== undefined">{{player.singlesAvgDiff | number: '1.1-2'}} Avg +/-</span>
+      <span *ngIf="player.singlesAvgDiff === undefined">N/A</span>
+    </div>
+  </div>
+</div>
+<table *ngIf="!loading && statChoice === 'doubles'" class='table table-dark app-table player-table'>
   <thead>
   <tr>
     <th>Office Rank</th>
@@ -47,7 +61,6 @@
     <th>Losses</th>
     <th>Winrate</th>
     <th>Avg Coin +/-</th>
-    <th></th>
   </tr>
   </thead>
   <tbody>
@@ -61,11 +74,26 @@
     <td *ngIf="player.doublesWinPtg === undefined">N/A</td>
     <td *ngIf="player.doublesAvgDiff !== undefined">{{player.doublesAvgDiff | number: '1.1-2'}}</td>
     <td *ngIf="player.doublesAvgDiff === undefined">N/A</td>
-    <td><a (click)='delete($event, player)' class="content-link">Delete</a></td>
   </tr>
   </tbody>
 </table>
-<table *ngIf="!loading && statChoice === 'total'" class='table table-dark app-table'>
+<div *ngIf="!loading && statChoice === 'doubles'" class='mobile-player-table'>
+  <div *ngFor='let player of players'>
+    <div class="mobile-table-header">
+      <span>{{players.indexOf(player) + 1}}</span>
+      <span *ngIf="!player.nickname">{{player.name}}</span>
+      <span *ngIf="player.nickname">{{player.nickname}}</span>
+    </div>
+    <div class="mobile-table-content">
+      <span *ngIf="player.doublesWins !==undefined">{{player.doublesWins}} Wins</span>
+      <span *ngIf="player.doublesLosses !== undefined">{{player.doublesLosses}} Losses</span>
+      <span *ngIf="player.doublesWinPtg === undefined">N/A</span>
+      <span *ngIf="player.doublesAvgDiff !== undefined">{{player.doublesAvgDiff | number: '1.1-2'}} Avg +/-</span>
+      <span *ngIf="player.doublesAvgDiff === undefined">N/A</span>
+    </div>
+  </div>
+</div>
+<table *ngIf="!loading && statChoice === 'total'" class='table table-dark app-table player-table'>
   <thead>
   <tr>
     <th>Office Rank</th>
@@ -74,7 +102,6 @@
     <th>Losses</th>
     <th>Winrate</th>
     <th>Avg Coin +/-</th>
-    <th></th>
   </tr>
   </thead>
   <tbody>
@@ -88,10 +115,25 @@
     <td *ngIf="player.totalWinPtg === undefined">N/A</td>
     <td *ngIf="player.totalAvgDiff !== undefined">{{player.totalAvgDiff | number: '1.1-2'}}</td>
     <td *ngIf="player.totalAvgDiff === undefined">N/A</td>
-    <td><a (click)='delete($event, player)' class="content-link">Delete</a></td>
   </tr>
   </tbody>
 </table>
+<div *ngIf="!loading && statChoice === 'total'" class='mobile-player-table'>
+  <div *ngFor='let player of players'>
+    <div class="mobile-table-header">
+      <span>{{players.indexOf(player) + 1}}</span>
+      <span *ngIf="!player.nickname">{{player.name}}</span>
+      <span *ngIf="player.nickname">{{player.nickname}}</span>
+    </div>
+    <div class="mobile-table-content">
+      <span *ngIf="player.totalWins !==undefined">{{player.totalWins}} Wins</span>
+      <span *ngIf="player.totalLosses !== undefined">{{player.totalLosses}} Losses</span>
+      <span *ngIf="player.totalWinPtg === undefined">N/A</span>
+      <span *ngIf="player.totalAvgDiff !== undefined">{{player.totalAvgDiff | number: '1.1-2'}} Avg +/-</span>
+      <span *ngIf="player.totalAvgDiff === undefined">N/A</span>
+    </div>
+  </div>
+</div>
 <div *ngIf="loading" class="loading-container">
   <img class="loading-animation" src="../../../assets/images/gap-spinner-emerald.svg"/>
   <h3>Calculating the latest player stats, please wait...</h3>

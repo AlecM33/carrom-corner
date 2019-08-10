@@ -1,13 +1,19 @@
+const environment_prod =  require("../../environments/environment_prod");
+
 var mysql = require('mysql');
-port = process.env.PORT || 3001;
 
 // TODO: Configure environments.ts, import environment object, and use that instead
-var connection = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: 'Ellie112196',
-  database: 'carrom-corner'
-});
+var connection;
+if (process.env.NODE_ENV === 'production') {
+  connection = mysql.createConnection(environment_prod);
+} else {
+  connection = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: 'Ellie112196',
+    database: 'carrom-corner'
+  });
+}
 
 // sneakily extend our mysql connection object to handle the requests it receives.
 // reduces boilerplate like A LOT. Also throw an easy to manage and centralized

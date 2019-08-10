@@ -107,7 +107,6 @@ export class AddTournamentComponent implements OnInit {
       this._tournyService.addDoublesTournament(this.tournament).subscribe((result: any) => {
         this.tournament.id = result.insertId;
         this._setupService.createDoublesData(result.insertId, this.tournamentName, 1, this.playersInTourny, this.robinType);
-        console.log('All Doubles Tournament data successfully created for the first round!');
       });
     } else {
       this.tournament = new SinglesTournament(this.tournamentName, this.playersInTourny.size, this.numberOfRounds, this.robinType);

@@ -163,12 +163,12 @@ export class ViewRoundComponent implements OnInit {
               playerRecords.push(new PlayerRecord(poolId, null, placement['team_id']));
             }
             this.recordPools.push(playerRecords);
-          });
-          this._gameService.getDoublesGamesInPool(poolId, this.tournamentId, this.roundId).subscribe((games) => {
-            this.allGamesPlayed = !games.find((game) => !game.winner);
-            this.gamePools.push(games);
-            this.calculateTeamRecords(games);
-            this.sortPools();
+            this._gameService.getDoublesGamesInPool(poolId, this.tournamentId, this.roundId).subscribe((games) => {
+              this.allGamesPlayed = !games.find((game) => !game.winner);
+              this.gamePools.push(games);
+              this.calculateTeamRecords(games);
+              this.sortPools();
+            });
           });
         }
       });
@@ -286,7 +286,6 @@ export class ViewRoundComponent implements OnInit {
         this.recordPools = [];
         this.loading = true;
         this.allGamesPlayed = false;
-        console.log(this.tournament);
         this.tournyType === 'singles' ?
           this._setupService.createSinglesData(this.tournamentId, this.tournamentName, 2, nextRoundAdvancers, this.tournament[0]['robin_type']).subscribe((nav) => {
             this.prepareRound();

@@ -2,47 +2,73 @@
 <div>
   <nav class='navbar navbar-lg navbar-dark bg-dark app-navbar'>
     <div class="navbar-content">
-      <svg height="60" width="60">
-        <circle class="striker" cx="30" cy="30" r="30" fill="#f7e5c5" />
-        <circle class="striker" cx="30" cy="30" r="22" stroke="darkgreen" stroke-width="1" fill="#f7e5c5" />
-        <circle class="striker" cx="30" cy="30" r="20" stroke="darkgreen" stroke-width="1" fill="#f7e5c5" />
-        <circle class="striker" cx="30" cy="30" r="18" stroke="darkgreen" stroke-width="1" fill="#f7e5c5" />
-        <circle class="striker" cx="30" cy="30" r="10" stroke="red" stroke-width="1" fill="#f7e5c5" />
-        <circle class="striker" cx="30" cy="30" r="8" stroke="red" stroke-width="1" fill="#f7e5c5" />
-        <circle class="striker" cx="30" cy="30" r="6" stroke="red" stroke-width="1" fill="#f7e5c5" />
-        <circle class="striker" cx="30" cy="30" r="4" stroke="red" stroke-width="1" fill="#f7e5c5" />
-        <circle class="striker" cx="30" cy="30" r="2" stroke="red" stroke-width="1" fill="#f7e5c5" />
-      </svg>
-      <a class='navbar-brand app-title'>{{ title }}</a>
-      <ul class='nav navbar-nav navbar-expand'>
-        <li class='nav-links'>
-          <a class='nav-link' [routerLink]="['/tournaments']">Tournaments
-            <img class="icon icon-bracket" src="../assets/images/bracket_icon.svg"/>
+        <button id="hamburger" (click)="toggleHamburgerMenu()" class="hamburger hamburger--collapse" type="button">
+          <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+          </span>
+        </button>
+      <div id="mobile-menu" class="mobile-menu hidden">
+        <div class='mobile-links'>
+          <div class="nav-item dropdown">
+            <a class="nav-link-mobile dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Tournaments
+              <img class="icon icon-bracket" src="../assets/images/bracket_icon_emerald.svg"/>
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <a class="dropdown-item" (click)="navigateAndCollapse('/tournaments')">View Tournaments</a>
+              <a class="dropdown-item" (click)="navigateAndCollapse('/tournament/singles/new')">New Singles Tournament
+                <img class="icon icon-singles" src="../assets/images/singles_logo.svg"/></a>
+
+              <a class="dropdown-item" (click)="navigateAndCollapse('/tournament/doubles/new')">New Doubles Tournament
+                <img class="icon icon-doubles" src="../assets/images/doubles_logo.svg"/></a>
+            </div>
+          </div>
+          <div class='nav-item'>
+            <a class='nav-link-mobile' (click)="navigateAndCollapse('/players')">Players
+              <img class="icon icon-players" src="../assets/images/players.svg"/>
+            </a>
+          </div>
+          <div class='nav-item'>
+            <a class='nav-link-mobile' (click)="navigateAndCollapse('/stats')">Stats
+              <img class="icon icon-stats" src="../assets/images/stats_logo_2.svg"/>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="app-logo">
+        <img class="striker" src="../assets/images/striker.svg"/>
+        <a class='navbar-brand app-title'>{{ title }}</a>
+      </div>
+      <ul class='nav navbar-nav navbar-expand desktop-links'>
+        <li class="nav-item dropdown nav-links">
+          <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Tournaments
+            <img class="icon icon-bracket" src="../assets/images/bracket_icon_emerald.svg"/>
           </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <a class="dropdown-item" [routerLink]="['/tournaments']">View Tournaments</a>
+            <a class="dropdown-item" [routerLink]="['/tournament/singles/new']">New Singles Tournament
+              <img class="icon icon-singles" src="../assets/images/singles_logo.svg"/></a>
+
+            <a class="dropdown-item" [routerLink]="['/tournament/doubles/new']">New Doubles Tournament
+              <img class="icon icon-doubles" src="../assets/images/doubles_logo.svg"/></a>
+          </div>
         </li>
-        <li class='nav-links'>
+        <li class='nav-item nav-links'>
           <a class='nav-link' [routerLink]="['/players']">Players
             <img class="icon icon-players" src="../assets/images/players.svg"/>
           </a>
         </li>
-        <li class='nav-links'>
+        <li class='nav-item nav-links'>
           <a class='nav-link' [routerLink]="['/stats']">Stats
             <img class="icon icon-stats" src="../assets/images/stats_logo_2.svg"/>
           </a>
         </li>
       </ul>
-      <span class="create-buttons">
-        <button class='main-buttons create-button' [routerLink]="['/tournament/singles/new']">+ Singles Tournament
-          <img class="icon icon-singles" src="../assets/images/singles_logo.svg"/>
-        </button>
-        <button class='main-buttons create-button' [routerLink]="['/tournament/doubles/new']">+ Doubles Tournament
-          <img class="icon icon-doubles" src="../assets/images/doubles_logo.svg"/>
-        </button>
-      </span>
     </div>
   </nav>
 </div>
-<div class='page-content'>
+<div id='page-content'>
   <router-outlet></router-outlet>
 </div>
 

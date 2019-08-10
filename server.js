@@ -33,10 +33,12 @@ app.use("/api/pools", pool);
 app.use("/api/pool_placements", pool_placements);
 app.use("/api/games", games);
 
-app.get('/*', function(req,res) {
-  res.sendFile(path.join(__dirname+'/dist/index.html'));
-});
 
+app.use(express.static(__dirname + '/dist/'));
+app.get('/*', function(req,res) {
+  res.sendFile(path.join(__dirname + '/dist/index.html'));
+
+});
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -47,4 +49,4 @@ app.use(function(req, res, next) {
 app.set('port', 3001);
 
 // Start the app by listening on the default Heroku port
-app.listen(3001);
+app.listen(process.env.PORT || 3001);

@@ -120,7 +120,6 @@ export class PlayerListComponent implements OnInit {
     }
     forkJoin(...playerStatFetches).subscribe(() => {
       for (const player of this.players) {
-        console.log(player);
         player.totalWins = player.singlesWins + player.doublesWins;
         player.totalLosses = player.singlesLosses + player.doublesLosses;
         player.totalWinPtg = this.setTotalWinPtg(player.singlesWinPtg, player.doublesWinPtg);
@@ -138,8 +137,6 @@ export class PlayerListComponent implements OnInit {
   }
 
   setTotalAvgDiff(singlesDiff, doublesDiff) {
-    console.log(singlesDiff);
-    console.log(doublesDiff);
     if (!(typeof singlesDiff === 'number') && !(typeof doublesDiff === 'number')) { return undefined; }
     if (typeof singlesDiff === 'number' && !(typeof doublesDiff === 'number')) { return singlesDiff; }
     if (!(typeof singlesDiff === 'number') && typeof doublesDiff === 'number') { return doublesDiff; }
@@ -147,10 +144,11 @@ export class PlayerListComponent implements OnInit {
   }
 
   fetchCalculatedSinglesStats(player): Observable<any> {
+    player.singlesWins = 0;
+    player.singlesLosses = 0;
     return this._gameService.getPlayerSinglesWinsAndLosses(player.id).pipe(tap((result) => {
-      console.log(result);
-      player.singlesWins = result[0].win_count;
-      player.singlesLosses = result[0].loss_count;
+      if (result[0].win_count > 0)  player.singlesWins = result[0].win_count;
+      if (result[0].loss_count > 0) player.singlesLosses = result[0].loss_count;
       player.singlesWinPtg = (player.singlesWins + player.singlesLosses) > 0 ? player.singlesWins / (player.singlesWins + player.singlesLosses) : undefined;
       player.singlesAvgDiff = (player.singlesWins + player.singlesLosses) > 0 ? ((result[0].plus + result[0].minus) / (player.singlesWins + player.singlesLosses)) : undefined;
     }));

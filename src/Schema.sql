@@ -3,13 +3,6 @@ CREATE TABLE `Players`
   `id` int PRIMARY KEY AUTO_INCREMENT,
   `name` varchar(255) UNIQUE NOT NULL,
   `nickname` varchar(255),
-  `elo` double,
-  `doubles_elo` double,
-  `wins` int,
-  `losses` int,
-  `total_diff` int,
-  `singles_played` int,
-  `doubles_played` int,
   `tournament_wins` int
 );
 
