@@ -5,12 +5,9 @@
         <div>
           <input id="name" type="text" placeholder="My {{tournyType}} tournament" name="name" [(ngModel)]="tournamentName"/>
         </div>
-        <div class='next-button'>
-          <button type="submit" class="main-buttons create-button" #createBtn>Create</button>
-        </div>
+        <button type="submit" class="app-btn" #createBtn>Create</button>
       </div>
       <div class='validation-notices'>
-        <div *ngIf="errorPresent" id="exclamation">!</div>
         <div id="error" *ngIf="!nameBlank && nameForbidden">
           There is already a tournament with that name.
         </div>
@@ -46,7 +43,7 @@
     </div>
   </form>
   <div class="addPlayersList">
-    <div class="player-list-table" [ngStyle]="{'height.px': (this.maxSize * 50) + 100}">
+    <div class="player-list-table">
       <div class="player-pool-header">
         <h2>Player Pool</h2>
         <a *ngIf="this.playersToAdd.size > 0" (click)="addAll($event)" class="content-link">+ Add All Players</a>
@@ -57,7 +54,7 @@
         </td>
       </div>
     </div>
-    <div [ngStyle]="{'height.px': (this.maxSize * 50) + 100}" class="player-list-table">
+    <div class="player-list-table">
       <h2>Current Roster: {{playersInTourny.size}} players</h2>
       <div class="player-card" (click)="removePlayer(player)" *ngFor="let player of playersInTourny">
         <td>{{player.name}}</td>

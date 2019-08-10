@@ -9,7 +9,7 @@
       <div [ngClass]="{'hidden': currentGame === undefined}" id="game-result-form">
         <div class="choices">
           <div *ngIf="currentGame" class="playoff-choice-container">
-            <h2>Winner</h2>
+            <h3>Winner</h3>
             <div class="choice-button-container">
               <div *ngIf="tournyType === 'singles'" (click)="setGameWinner(currentGame.player1Id, currentGame.player2Id)" [className]="currentGame.winner === currentGame.player1Id ? 'choice selected' : 'choice'">{{convertToName(currentGame.player1Id)}}</div>
               <div *ngIf="tournyType === 'doubles'" (click)="setGameWinner(currentGame.team1Id, currentGame.team2Id)" [className]="currentGame.winner === currentGame.team1Id ? 'choice selected' : 'choice'">{{convertToName(currentGame.team1Id)}}</div>
@@ -18,7 +18,7 @@
             </div>
           </div>
           <div *ngIf="currentGame" class="playoff-choice-container">
-            <h2>Validator</h2>
+            <h3>Validator</h3>
             <div class="choice-button-container">
               <div *ngIf="tournyType === 'singles'" (click)="setValidator(currentGame.player1Id)" [className]="currentGame.validator === currentGame.player1Id ? 'choice selected' : 'choice'">{{convertToName(currentGame.player1Id)}}</div>
               <div *ngIf="tournyType === 'doubles'" (click)="setValidator(currentGame.team1Id)" [className]="currentGame.validator === currentGame.team1Id ? 'choice selected' : 'choice'">{{convertToName(currentGame.team1Id)}}</div>
@@ -27,7 +27,7 @@
             </div>
           </div>
           <div *ngIf="currentGame" class="playoff-choice-container">
-            <h2>Coin Flip Winner</h2>
+            <h3>Coin Flip Winner</h3>
             <div class="choice-button-container">
               <div *ngIf="tournyType === 'singles'" (click)="setFlipWinner(currentGame.player1Id)" [className]="currentGame.coinFlipWinner === currentGame.player1Id ? 'choice selected' : 'choice'">{{convertToName(currentGame.player1Id)}}</div>
               <div *ngIf="tournyType === 'doubles'" (click)="setFlipWinner(currentGame.team1Id)" [className]="currentGame.coinFlipWinner === currentGame.team1Id ? 'choice selected' : 'choice'">{{convertToName(currentGame.team1Id)}}</div>
@@ -36,7 +36,7 @@
             </div>
           </div>
         </div>
-        <h2>Differential (Including validation bonus)</h2>
+        <h3>Differential (Including validation bonus)</h3>
         <div class="number-input-container">
           <span *ngIf="currentGame"  id="number-box">
             {{currentGame.differential}}
@@ -80,7 +80,9 @@
       </div>
     </div>
     <div class="x-axis">
-      <div class="filler"></div>
+      <div>
+       <div class="filler"></div>
+      </div>
       <div *ngFor="let participant of participantsInPool">
         <div class="axis-label-x">{{convertToName(participant.id)}}</div>
       </div>
