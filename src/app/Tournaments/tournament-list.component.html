@@ -20,7 +20,7 @@
   </tbody>
 </table>
 <div class='mobile-tourny-table'>
-  <div *ngFor='let tournament of singlesTournaments'>
+  <div *ngFor='let tournament of singlesTournaments' (click)="viewTournament(null, tournament)">
     <div class="mobile-table-header">
       <span>{{tournament.name}}</span>
     </div>
@@ -28,8 +28,6 @@
       <span>{{tournament.size}} players</span>
       <span *ngIf="tournament.winner">Winner: {{tournament.winnerName}}</span>
       <span class='in-progress' *ngIf="!tournament.winner">In progress...</span>
-      <span *ngIf="tournament.playoffsStarted"><a (click)='viewPlayoff($event, tournament)' class="content-link">View</a></span>
-      <span *ngIf="!tournament.playoffsStarted"><a (click)='viewTournament($event, tournament)' class="content-link">View</a></span>
     </div>
   </div>
 </div>
@@ -56,7 +54,7 @@
   </tbody>
 </table>
 <div class='mobile-tourny-table'>
-  <div *ngFor='let tournament of doublesTournaments'>
+  <div *ngFor='let tournament of doublesTournaments' (click)="viewTournament(null, tournament)">
     <div class="mobile-table-header">
       <span>{{tournament.name}}</span>
     </div>
@@ -64,8 +62,6 @@
       <span>{{tournament.size}} teams</span>
       <span *ngIf="tournament.winner">Winner: {{tournament.winnerName}}</span>
       <span class='in-progress' *ngIf="!tournament.winner">In progress...</span>
-      <span *ngIf="tournament.playoffsStarted"><a (click)='viewPlayoff($event, tournament)' class="content-link">View</a></span>
-      <span *ngIf="!tournament.playoffsStarted"><a (click)='viewTournament($event, tournament)' class="content-link">View</a></span>
     </div>
   </div>
 </div>

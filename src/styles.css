@@ -659,13 +659,13 @@ input[type=text]:hover {
 #stats-filter-choice div:nth-child(2) {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
-  width: 6rem;
+  width: 5rem;
 }
 
 #stats-filter-choice div:nth-child(3) {
   border-top-right-radius: 7px;
   border-bottom-right-radius: 7px;
-  width: 6rem;
+  width: 5rem;
 }
 
 #stats-filter-choice {
@@ -675,7 +675,7 @@ input[type=text]:hover {
 
 #stats-filter-choice .choice {
   font-size: 14px;
-  width: 100px;
+  width: 5rem;
 }
 
 .choice-button-container {
@@ -768,7 +768,6 @@ input[type=text]:hover {
 .loading-container {
   margin: 7em 1em;
   display: flex;
-  width: 100%;
   flex-direction: column;
   align-items: center;
 }

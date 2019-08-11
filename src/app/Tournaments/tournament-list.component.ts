@@ -41,7 +41,7 @@ export class TournamentListComponent implements OnInit {
   }
 
   viewPlayoff(e, tournament) {
-    e.preventDefault();
+    if (e) e.preventDefault();
     if (this.singlesTournaments.includes(tournament)) {
       this.router.navigateByUrl('/playoffs/singles/' + tournament.id);
     } else {
@@ -49,7 +49,7 @@ export class TournamentListComponent implements OnInit {
     }
   }
 
-  deleteTournament(e, tournament) {
+  deleteTournament(tournament) {
       this._tournyService.deleteTournament(tournament, tournament.name).pipe(
         tap((res) => {
           console.log('Delete tournament result:');
@@ -64,11 +64,15 @@ export class TournamentListComponent implements OnInit {
   }
 
   viewTournament(e, tournament) {
-    e.preventDefault();
-    if (this.singlesTournaments.includes(tournament)) {
-      this.router.navigateByUrl('/tournaments/singles/' + tournament.name + '/' + tournament.id + '/' + tournament.currentRound);
+    if (e) e.preventDefault();
+    if (tournament.playoffsStarted) {
+      this.viewPlayoff(e, tournament);
     } else {
-      this.router.navigateByUrl('/tournaments/doubles/' + tournament.name + '/' + tournament.id + '/' + tournament.currentRound);
+      if (this.singlesTournaments.includes(tournament)) {
+        this.router.navigateByUrl('/tournaments/singles/' + tournament.name + '/' + tournament.id + '/' + tournament.currentRound);
+      } else {
+        this.router.navigateByUrl('/tournaments/doubles/' + tournament.name + '/' + tournament.id + '/' + tournament.currentRound);
+      }
     }
   }
 }
