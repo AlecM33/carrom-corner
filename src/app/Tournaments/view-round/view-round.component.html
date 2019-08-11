@@ -8,30 +8,34 @@
       <span class="close" (click)="hideModal()">&times;</span>
     </div>
     <div class="modal-body">
-      <h2>I'd like to take the top</h2>
-      <div class="number-input-container">
-          <span id="number-box">
-            {{numberToAdvance}}
-          </span>
-        <div class="arrows">
-          <div id="up-arrow">
-            <svg class="svg-triangle-up" (click)="setRoundAdvancements('plus')">
-              <polygon points="0,0 100,0 100,100"/>
-            </svg>
-          </div>
-          <div id="down-arrow">
-            <svg class="svg-triangle-down" (click)="setRoundAdvancements('minus')">
-              <polygon points="0,0 100,0 100,100"/>
-            </svg>
+      <div class="advancers-container">
+        <h3>I'd like to take the top</h3>
+        <div class="number-input-container">
+            <span id="number-box">
+              {{numberToAdvance}}
+            </span>
+          <div class="arrows">
+            <div id="up-arrow">
+              <svg class="svg-triangle-up" (click)="setRoundAdvancements('plus')">
+                <polygon points="0,0 100,0 100,100"/>
+              </svg>
+            </div>
+            <div id="down-arrow">
+              <svg class="svg-triangle-down" (click)="setRoundAdvancements('minus')">
+                <polygon points="0,0 100,0 100,100"/>
+              </svg>
+            </div>
           </div>
         </div>
+        <h3>players or teams from each pool.</h3>
       </div>
-      <h2>players or teams from each pool.</h2>
-      <h2>For pools with an extra player, I'd like to advance an extra player.</h2>
-      <div class="choice-container">
-        <div class="choice-button-container">
-          <div (click)="changeExtraPlayerChoice()" [className]="this.extraPlayer ? 'choice selected' : 'choice'">Yes</div>
-          <div (click)="changeExtraPlayerChoice()" [className]="this.extraPlayer ? 'choice' : 'choice selected'">No</div>
+      <div class="extra-player-container">
+        <h3>For pools with an extra player, I'd like to advance an extra player.</h3>
+        <div class="choice-container">
+          <div class="choice-button-container">
+            <div (click)="changeExtraPlayerChoice()" [className]="this.extraPlayer ? 'choice selected' : 'choice'">Yes</div>
+            <div (click)="changeExtraPlayerChoice()" [className]="this.extraPlayer ? 'choice' : 'choice selected'">No</div>
+          </div>
         </div>
       </div>
     </div>
