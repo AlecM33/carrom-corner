@@ -123,6 +123,32 @@
     text-align: left;
   }
 
+  .advancers-container {
+    flex-direction: column;
+  }
+
+  input[type=text] {
+    width: 12rem;
+    font-size: 15px;
+  }
+
+  .playoff-header {
+    flex-direction: column;
+  }
+
+  .winner-container {
+    width: 100%;
+  }
+
+  img#trophy-large {
+    width: 250px;
+    height: 250px;
+  }
+
+  table {
+    font-size: 14px;
+  }
+
 }
 
 @media (min-width: 726px) {
@@ -176,7 +202,7 @@
   }
 
   h2 {
-    font-size: 30px;
+    font-size: 25px;
   }
 
   h3 {
@@ -185,6 +211,24 @@
 
   .player-list-table {
     width: 350px;
+  }
+
+  input[type=text] {
+    width: 20rem;
+    font-size: 18px;
+  }
+
+  .winner-container {
+    width: 26rem;
+  }
+
+  img#trophy-large {
+    width: 350px;
+    height: 350px;
+  }
+
+  table {
+    font-size: 16px;
   }
 }
 
@@ -199,6 +243,10 @@
 
   .stat, .stat-secondary {
     margin: 0 0.5rem
+  }
+
+  .modal-content {
+    width: 75%;
   }
 
 }
@@ -221,6 +269,10 @@
   .stat-secondary {
     margin: 0 0.5rem;
   }
+
+  .modal-content {
+    width: 90%;
+  }
 }
 
 
@@ -230,7 +282,7 @@
   }
 
   #game-result-form .choices {
-    flex-direction: row;
+    flex-direction: column;
   }
 
   .container-fluid {
@@ -242,6 +294,10 @@
   }
   .pools {
     width: 100%;
+  }
+
+  .modal-content {
+    width: 60%;
   }
 }
 
@@ -269,6 +325,12 @@
   .tourny-results-container {
     flex-direction: column;
     justify-content: flex-start;
+  }
+}
+
+@media(min-width: 1200px) {
+  .modal-content {
+    width: 50%;
   }
 }
 
@@ -429,7 +491,7 @@ input#name {
 .modal-content {
   border: none;
   background-color: transparent;
-  margin: 5% auto;
+  margin: 3% auto;
   padding: 20px;
 }
 
@@ -532,11 +594,9 @@ input[type=text] {
   background-color: transparent;
   border: 1px solid #f7e5c5;
   caret-color: #f7e5c5;
-  font-size: 20px;
   margin-right: 1rem;
   color: #f7e5c5;
   padding: 0.6rem;
-  width: 15rem;
 }
 
 #add-player-form {
@@ -564,17 +624,18 @@ input[type=text]:hover {
 .choice {
   border: 1px solid #f7e5c5;
   padding: 10px 15px 10px 15px;
-  font-size: 20px;
+  font-size: 17px;
+  text-align: center;
   color: #f7e5c5;
   cursor: pointer;
 }
 
 .choice-container {
-  margin: 1em 3em 1em 0;
+  margin: 0 3em 0 0;
 }
 
 .playoff-choice-container {
-  width: 33%;
+  width: 75%;
   margin-right: 20px;
 }
 
@@ -586,29 +647,30 @@ input[type=text]:hover {
 .choice-button-container div:nth-child(1) {
   border-top-left-radius: 7px;
   border-bottom-left-radius: 7px;
-  width: 125px;
+  width: 7rem;
 }
 
 .choice-button-container div:nth-child(2) {
   border-top-right-radius: 7px;
   border-bottom-right-radius: 7px;
-  width: 125px;
+  width: 7rem;
 }
 
 #stats-filter-choice div:nth-child(2) {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
-  width: 100px;
+  width: 6rem;
 }
 
 #stats-filter-choice div:nth-child(3) {
   border-top-right-radius: 7px;
   border-bottom-right-radius: 7px;
-  width: 100px;
+  width: 6rem;
 }
 
 #stats-filter-choice {
   margin: 0;
+  margin-bottom: 1rem;
 }
 
 #stats-filter-choice .choice {
@@ -645,6 +707,8 @@ input[type=text]:hover {
 
 #game-result-form button {
   margin-top: 2em;
+  align-self: center;
+  width: 13rem;
 }
 
 #game-result-form .choices {
@@ -704,7 +768,7 @@ input[type=text]:hover {
 .loading-container {
   margin: 7em 1em;
   display: flex;
-  width: 100%%;
+  width: 100%;
   flex-direction: column;
   align-items: center;
 }
@@ -821,6 +885,9 @@ input[type=text]:hover {
   width: 100%;
   border-radius: 5px;
   color: #f7e5c5;
+  justify-content: flex-end;
+  display: flex;
+  flex-direction: column
 }
 
 #game-result-form .choice-button-container .choice {
@@ -1067,6 +1134,20 @@ input[type=text]:hover {
   background-color: rgba(0,0,0,0.4);
 }
 
+.advancers-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.extra-player-container {
+  width: 100%;
+}
+
+.advancers-container h3 {
+  margin: 0;
+}
+
 .modal-body .number-input-container {
   margin: 20px;
 }
@@ -1088,7 +1169,6 @@ input[type=text]:hover {
 .modal-content {
   background-color: #343a40;
   border: 1px solid #888;
-  width: 80%;
   animation-name: animatetop;
   animation-duration: 0.4s
 }
@@ -1129,6 +1209,8 @@ input[type=text]:hover {
 .modal-body {
   border: none;
   display: flex;
+  text-align: left;
+  flex-direction: column;
   flex-wrap: wrap;
   padding: 0;
 }
@@ -1163,6 +1245,7 @@ input[type=text]:hover {
 
 .playoff-header {
   display: flex;
+  width: 100%;
   justify-content: space-around;
 }
 
@@ -1170,7 +1253,6 @@ input[type=text]:hover {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  min-width: 500px;
 }
 
 .winner-box {
@@ -1199,8 +1281,8 @@ input[type=text]:hover {
 
 #congrats-message {
   animation: expand 0.3s;
+  padding: 0 2rem;
   animation-fill-mode: forwards;
-  font-size: 40px;
   display: flex;
   justify-content: center;
 }
@@ -1245,8 +1327,6 @@ img#trophy {
 }
 
 img#trophy-large {
-  width: 375px;
-  height: 375px;
   animation: changing-shadow 1.5s linear infinite;
   animation-direction: alternate;
   animation-delay: 0.3s;
@@ -1263,10 +1343,11 @@ img#trophy-large {
   border-bottom: 1px solid #828181;
 }
 
-#container {
+#bracket-container {
   position: relative;
   text-align: initial;
   display: flex;
+  overflow-x: auto;
 }
 
 #labels .node {
@@ -1330,6 +1411,10 @@ img#trophy-large {
 #bracket {
   display: flex;
   flex-wrap: nowrap;
+}
+
+#bracket-svg {
+  overflow: visible;
 }
 
 #bracket .bracket-node {
@@ -1455,7 +1540,7 @@ h2 {
 h3 {
   display: flex;
   padding: 0;
-  color: #f7e5c5;
+  color: lightgray;
   font-weight: normal;
   justify-content: left;
   margin-bottom: 1rem;
@@ -1605,8 +1690,8 @@ text {
   margin: 0 2em 0 2em;
 }
 
-.add-player input.btn {
-  margin-top: 10px;
+#add-player-form .app-btn {
+  margin-top: 1.5rem;
 }
 
 .first {
