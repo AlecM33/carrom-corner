@@ -1,14 +1,36 @@
-# CarromApp
+# Carrom Corner
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.7.1.
 
-The application originally ran by querying a mock server through the service json-server, but now it is hitting a mySQL database using the schema stored in src/Schema.sql. The app is only partially migrated to this database, so there are portions of the functionality which are unusable currently. 
+This application is an Angular 5 node.js application which uses a mock API to query a SQL server. 
 
 INSTRUCTIONS TO RUN LOCALLY
 
-get a local mySQL server up and running with the schema. Configure db.js with your connection parameters. Start the node server by running "node server.js" in a command window. Serve the project in another window using ng serve --proxy-config proxy.conf.json
+get a local mySQL server up and running with the schema. Configure db.js with your connection parameters. Start the node server by running "node server.js" in a command window. Serve the project in another window using ng serve --proxy-config proxy.conf.json. HTTP requests will be proxied with this configuration to allow the local mock API found in the /api directory to do it's work. 
 
 navigate to localhost:4200 to use the app.
+
+# Key Functionality:
+
+1. Players
+
+Add players to the application and begin tracking their carrom-related stats. The application ranks players based on singles,    doubles, and total stats. 
+
+2. Tournaments
+
+Create singles and doubles tournaments with the players you add. The tournament can be configured to have one or two rounds, as well as a single or double round-robin game set. 
+    
+3. Pools
+
+Players will be automatically distributed into pools. Click on a pool to view its set of games. Click a game on the graph to enter its result, and have it reflected in the calculated standings of each pool.
+    
+4. Brackets
+
+   Once the playoffs begin, the players you advance will be seeded, and a bracket will be constructed dynamically based on the amount of players you have advanced. Click a node on the bracket to enter a result for that game. Once a winner has been declared, clicking "End Tournament" will officially end the tournament and declare the winner.
+   
+5. Stats
+
+Several global stats sourced from all players can be viewed on the "Stats" tab.
 
 ## Code scaffolding
 
