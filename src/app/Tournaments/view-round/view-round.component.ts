@@ -98,12 +98,12 @@ export class ViewRoundComponent implements OnInit {
               playerRecords.push(new PlayerRecord(poolId, placement['player_id'], null));
             }
             this.recordPools.push(playerRecords);
-          });
-          this._gameService.getSinglesGamesInPool(poolId, this.tournamentId, this.roundId).subscribe((games) => {
-            this.allGamesPlayed = !games.find((game) => !game.winner);
-            this.gamePools.push(games);
-            this.calculatePlayerRecords(games);
-            this.sortPools();
+            this._gameService.getSinglesGamesInPool(poolId, this.tournamentId, this.roundId).subscribe((games) => {
+              this.allGamesPlayed = !games.find((game) => !game.winner);
+              this.gamePools.push(games);
+              this.calculatePlayerRecords(games);
+              this.sortPools();
+            });
           });
         }
       });
