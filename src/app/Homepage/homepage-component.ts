@@ -72,7 +72,7 @@ export class HomepageComponent implements OnInit {
     if (!(typeof singlesPtc === 'number') && typeof doublesPtc === 'number') { return doublesPtc; }
     if (typeof singlesPtc === 'number' && typeof doublesPtc === 'number') {
       return ((singlesPtc * (this.playedSinglesGames.length / this.totalGamesPlayed))
-        + (doublesPtc * (this.playedDoublesGames.length / this.totalGamesPlayed)) / 2);
+        + (doublesPtc * (this.playedDoublesGames.length / this.totalGamesPlayed)));
     }
   }
 
@@ -82,7 +82,7 @@ export class HomepageComponent implements OnInit {
     if (!(typeof singlesPtc === 'number') && typeof doublesPtc === 'number') { return doublesPtc; }
     if (typeof singlesPtc === 'number' && typeof doublesPtc === 'number') {
       return ((singlesPtc * (this.playedSinglesGames.length / this.totalGamesPlayed))
-        + (doublesPtc * (this.playedDoublesGames.length / this.totalGamesPlayed)) / 2);
+        + (doublesPtc * (this.playedDoublesGames.length / this.totalGamesPlayed)));
     }
   }
 
@@ -92,7 +92,7 @@ export class HomepageComponent implements OnInit {
     if (!(typeof singlesDiff === 'number') && typeof doublesDiff === 'number') { return doublesDiff; }
     if (typeof singlesDiff === 'number' && typeof doublesDiff === 'number') {
       return ((singlesDiff * (this.playedSinglesGames.length / this.totalGamesPlayed))
-        + (doublesDiff * (this.playedDoublesGames.length / this.totalGamesPlayed)) / 2);
+        + (doublesDiff * (this.playedDoublesGames.length / this.totalGamesPlayed)));
     }
   }
 
