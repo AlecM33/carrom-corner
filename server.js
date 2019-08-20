@@ -2,8 +2,11 @@
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
+var secure = require('express-force-https');
 
 const app = express();
+
+app.use(secure);
 
 // Serve only the static files form the dist directory
 //app.use(express.static(__dirname + '/dist'));

@@ -30,7 +30,7 @@ export class PlayerService {
     return result;
   }
 
-    constructor(private http: HttpClient, private elo_adjuster: EloService) {
+    constructor(private http: HttpClient) {
       this._players = [];
     }
 
