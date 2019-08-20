@@ -90,6 +90,7 @@ export class ViewRoundComponent implements OnInit {
     this._setupService.getSinglesRound(this.tournamentId, this.currentRound).subscribe((round) => {
       this.roundId = round[0]['id'];
       this._setupService.getSinglesPools(round[0]['id']).subscribe((poolsResponse: any) => {
+        this.orderPoolsByNumber(poolsResponse);
         for (const pool of poolsResponse) {
           const poolId = pool['id'];
           this._setupService.getSinglesPoolPlacements(pool['id']).subscribe((placements: any) => {
@@ -102,7 +103,7 @@ export class ViewRoundComponent implements OnInit {
               this.allGamesPlayed = !games.find((game) => !game.winner);
               this.gamePools.push(games);
               this.calculatePlayerRecords(games);
-              this.sortPools();
+              this.sortByStanding();
             });
           });
         }
@@ -110,7 +111,7 @@ export class ViewRoundComponent implements OnInit {
     });
   }
 
-  sortPools() {
+  sortByStanding() {
     console.log(this.recordPools);
     for (const pool of this.recordPools) {
       pool.sort((a, b) => {
@@ -123,6 +124,13 @@ export class ViewRoundComponent implements OnInit {
       );
     }
     this.loading = false;
+  }
+
+  orderPoolsByNumber(pools) {
+    pools.sort((a, b) => {
+      return a['number'] > b['number'] ? 1 : -1;
+    });
+    console.log(pools);
   }
 
   sortPlayoffPool(pool) {
@@ -141,6 +149,7 @@ export class ViewRoundComponent implements OnInit {
     this._setupService.getDoublesRound(this.tournamentId, this.currentRound).subscribe((round) => {
       this.roundId = round[0]['id'];
       this._setupService.getDoublesPools(this.roundId).subscribe((poolsResponse: any) => {
+        this.orderPoolsByNumber(poolsResponse);
         for (const pool of poolsResponse) {
           const poolId = pool['id'];
           this._setupService.getDoublesPoolPlacements(pool['id']).subscribe((placements: any) => {
@@ -153,7 +162,7 @@ export class ViewRoundComponent implements OnInit {
               this.allGamesPlayed = !games.find((game) => !game.winner);
               this.gamePools.push(games);
               this.calculateTeamRecords(games);
-              this.sortPools();
+              this.sortByStanding();
             });
           });
         }
@@ -335,7 +344,7 @@ export class ViewRoundComponent implements OnInit {
       }
       this.tournyType === 'singles' ? this.calculatePlayerRecords(pool) : this.calculateTeamRecords(pool);
       this.allGamesPlayed = !pool.find((game) => !game.winner);
-      this.sortPools();
+      this.sortByStanding();
     }
   }
 
