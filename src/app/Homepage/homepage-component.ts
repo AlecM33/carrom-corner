@@ -28,6 +28,7 @@ export class HomepageComponent implements OnInit {
     public totalCoinFlipPct;
     public loading = true;
     public noGamesPlayed = false;
+    public totalGamesPlayed = 0;
 
     ngOnInit() {
       this._gameService.getPlayedSinglesGames().subscribe((games) => {
@@ -38,6 +39,7 @@ export class HomepageComponent implements OnInit {
             if (this.playedSinglesGames.length === 0 && this.playedDoublesGames.length === 0) {
               this.noGamesPlayed = true;
             }
+            this.totalGamesPlayed = this.playedSinglesGames.length + this.playedDoublesGames.length;
             this.calculateTotalStats();
             this.calculateWinPercentages();
             this.loading = false;
@@ -68,21 +70,30 @@ export class HomepageComponent implements OnInit {
     if (!(typeof singlesPtc === 'number') && !(typeof doublesPtc === 'number')) { return undefined; }
     if (typeof singlesPtc === 'number' && !(typeof doublesPtc === 'number')) { return singlesPtc; }
     if (!(typeof singlesPtc === 'number') && typeof doublesPtc === 'number') { return doublesPtc; }
-    if (typeof singlesPtc === 'number' && typeof doublesPtc === 'number') { return (singlesPtc + doublesPtc) / 2; }
+    if (typeof singlesPtc === 'number' && typeof doublesPtc === 'number') {
+      return ((singlesPtc * (this.playedSinglesGames.length / this.totalGamesPlayed))
+        + (doublesPtc * (this.playedDoublesGames.length / this.totalGamesPlayed)) / 2);
+    }
   }
 
   setTotalCoinFlipPtc(singlesPtc, doublesPtc) {
     if (!(typeof singlesPtc === 'number') && !(typeof doublesPtc === 'number')) { return undefined; }
     if (typeof singlesPtc === 'number' && !(typeof doublesPtc === 'number')) { return singlesPtc; }
     if (!(typeof singlesPtc === 'number') && typeof doublesPtc === 'number') { return doublesPtc; }
-    if (typeof singlesPtc === 'number' && typeof doublesPtc === 'number') { return (singlesPtc + doublesPtc) / 2; }
+    if (typeof singlesPtc === 'number' && typeof doublesPtc === 'number') {
+      return ((singlesPtc * (this.playedSinglesGames.length / this.totalGamesPlayed))
+        + (doublesPtc * (this.playedDoublesGames.length / this.totalGamesPlayed)) / 2);
+    }
   }
 
   setTotalAvgDiff(singlesDiff, doublesDiff) {
     if (!(typeof singlesDiff === 'number') && !(typeof doublesDiff === 'number')) { return undefined; }
     if (typeof singlesDiff === 'number' && !(typeof doublesDiff === 'number')) { return singlesDiff; }
     if (!(typeof singlesDiff === 'number') && typeof doublesDiff === 'number') { return doublesDiff; }
-    if (typeof singlesDiff === 'number' && typeof doublesDiff === 'number') { return (singlesDiff + doublesDiff) / 2; }
+    if (typeof singlesDiff === 'number' && typeof doublesDiff === 'number') {
+      return ((singlesDiff * (this.playedSinglesGames.length / this.totalGamesPlayed))
+        + (doublesDiff * (this.playedDoublesGames.length / this.totalGamesPlayed)) / 2);
+    }
   }
 
   calculateTotalStats() {

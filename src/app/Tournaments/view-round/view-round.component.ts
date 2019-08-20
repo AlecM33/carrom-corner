@@ -130,7 +130,6 @@ export class ViewRoundComponent implements OnInit {
     pools.sort((a, b) => {
       return a['number'] > b['number'] ? 1 : -1;
     });
-    console.log(pools);
   }
 
   sortPlayoffPool(pool) {
