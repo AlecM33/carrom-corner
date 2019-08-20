@@ -1,0 +1,36 @@
+insert into Singles_Pools values (null, 3, 1), (null, 3, 2);
+insert into Singles_Pool_Placements values 
+(null, 9, 26), (null, 9, 5), (null, 9, 23), (null, 9, 8), (null, 9, 6), (null, 9, 1),
+(null, 10, 11), (null, 10, 3),(null, 10, 13),(null, 10, 21),(null, 10, 10),(null, 10, 18);
+
+insert into Singles_Games values
+(null, 1, 3, 9, false, null, 26, 5, null, null, null, null, null),
+(null, 1, 3, 9, false, null, 26, 23, null, null, null, null, null),
+(null, 1, 3, 9, false, null, 26, 8, null, null, null, null, null),
+(null, 1, 3, 9, false, null, 26, 6, null, null, null, null, null),
+(null, 1, 3, 9, false, null, 26, 1, null, null, null, null, null),
+(null, 1, 3, 9, false, null, 5, 23, null, null, null, null, null),
+(null, 1, 3, 9, false, null, 5, 8, null, null, null, null, null),
+(null, 1, 3, 9, false, null, 5, 6, null, null, null, null, null),
+(null, 1, 3, 9, false, null, 5, 1, null, null, null, null, null),
+(null, 1, 3, 9, false, null, 23, 8, null, null, null, null, null),
+(null, 1, 3, 9, false, null, 23, 6, null, null, null, null, null),
+(null, 1, 3, 9, false, null, 23, 1, null, null, null, null, null),
+(null, 1, 3, 9, false, null, 8, 6, null, null, null, null, null),
+(null, 1, 3, 9, false, null, 8, 1, null, null, null, null, null),
+(null, 1, 3, 9, false, null, 1, 6, null, null, null, null, null),
+(null, 1, 3, 10, false, null, 11, 3, null, null, null, null, null),
+(null, 1, 3, 10, false, null, 11, 13, null, null, null, null, null),
+(null, 1, 3, 10, false, null, 11, 21, null, null, null, null, null),
+(null, 1, 3, 10, false, null, 11, 10, null, null, null, null, null),
+(null, 1, 3, 10, false, null, 11, 18, null, null, null, null, null),
+(null, 1, 3, 10, false, null, 3, 13, null, null, null, null, null),
+(null, 1, 3, 10, false, null, 3, 21, null, null, null, null, null),
+(null, 1, 3, 10, false, null, 3, 10, null, null, null, null, null),
+(null, 1, 3, 10, false, null, 3, 18, null, null, null, null, null),
+(null, 1, 3, 10, false, null, 13, 21, null, null, null, null, null),
+(null, 1, 3, 10, false, null, 13, 10, null, null, null, null, null),
+(null, 1, 3, 10, false, null, 13, 18, null, null, null, null, null),
+(null, 1, 3, 10, false, null, 21, 10, null, null, null, null, null),
+(null, 1, 3, 10, false, null, 21, 18, null, null, null, null, null),
+(null, 1, 3, 10, false, null, 18, 10, null, null, null, null, null);

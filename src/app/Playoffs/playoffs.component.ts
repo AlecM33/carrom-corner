@@ -280,6 +280,9 @@ export class PlayoffsComponent implements OnInit {
     }
   }
 
+  goToRound() {
+    this.router.navigateByUrl('/tournaments/' + this.tournyType + '/' + this.tournament.name + '/' + this.tournament.id + '/' + this.tournament.current_round);
+  }
 
   hideModal() {
     this.playoffModal.nativeElement.className = 'modal hidden';

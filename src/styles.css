@@ -410,7 +410,7 @@ html, body {
   align-items: flex-start;
 }
 
-.round-buttons .first-round, .round-buttons .second-round {
+.first-round, .second-round {
   margin-bottom: 2em;
   border: 1px solid #888888;
   padding: 0.3em;
@@ -418,8 +418,7 @@ html, body {
   width: 12em;
 }
 
-.round-buttons .first-round:hover, .round-buttons .second-round:hover {
-  transform: scale(1.0);
+.first-round:hover, .second-round:hover {
   background-color: #343a40;
   color: darkgray;
 }
@@ -429,7 +428,6 @@ html, body {
 }
 
 .app-btn:hover {
-  transform: scale(1.05);
   background-color: rgba(133, 133, 133, 0.3);
 }
 

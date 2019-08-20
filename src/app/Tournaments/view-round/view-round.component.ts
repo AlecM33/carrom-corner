@@ -301,6 +301,10 @@ export class ViewRoundComponent implements OnInit {
     this.getRoundData();
   }
 
+  goToPlayoffs() {
+    this.router.navigateByUrl('/playoffs/' + this.tournyType + '/' + this.tournamentId);
+  }
+
   // Gets a random integer in the specified range (inclusive)
   getRandomIntInclusive(min, max) {
     min = Math.ceil(min);
