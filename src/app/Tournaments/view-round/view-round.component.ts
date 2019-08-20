@@ -59,25 +59,10 @@ export class ViewRoundComponent implements OnInit {
               ) { }
 
   ngOnInit() {
-    this.recordPools = [];
-    this.loading = true;
-    this.allGamesPlayed = false;
     this.tournyType = this.active_route.snapshot.paramMap.get('type');
     this.tournamentName = this.active_route.snapshot.paramMap.get('name');
     this.tournamentId = parseInt(this.active_route.snapshot.paramMap.get('tourny_id'), 10);
     this.currentRound = parseInt(this.active_route.snapshot.paramMap.get('round'), 10);
-    this.prepareRound();
-  }
-
-  prepareRound() {
-    this.router.events.subscribe((event) => {
-      if (event instanceof NavigationEnd) {
-        this.tournyType = this.active_route.snapshot.paramMap.get('type');
-        this.tournamentName = this.active_route.snapshot.paramMap.get('name');
-        this.tournamentId = parseInt(this.active_route.snapshot.paramMap.get('tourny_id'), 10);
-        this.currentRound = parseInt(this.active_route.snapshot.paramMap.get('round'), 10);
-      }
-    });
     this.getRoundData();
   }
 
@@ -102,7 +87,7 @@ export class ViewRoundComponent implements OnInit {
   }
 
   retrieveSinglesData() {
-    this._setupService.getSinglesRound(this.tournamentId, this.tournament[0]['current_round']).subscribe((round) => {
+    this._setupService.getSinglesRound(this.tournamentId, this.currentRound).subscribe((round) => {
       this.roundId = round[0]['id'];
       this._setupService.getSinglesPools(round[0]['id']).subscribe((poolsResponse: any) => {
         for (const pool of poolsResponse) {
@@ -286,15 +271,25 @@ export class ViewRoundComponent implements OnInit {
         this.recordPools = [];
         this.loading = true;
         this.allGamesPlayed = false;
+        this.currentRound = 2;
         this.tournyType === 'singles' ?
           this._setupService.createSinglesData(this.tournamentId, this.tournamentName, 2, nextRoundAdvancers, this.tournament[0]['robin_type']).subscribe((nav) => {
-            this.prepareRound();
+            this.getRoundData();
           })
           : this._setupService.createDoublesDataForSecondRound(this.tournamentId, this.tournamentName, 2, nextRoundAdvancers, this.tournament[0]['robin_type']).subscribe((nav) => {
-            this.prepareRound();
+            this.getRoundData();
           });
       }
     });
+  }
+
+  goToRound(number) {
+    this.recordPools = [];
+    this.loading = true;
+    this.allGamesPlayed = false;
+    this.currentRound = number;
+    this.router.navigateByUrl('/tournaments/' + this.tournyType + '/' + this.tournamentName + '/' + this.tournamentId + '/' + this.currentRound);
+    this.getRoundData();
   }
 
   // Gets a random integer in the specified range (inclusive)

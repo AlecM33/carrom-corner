@@ -34,6 +34,7 @@ export class ViewPoolComponent implements OnInit {
   public currentGame = undefined;
   public gameWinner: any;
   public robinType: string;
+  public tournament: any;
 
   @ViewChild('updateBtn') updateBtn: ElementRef;
   @ViewChild('poolModal') poolModal: ElementRef;
@@ -61,6 +62,7 @@ export class ViewPoolComponent implements OnInit {
     this.tournamentId = parseInt(this.active_route.snapshot.paramMap.get('tourny_id'), 10);
     this._tournyService.getTournament(this.tournamentId, this.tournyType).subscribe((tourny) => {
       this.robinType = tourny[0]['robin_type'];
+      this.tournament = tourny[0];
     });
     this.roundId = parseInt(this.active_route.snapshot.paramMap.get('round_id'), 10);
     this.poolId = parseInt(this.active_route.snapshot.paramMap.get('pool_id'), 10);
@@ -84,7 +86,7 @@ export class ViewPoolComponent implements OnInit {
 
   openModal() {
     this.updateBtn.nativeElement.innerText = 'Update Game';
-    this.updateBtn.nativeElement.className = 'app-btn';
+    this.updateBtn.nativeElement.className = this.currentRound === this.tournament['current_round'] ? 'app-btn' : 'app-btn disabled';
     this.poolModal.nativeElement.className = 'modal';
   }
 

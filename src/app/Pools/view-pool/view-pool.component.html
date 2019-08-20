@@ -54,13 +54,13 @@
             </div>
           </div>
         </div>
-        <button class='app-btn' (click)="submitGame()" #updateBtn>Update Game</button>
+        <button (click)="submitGame()" #updateBtn>Update Game</button>
       </div>
     </div>
   </div>
 </div>
-<button class='app-btn back-button' (click)="backToRound()">« Back to Round</button>
 <h2 *ngIf="tournamentName">{{tournamentName}}: Pool {{letter}}</h2>
+<button class='app-btn back-button' (click)="backToRound()">« Back to Round</button>
 <div *ngIf="!loading" id="graph-container">
   <div id="upper-container">
     <div class="y-axis">

@@ -396,11 +396,36 @@ html, body {
 
 .app-btn {
   cursor: pointer;
+  border-radius: 3px;
   padding: 0.6rem 1.4rem;
   background: transparent;
   border: 1px solid #f7e5c5;
   font-size: 15px;
   color: #f7e5c5;
+}
+
+.round-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.round-buttons .first-round, .round-buttons .second-round {
+  margin-bottom: 2em;
+  border: 1px solid #888888;
+  padding: 0.3em;
+  font-size: 0.8em;
+  width: 12em;
+}
+
+.round-buttons .first-round:hover, .round-buttons .second-round:hover {
+  transform: scale(1.0);
+  background-color: #343a40;
+  color: darkgray;
+}
+
+.round-buttons .next-btn {
+  margin: 0 auto;
 }
 
 .app-btn:hover {
