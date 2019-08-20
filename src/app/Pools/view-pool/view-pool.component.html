@@ -54,41 +54,39 @@
             </div>
           </div>
         </div>
-        <button class='app-btn' (click)="submitGame()" #updateBtn>Update Game</button>
+        <button (click)="submitGame()" #updateBtn>Update Game</button>
       </div>
     </div>
   </div>
 </div>
-<button class='app-btn back-button' (click)="backToRound()">« Back to Round</button>
 <h2 *ngIf="tournamentName">{{tournamentName}}: Pool {{letter}}</h2>
-<div id="round-robin-page-container">
-  <div *ngIf="!loading" id="graph-container">
-    <div id="upper-container">
-      <div class="y-axis">
-        <div *ngFor="let participant of participantsInPool">
-          <div class="axis-label-y">{{convertToName(participant.id)}}</div>
-        </div>
-      </div>
-      <div id="round-robin-graph">
-        <div class="graph-rows" *ngFor="let participant of participantsInPool; let i = index">
-          <div class="graph-columns" *ngFor="let element of returnArrayBasedOnRobinType(i + 1); let j = index">
-            <div *ngIf="!(j === i)" [ngClass]="{'graph-square': !gameIsPlayed(participantsInPool[j].id, participantsInPool[i].id),
-            'graph-square-filled': gameIsPlayed(participantsInPool[j].id, participantsInPool[i].id)}" (click)="setCurrentGame(participantsInPool[j].id, participantsInPool[i].id, (i * participantsInPool.length) + j)"></div>
-            <div *ngIf="j === i" class="graph-square-empty"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="x-axis">
-      <div>
-       <div class="filler"></div>
-      </div>
+<button class='app-btn back-button' (click)="backToRound()">« Back to Round</button>
+<div *ngIf="!loading" id="graph-container">
+  <div id="upper-container">
+    <div class="y-axis">
       <div *ngFor="let participant of participantsInPool">
-        <div class="axis-label-x">{{convertToName(participant.id)}}</div>
+        <div class="axis-label-y">{{convertToName(participant.id)}}</div>
+      </div>
+    </div>
+    <div id="round-robin-graph">
+      <div class="graph-rows" *ngFor="let participant of participantsInPool; let i = index">
+        <div class="graph-columns" *ngFor="let element of returnArrayBasedOnRobinType(i + 1); let j = index">
+          <div *ngIf="!(j === i)" [ngClass]="{'graph-square': !gameIsPlayed(participantsInPool[j].id, participantsInPool[i].id),
+          'graph-square-filled': gameIsPlayed(participantsInPool[j].id, participantsInPool[i].id)}" (click)="setCurrentGame(participantsInPool[j].id, participantsInPool[i].id, (i * participantsInPool.length) + j)"></div>
+          <div *ngIf="j === i" class="graph-square-empty"></div>
+        </div>
       </div>
     </div>
   </div>
-  <div *ngIf="loading" class="loading-container">
-    <img class="loading-animation" src="../../../assets/images/gap-spinner-emerald.svg"/>
+  <div class="x-axis">
+    <div>
+     <div class="filler"></div>
+    </div>
+    <div *ngFor="let participant of participantsInPool">
+      <div class="axis-label-x">{{convertToName(participant.id)}}</div>
+    </div>
   </div>
+</div>
+<div *ngIf="loading" class="loading-container">
+  <img class="loading-animation" src="../../../assets/images/gap-spinner-emerald.svg"/>
 </div>

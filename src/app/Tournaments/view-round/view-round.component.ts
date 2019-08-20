@@ -59,25 +59,10 @@ export class ViewRoundComponent implements OnInit {
               ) { }
 
   ngOnInit() {
-    this.recordPools = [];
-    this.loading = true;
-    this.allGamesPlayed = false;
     this.tournyType = this.active_route.snapshot.paramMap.get('type');
     this.tournamentName = this.active_route.snapshot.paramMap.get('name');
     this.tournamentId = parseInt(this.active_route.snapshot.paramMap.get('tourny_id'), 10);
     this.currentRound = parseInt(this.active_route.snapshot.paramMap.get('round'), 10);
-    this.prepareRound();
-  }
-
-  prepareRound() {
-    this.router.events.subscribe((event) => {
-      if (event instanceof NavigationEnd) {
-        this.tournyType = this.active_route.snapshot.paramMap.get('type');
-        this.tournamentName = this.active_route.snapshot.paramMap.get('name');
-        this.tournamentId = parseInt(this.active_route.snapshot.paramMap.get('tourny_id'), 10);
-        this.currentRound = parseInt(this.active_route.snapshot.paramMap.get('round'), 10);
-      }
-    });
     this.getRoundData();
   }
 
@@ -102,9 +87,10 @@ export class ViewRoundComponent implements OnInit {
   }
 
   retrieveSinglesData() {
-    this._setupService.getSinglesRound(this.tournamentId, this.tournament[0]['current_round']).subscribe((round) => {
+    this._setupService.getSinglesRound(this.tournamentId, this.currentRound).subscribe((round) => {
       this.roundId = round[0]['id'];
       this._setupService.getSinglesPools(round[0]['id']).subscribe((poolsResponse: any) => {
+        this.orderPoolsByNumber(poolsResponse);
         for (const pool of poolsResponse) {
           const poolId = pool['id'];
           this._setupService.getSinglesPoolPlacements(pool['id']).subscribe((placements: any) => {
@@ -113,19 +99,20 @@ export class ViewRoundComponent implements OnInit {
               playerRecords.push(new PlayerRecord(poolId, placement['player_id'], null));
             }
             this.recordPools.push(playerRecords);
-          });
-          this._gameService.getSinglesGamesInPool(poolId, this.tournamentId, this.roundId).subscribe((games) => {
-            this.allGamesPlayed = !games.find((game) => !game.winner);
-            this.gamePools.push(games);
-            this.calculatePlayerRecords(games);
-            this.sortPools();
+            this._gameService.getSinglesGamesInPool(poolId, this.tournamentId, this.roundId).subscribe((games) => {
+              this.allGamesPlayed = !games.find((game) => !game.winner);
+              this.gamePools.push(games);
+              this.calculatePlayerRecords(games);
+              this.sortByStanding();
+            });
           });
         }
       });
     });
   }
 
-  sortPools() {
+  sortByStanding() {
+    console.log(this.recordPools);
     for (const pool of this.recordPools) {
       pool.sort((a, b) => {
           if(a.wins > b.wins) return -1;
@@ -137,6 +124,12 @@ export class ViewRoundComponent implements OnInit {
       );
     }
     this.loading = false;
+  }
+
+  orderPoolsByNumber(pools) {
+    pools.sort((a, b) => {
+      return a['number'] > b['number'] ? 1 : -1;
+    });
   }
 
   sortPlayoffPool(pool) {
@@ -152,9 +145,10 @@ export class ViewRoundComponent implements OnInit {
   }
 
   retrieveDoublesData() {
-    this._setupService.getDoublesRound(this.tournamentId, this.tournament[0]['current_round']).subscribe((round) => {
+    this._setupService.getDoublesRound(this.tournamentId, this.currentRound).subscribe((round) => {
       this.roundId = round[0]['id'];
       this._setupService.getDoublesPools(this.roundId).subscribe((poolsResponse: any) => {
+        this.orderPoolsByNumber(poolsResponse);
         for (const pool of poolsResponse) {
           const poolId = pool['id'];
           this._setupService.getDoublesPoolPlacements(pool['id']).subscribe((placements: any) => {
@@ -167,7 +161,7 @@ export class ViewRoundComponent implements OnInit {
               this.allGamesPlayed = !games.find((game) => !game.winner);
               this.gamePools.push(games);
               this.calculateTeamRecords(games);
-              this.sortPools();
+              this.sortByStanding();
             });
           });
         }
@@ -178,7 +172,7 @@ export class ViewRoundComponent implements OnInit {
   calculatePlayerRecords(games: SinglesGame[]) {
     for (const game of games) {
       if (game.winner) {
-        const playerPool = this.recordPools.find((pool) => pool.find((record) => record.playerId === game.winner));
+        const playerPool = this.recordPools.find((pool) => pool.find((record) => record.playerId === game.winner) !== undefined);
         const winningPlayerIndex = playerPool.findIndex((record) => record.playerId === game.winner);
         const losingPlayerIndex = playerPool.findIndex((record) => record.playerId === game.loser);
 
@@ -286,15 +280,29 @@ export class ViewRoundComponent implements OnInit {
         this.recordPools = [];
         this.loading = true;
         this.allGamesPlayed = false;
+        this.currentRound = 2;
         this.tournyType === 'singles' ?
           this._setupService.createSinglesData(this.tournamentId, this.tournamentName, 2, nextRoundAdvancers, this.tournament[0]['robin_type']).subscribe((nav) => {
-            this.prepareRound();
+            this.getRoundData();
           })
           : this._setupService.createDoublesDataForSecondRound(this.tournamentId, this.tournamentName, 2, nextRoundAdvancers, this.tournament[0]['robin_type']).subscribe((nav) => {
-            this.prepareRound();
+            this.getRoundData();
           });
       }
     });
+  }
+
+  goToRound(number) {
+    this.recordPools = [];
+    this.loading = true;
+    this.allGamesPlayed = false;
+    this.currentRound = number;
+    this.router.navigateByUrl('/tournaments/' + this.tournyType + '/' + this.tournamentName + '/' + this.tournamentId + '/' + this.currentRound);
+    this.getRoundData();
+  }
+
+  goToPlayoffs() {
+    this.router.navigateByUrl('/playoffs/' + this.tournyType + '/' + this.tournamentId);
   }
 
   // Gets a random integer in the specified range (inclusive)
@@ -339,7 +347,7 @@ export class ViewRoundComponent implements OnInit {
       }
       this.tournyType === 'singles' ? this.calculatePlayerRecords(pool) : this.calculateTeamRecords(pool);
       this.allGamesPlayed = !pool.find((game) => !game.winner);
-      this.sortPools();
+      this.sortByStanding();
     }
   }
 

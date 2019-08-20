@@ -60,7 +60,10 @@
   </div>
 </div>
 <div class="playoff-header">
-  <h2 *ngIf="tournament">Playoffs - {{tournament.name}}</h2>
+  <div>
+    <h2 *ngIf="tournament">Playoffs - {{tournament.name}}</h2>
+    <button (click)="goToRound()" class="app-btn second-round">« View Previous Round</button>
+  </div>
   <div class="winner-container">
     <div class="winner-box">
       <img id="trophy" src="../../assets/images/trophy.svg"/>
