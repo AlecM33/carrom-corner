@@ -137,7 +137,7 @@ export class ViewRoundComponent implements OnInit {
   }
 
   retrieveDoublesData() {
-    this._setupService.getDoublesRound(this.tournamentId, this.tournament[0]['current_round']).subscribe((round) => {
+    this._setupService.getDoublesRound(this.tournamentId, this.currentRound).subscribe((round) => {
       this.roundId = round[0]['id'];
       this._setupService.getDoublesPools(this.roundId).subscribe((poolsResponse: any) => {
         for (const pool of poolsResponse) {
