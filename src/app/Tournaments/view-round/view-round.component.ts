@@ -111,6 +111,7 @@ export class ViewRoundComponent implements OnInit {
   }
 
   sortPools() {
+    console.log(this.recordPools);
     for (const pool of this.recordPools) {
       pool.sort((a, b) => {
           if(a.wins > b.wins) return -1;
@@ -163,7 +164,7 @@ export class ViewRoundComponent implements OnInit {
   calculatePlayerRecords(games: SinglesGame[]) {
     for (const game of games) {
       if (game.winner) {
-        const playerPool = this.recordPools.find((pool) => pool.find((record) => record.playerId === game.winner));
+        const playerPool = this.recordPools.find((pool) => pool.find((record) => record.playerId === game.winner) !== undefined);
         const winningPlayerIndex = playerPool.findIndex((record) => record.playerId === game.winner);
         const losingPlayerIndex = playerPool.findIndex((record) => record.playerId === game.loser);
 
