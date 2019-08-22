@@ -49,7 +49,7 @@
 <div class="round-buttons">
   <div>
     <button *ngIf="currentRound === 2" (click)="goToRound(1)" class="app-btn first-round">« View First Round</button>
-    <button *ngIf="currentRound === 2 && tournament && tournament[0]['playoffs_started']" (click)="goToPlayoffs()" class="app-btn first-round">View Bracket »</button>
+    <button *ngIf="tournament && currentRound === tournament[0]['rounds'] && tournament[0]['playoffs_started']" (click)="goToPlayoffs()" class="app-btn first-round">View Bracket »</button>
   </div>
   <button *ngIf="currentRound === 1 && tournament && tournament[0]['current_round'] === 2" (click)="goToRound(2)" class="app-btn second-round">View Second Round »</button>
   <button *ngIf="numberOfRounds > 1 && currentRound === 1 && tournament && tournament[0]['current_round'] === 1" (click)="openModal()" [ngClass]="{'app-btn next-btn': true, 'disabled': allGamesPlayed === false}">Start Next Round</button>

@@ -112,7 +112,6 @@ export class ViewRoundComponent implements OnInit {
   }
 
   sortByStanding() {
-    console.log(this.recordPools);
     for (const pool of this.recordPools) {
       pool.sort((a, b) => {
           if(a.wins > b.wins) return -1;
@@ -256,40 +255,42 @@ export class ViewRoundComponent implements OnInit {
 
   startNextRound(playoffs: boolean) {
     this.roundModal.nativeElement.className = 'modal hidden';
-    let roundUpdateObs;
-    this.tournyType === 'singles' ?
-      roundUpdateObs = this._tournamentService.updateSinglesTournamentRound(this.tournament[0].id, 2)
-      : roundUpdateObs = this._tournamentService.updateDoublesTournamentRound(this.tournament[0].id, 2);
-    roundUpdateObs.subscribe((resp) => {
-      const nextRoundAdvancers = new Set();
-      for (const pool of this.recordPools) {
-        for (let i = 0; i < this.numberToAdvance; i++) {
-          this.tournyType === 'singles' ?
-            nextRoundAdvancers.add(this.players.find((player) => player.id === pool[i].playerId))
-            : nextRoundAdvancers.add(this.teams.find((team) => team.id === pool[i].teamId));
-        }
-        if (pool.length === this.findLargestPool() && this.extraPlayer === true && this.numberToAdvance !== this.findLargestPool()) {
-          this.tournyType === 'singles' ?
-            nextRoundAdvancers.add(this.players.find((player) => player.id === pool[this.numberToAdvance].playerId))
-            : nextRoundAdvancers.add(this.teams.find((team) => team.id === pool[this.numberToAdvance].teamId));
-        }
+    const nextRoundAdvancers = new Set();
+    for (const pool of this.recordPools) {
+      for (let i = 0; i < this.numberToAdvance; i++) {
+        this.tournyType === 'singles' ?
+          nextRoundAdvancers.add(this.players.find((player) => player.id === pool[i].playerId))
+          : nextRoundAdvancers.add(this.teams.find((team) => team.id === pool[i].teamId));
       }
-      if (playoffs) {
-        this.startPlayoffs(nextRoundAdvancers);
-      } else {
+      if (pool.length === this.findLargestPool() && this.extraPlayer === true && this.numberToAdvance !== this.findLargestPool()) {
+        this.tournyType === 'singles' ?
+          nextRoundAdvancers.add(this.players.find((player) => player.id === pool[this.numberToAdvance].playerId))
+          : nextRoundAdvancers.add(this.teams.find((team) => team.id === pool[this.numberToAdvance].teamId));
+      }
+    }
+    if (playoffs) {
+      this.startPlayoffs(nextRoundAdvancers);
+    } else {
+      let roundUpdateObs;
+      this.tournyType === 'singles' ?
+        roundUpdateObs = this._tournamentService.updateSinglesTournamentRound(this.tournament[0].id, 2)
+        : roundUpdateObs = this._tournamentService.updateDoublesTournamentRound(this.tournament[0].id, 2);
+      roundUpdateObs.subscribe((resp) => {
         this.recordPools = [];
         this.loading = true;
         this.allGamesPlayed = false;
         this.currentRound = 2;
         this.tournyType === 'singles' ?
-          this._setupService.createSinglesData(this.tournamentId, this.tournamentName, 2, nextRoundAdvancers, this.tournament[0]['robin_type']).subscribe((nav) => {
-            this.getRoundData();
-          })
-          : this._setupService.createDoublesDataForSecondRound(this.tournamentId, this.tournamentName, 2, nextRoundAdvancers, this.tournament[0]['robin_type']).subscribe((nav) => {
-            this.getRoundData();
-          });
-      }
-    });
+          this._setupService.createSinglesData(this.tournamentId, this.tournamentName, 2, nextRoundAdvancers,
+            this.tournament[0]['robin_type']).subscribe((nav) => {
+              this.getRoundData();
+            })
+          : this._setupService.createDoublesDataForSecondRound(this.tournamentId, this.tournamentName, 2,
+          nextRoundAdvancers, this.tournament[0]['robin_type']).subscribe((nav) => {
+              this.getRoundData();
+            });
+      });
+    }
   }
 
   goToRound(number) {
@@ -297,7 +298,8 @@ export class ViewRoundComponent implements OnInit {
     this.loading = true;
     this.allGamesPlayed = false;
     this.currentRound = number;
-    this.router.navigateByUrl('/tournaments/' + this.tournyType + '/' + this.tournamentName + '/' + this.tournamentId + '/' + this.currentRound);
+    this.router.navigateByUrl('/tournaments/' + this.tournyType + '/' + this.tournamentName + '/' + this.tournamentId + '/'
+      + this.currentRound);
     this.getRoundData();
   }
 
