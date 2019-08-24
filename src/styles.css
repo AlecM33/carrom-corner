@@ -149,6 +149,18 @@
     font-size: 14px;
   }
 
+  .diff-container {
+    width: 100%;
+    background-color: #23282b !important;
+    border-bottom: 1px solid #009874;
+    height: 3em;
+    color: #a19f9f;
+  }
+
+  .diff-container .diff-value {
+    width: 7em;
+  }
+
 }
 
 @media (min-width: 726px) {
@@ -229,6 +241,10 @@
 
   table {
     font-size: 16px;
+  }
+
+  .diff-container .diff-value {
+    width: 3em;
   }
 }
 
@@ -1591,7 +1607,6 @@ h3 {
 }
 
 .mobile-table-header {
-  padding: 0.3rem;
   width: 100%;
   font-size: 1.3rem;
   display: flex;
@@ -1612,6 +1627,17 @@ h3 {
   border-bottom: 1px solid #009874;
 }
 
+.subheader {
+  width: 100%;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  background-color: #23282b !important;
+  color: #a6a6a6 !important;
+  justify-content: space-evenly;
+  height: 3rem;
+}
+
 .mobile-table-header span {
   margin-left: 0.5rem;
 }
@@ -1630,6 +1656,7 @@ h3 {
   display: flex;
   align-items: center;
   justify-content: flex-start;
+  margin: 0 auto;
 }
 
 .player-list-header, .tourny-list-header, .player-list-subheader, .add-all-button {
@@ -1766,6 +1793,30 @@ tr {
 
 td {
   padding: 10px;
+}
+
+.neg-diff {
+  border-radius: 3px;
+  background-color: #ba1007;
+  opacity: 0.7;
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+  display: inline-block;
+  height: 0.45em;
+}
+
+.pos-diff {
+  border-radius: 3px;
+  background-color: green;
+  opacity: 0.7;
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+  display: inline-block;
+  height: 0.45em;
+}
+
+.diff-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .add-button {

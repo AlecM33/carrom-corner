@@ -31,7 +31,13 @@
     <td *ngIf="player.singlesLosses !== undefined">{{player.singlesLosses}}</td>
     <td *ngIf="player.singlesWinPtg !== undefined">{{player.singlesWinPtg | percent}}</td>
     <td *ngIf="player.singlesWinPtg === undefined">N/A</td>
-    <td *ngIf="player.singlesAvgDiff !== undefined">{{player.singlesAvgDiff | number: '1.1-2'}}</td>
+    <td *ngIf="player.singlesAvgDiff !== undefined">
+      <div class="diff-container" [ngStyle]="{'margin-right.em': -player.singlesAvgDiff}">
+        <span *ngIf="player.singlesAvgDiff < 0" [ngStyle]="{'width.em': -player.singlesAvgDiff}" class="neg-diff">&nbsp;</span>
+        <span class="diff-value">{{player.singlesAvgDiff | number: '1.1-2'}}</span>
+        <span *ngIf="player.singlesAvgDiff > 0" [ngStyle]="{'width.em': player.singlesAvgDiff}" class="pos-diff">&nbsp;</span>
+      </div>
+    </td>
     <td *ngIf="player.singlesAvgDiff === undefined">N/A</td>
   </tr>
   </tbody>
@@ -72,7 +78,13 @@
     <td *ngIf="player.doublesLosses !== undefined">{{player.doublesLosses}}</td>
     <td *ngIf="player.doublesWinPtg !== undefined">{{player.doublesWinPtg | percent}}</td>
     <td *ngIf="player.doublesWinPtg === undefined">N/A</td>
-    <td *ngIf="player.doublesAvgDiff !== undefined">{{player.doublesAvgDiff | number: '1.1-2'}}</td>
+    <td *ngIf="player.doublesAvgDiff !== undefined">
+      <div class="diff-container" [ngStyle]="{'margin-right.em': -player.doublesAvgDiff}">
+        <span *ngIf="player.doublesAvgDiff < 0" [ngStyle]="{'width.em': -player.doublesAvgDiff}" class="neg-diff">&nbsp;</span>
+        <span class="diff-value">{{player.doublesAvgDiff | number: '1.1-2'}}</span>
+        <span *ngIf="player.doublesAvgDiff > 0" [ngStyle]="{'width.em': player.doublesAvgDiff}" class="pos-diff">&nbsp;</span>
+      </div>
+    </td>
     <td *ngIf="player.doublesAvgDiff === undefined">N/A</td>
   </tr>
   </tbody>
@@ -113,7 +125,13 @@
     <td *ngIf="player.totalLosses !== undefined">{{player.totalLosses}}</td>
     <td *ngIf="player.totalWinPtg !== undefined">{{player.totalWinPtg | percent}}</td>
     <td *ngIf="player.totalWinPtg === undefined">N/A</td>
-    <td *ngIf="player.totalAvgDiff !== undefined">{{player.totalAvgDiff | number: '1.1-2'}}</td>
+    <td *ngIf="player.totalAvgDiff !== undefined">
+      <div class="diff-container" [ngStyle]="{'margin-right.em': -player.totalAvgDiff}">
+        <span *ngIf="player.totalAvgDiff < 0" [ngStyle]="{'width.em': -player.totalAvgDiff}" class="neg-diff">&nbsp;</span>
+        <span class="diff-value">{{player.totalAvgDiff | number: '1.1-2'}}</span>
+        <span *ngIf="player.totalAvgDiff > 0" [ngStyle]="{'width.em': player.totalAvgDiff}" class="pos-diff">&nbsp;</span>
+      </div>
+    </td>
     <td *ngIf="player.totalAvgDiff === undefined">N/A</td>
   </tr>
   </tbody>
