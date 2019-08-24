@@ -12,10 +12,12 @@ import {SinglesGame} from '../../Games/singles-game';
 import {DoublesGame} from '../../Games/doubles-game';
 import {Team} from '../../Teams/team';
 import {TeamService} from '../../Services/team.service';
-import {Playoff} from '../../Playoffs/playoff';
 import {PlayoffService} from '../../Services/playoff.service';
 import {SinglesBracketNode} from '../../Brackets/singles-bracket-node';
 import {DoublesBracketNode} from '../../Brackets/doubles-bracket-node';
+import {Observable} from 'rxjs/Observable';
+import {concatMap, tap} from 'rxjs/operators';
+import {forkJoin} from 'rxjs/observable/forkJoin';
 
 @Component({
   selector: 'app-view-round',
@@ -88,23 +90,26 @@ export class ViewRoundComponent implements OnInit {
     this._setupService.getSinglesRound(this.tournamentId, this.currentRound).subscribe((round) => {
       this.roundId = round[0]['id'];
       this._setupService.getSinglesPools(round[0]['id']).subscribe((poolsResponse: any) => {
-        this.orderPoolsByNumber(poolsResponse);
+        const poolDataObservables: Observable<Object>[] = [];
         for (const pool of poolsResponse) {
           const poolId = pool['id'];
-          this._setupService.getSinglesPoolPlacements(pool['id']).subscribe((placements: any) => {
+          poolDataObservables.push(this._setupService.getSinglesPoolPlacements(pool['id']).pipe(concatMap((placements: any) => {
             const playerRecords: PlayerRecord[] = [];
             for (const placement of placements) {
-              playerRecords.push(new PlayerRecord(poolId, placement['player_id'], null));
+              playerRecords.push(new PlayerRecord(pool['id'], pool['number'], placement['player_id'], null));
             }
             this.recordPools.push(playerRecords);
-            this._gameService.getSinglesGamesInPool(poolId, this.tournamentId, this.roundId).subscribe((games) => {
+            return this._gameService.getSinglesGamesInPool(poolId, this.tournamentId, this.roundId).pipe(tap((games) => {
               this.allGamesPlayed = !games.find((game) => !game.winner);
               this.gamePools.push(games);
               this.calculatePlayerRecords(games);
               this.sortByStanding();
-            });
-          });
+            }));
+          })));
         }
+        forkJoin(...poolDataObservables).subscribe(() => {
+          this.orderPoolsByNumber(this.recordPools);
+        });
       });
     });
   }
@@ -125,7 +130,7 @@ export class ViewRoundComponent implements OnInit {
 
   orderPoolsByNumber(pools) {
     pools.sort((a, b) => {
-      return a['number'] > b['number'] ? 1 : -1;
+      return a[0].poolNumber > b[0].poolNumber ? 1 : -1;
     });
   }
 
@@ -144,24 +149,27 @@ export class ViewRoundComponent implements OnInit {
   retrieveDoublesData() {
     this._setupService.getDoublesRound(this.tournamentId, this.currentRound).subscribe((round) => {
       this.roundId = round[0]['id'];
-      this._setupService.getDoublesPools(this.roundId).subscribe((poolsResponse: any) => {
-        this.orderPoolsByNumber(poolsResponse);
+      this._setupService.getDoublesPools(round[0]['id']).subscribe((poolsResponse: any) => {
+        const poolDataObservables: Observable<Object>[] = [];
         for (const pool of poolsResponse) {
           const poolId = pool['id'];
-          this._setupService.getDoublesPoolPlacements(pool['id']).subscribe((placements: any) => {
+          poolDataObservables.push(this._setupService.getDoublesPoolPlacements(pool['id']).pipe(concatMap((placements: any) => {
             const playerRecords: PlayerRecord[] = [];
             for (const placement of placements) {
-              playerRecords.push(new PlayerRecord(poolId, null, placement['team_id']));
+              playerRecords.push(new PlayerRecord(pool['id'], pool['number'], placement['team_id'], null));
             }
             this.recordPools.push(playerRecords);
-            this._gameService.getDoublesGamesInPool(poolId, this.tournamentId, this.roundId).subscribe((games) => {
+            return this._gameService.getDoublesGamesInPool(poolId, this.tournamentId, this.roundId).pipe(tap((games) => {
               this.allGamesPlayed = !games.find((game) => !game.winner);
               this.gamePools.push(games);
-              this.calculateTeamRecords(games);
+              this.calculatePlayerRecords(games);
               this.sortByStanding();
-            });
-          });
+            }));
+          })));
         }
+        forkJoin(...poolDataObservables).subscribe(() => {
+          this.orderPoolsByNumber(this.recordPools);
+        });
       });
     });
   }
