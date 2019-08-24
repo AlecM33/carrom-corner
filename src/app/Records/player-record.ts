@@ -1,6 +1,7 @@
 export class PlayerRecord {
 
   public poolId: number;
+  public poolNumber: number;
   public playerId: number;
   public teamId: number;
   public wins: number;
@@ -11,11 +12,13 @@ export class PlayerRecord {
 
   constructor(
     poolId: number,
+    poolNumber: number,
     playerId: number,
     teamId: number
   ) {
 
     this.poolId = poolId;
+    this.poolNumber = poolNumber;
     this.playerId = playerId;
     this.teamId = teamId;
     this.wins = 0;

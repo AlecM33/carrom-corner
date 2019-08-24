@@ -2,8 +2,6 @@ import { Injectable } from '@angular/core';
 import { BracketGraph } from '../Brackets/bracketgraph';
 import { BracketNode } from '../Brackets/bracketnode';
 import { ChildTeams } from '../Brackets/childteams';
-import {Player} from '../Players/player';
-import {Team} from '../Teams/team';
 import {Observable} from 'rxjs/Observable';
 import {HttpClient} from '@angular/common/http';
 import {SinglesBracketNode} from '../Brackets/singles-bracket-node';

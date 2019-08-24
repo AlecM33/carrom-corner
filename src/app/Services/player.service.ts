@@ -21,7 +21,7 @@ export class PlayerService {
       'id', 'name', 'nickname', 'tournament_wins'
     ];
     for (const jsonPlayers of retrievedPlayers) {
-      if (!expectedProperties.every((prop) => jsonPlayers.hasOwnProperty(prop))) continue;
+      if (!expectedProperties.every((prop) => jsonPlayers.hasOwnProperty(prop))) { continue; }
       const newPlayer = new Player(jsonPlayers['name'], jsonPlayers['nickname']);
       newPlayer['id'] = jsonPlayers['id'];
       newPlayer['tournamentWins'] = jsonPlayers['tournament_wins'];

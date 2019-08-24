@@ -115,7 +115,7 @@ export class HomepageComponent implements OnInit {
       }
       doublesTotalDiff += game.differential;
     }
-    if (singlesTotalDiff) this.singlesAvgDiff = singlesTotalDiff / this.playedSinglesGames.length;
-    if (doublesTotalDiff) this.doublesAvgDiff = doublesTotalDiff / this.playedDoublesGames.length;
+    if (singlesTotalDiff) { this.singlesAvgDiff = singlesTotalDiff / this.playedSinglesGames.length; }
+    if (doublesTotalDiff) { this.doublesAvgDiff = doublesTotalDiff / this.playedDoublesGames.length; }
   }
 }

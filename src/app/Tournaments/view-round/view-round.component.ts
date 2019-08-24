@@ -12,10 +12,12 @@ import {SinglesGame} from '../../Games/singles-game';
 import {DoublesGame} from '../../Games/doubles-game';
 import {Team} from '../../Teams/team';
 import {TeamService} from '../../Services/team.service';
-import {Playoff} from '../../Playoffs/playoff';
 import {PlayoffService} from '../../Services/playoff.service';
 import {SinglesBracketNode} from '../../Brackets/singles-bracket-node';
 import {DoublesBracketNode} from '../../Brackets/doubles-bracket-node';
+import {Observable} from 'rxjs/Observable';
+import {concatMap, tap} from 'rxjs/operators';
+import {forkJoin} from 'rxjs/observable/forkJoin';
 
 @Component({
   selector: 'app-view-round',
@@ -31,11 +33,9 @@ export class ViewRoundComponent implements OnInit {
   public currentRound: number;
   public numberOfRounds: number;
   public tournamentName: string;
-  public playerPools = [];
   public recordPools = [];
   public roundId: number;
   public allGamesPlayed = false;
-  public selectingAdvancements = false;
   public numberToAdvance = 1;
   public extraPlayer = false;
   public gamePools = [];
@@ -90,35 +90,37 @@ export class ViewRoundComponent implements OnInit {
     this._setupService.getSinglesRound(this.tournamentId, this.currentRound).subscribe((round) => {
       this.roundId = round[0]['id'];
       this._setupService.getSinglesPools(round[0]['id']).subscribe((poolsResponse: any) => {
-        this.orderPoolsByNumber(poolsResponse);
+        const poolDataObservables: Observable<Object>[] = [];
         for (const pool of poolsResponse) {
           const poolId = pool['id'];
-          this._setupService.getSinglesPoolPlacements(pool['id']).subscribe((placements: any) => {
+          poolDataObservables.push(this._setupService.getSinglesPoolPlacements(pool['id']).pipe(concatMap((placements: any) => {
             const playerRecords: PlayerRecord[] = [];
             for (const placement of placements) {
-              playerRecords.push(new PlayerRecord(poolId, placement['player_id'], null));
+              playerRecords.push(new PlayerRecord(pool['id'], pool['number'], placement['player_id'], null));
             }
             this.recordPools.push(playerRecords);
-            this._gameService.getSinglesGamesInPool(poolId, this.tournamentId, this.roundId).subscribe((games) => {
+            return this._gameService.getSinglesGamesInPool(poolId, this.tournamentId, this.roundId).pipe(tap((games) => {
               this.allGamesPlayed = !games.find((game) => !game.winner);
               this.gamePools.push(games);
               this.calculatePlayerRecords(games);
               this.sortByStanding();
-            });
-          });
+            }));
+          })));
         }
+        forkJoin(...poolDataObservables).subscribe(() => {
+          this.orderPoolsByNumber(this.recordPools);
+        });
       });
     });
   }
 
   sortByStanding() {
-    console.log(this.recordPools);
     for (const pool of this.recordPools) {
       pool.sort((a, b) => {
-          if(a.wins > b.wins) return -1;
-          if(b.wins > a.wins) return 1;
-          if(a.losses < b.losses) return -1;
-          if(b.losses > a.losses) return 1;
+          if (a.wins > b.wins) { return -1; }
+          if (b.wins > a.wins) { return 1; }
+          if (a.losses < b.losses) { return -1; }
+          if (b.losses > a.losses) { return 1; }
           return a.totalDiff >= b.totalDiff ? -1 : 1;
         }
       );
@@ -128,16 +130,16 @@ export class ViewRoundComponent implements OnInit {
 
   orderPoolsByNumber(pools) {
     pools.sort((a, b) => {
-      return a['number'] > b['number'] ? 1 : -1;
+      return a[0].poolNumber > b[0].poolNumber ? 1 : -1;
     });
   }
 
   sortPlayoffPool(pool) {
     pool.sort((a, b) => {
-        if(a.wins > b.wins) return -1;
-        if(b.wins > a.wins) return 1;
-        if(a.losses < b.losses) return -1;
-        if(b.losses > a.losses) return 1;
+        if (a.wins > b.wins) { return -1; }
+        if (b.wins > a.wins) { return 1; }
+        if (a.losses < b.losses) { return -1; }
+        if (b.losses > a.losses) { return 1; }
         return a.totalDiff >= b.totalDiff ? -1 : 1;
       }
     );
@@ -147,24 +149,27 @@ export class ViewRoundComponent implements OnInit {
   retrieveDoublesData() {
     this._setupService.getDoublesRound(this.tournamentId, this.currentRound).subscribe((round) => {
       this.roundId = round[0]['id'];
-      this._setupService.getDoublesPools(this.roundId).subscribe((poolsResponse: any) => {
-        this.orderPoolsByNumber(poolsResponse);
+      this._setupService.getDoublesPools(round[0]['id']).subscribe((poolsResponse: any) => {
+        const poolDataObservables: Observable<Object>[] = [];
         for (const pool of poolsResponse) {
           const poolId = pool['id'];
-          this._setupService.getDoublesPoolPlacements(pool['id']).subscribe((placements: any) => {
+          poolDataObservables.push(this._setupService.getDoublesPoolPlacements(pool['id']).pipe(concatMap((placements: any) => {
             const playerRecords: PlayerRecord[] = [];
             for (const placement of placements) {
-              playerRecords.push(new PlayerRecord(poolId, null, placement['team_id']));
+              playerRecords.push(new PlayerRecord(pool['id'], pool['number'], placement['team_id'], null));
             }
             this.recordPools.push(playerRecords);
-            this._gameService.getDoublesGamesInPool(poolId, this.tournamentId, this.roundId).subscribe((games) => {
+            return this._gameService.getDoublesGamesInPool(poolId, this.tournamentId, this.roundId).pipe(tap((games) => {
               this.allGamesPlayed = !games.find((game) => !game.winner);
               this.gamePools.push(games);
-              this.calculateTeamRecords(games);
+              this.calculatePlayerRecords(games);
               this.sortByStanding();
-            });
-          });
+            }));
+          })));
         }
+        forkJoin(...poolDataObservables).subscribe(() => {
+          this.orderPoolsByNumber(this.recordPools);
+        });
       });
     });
   }
@@ -256,40 +261,42 @@ export class ViewRoundComponent implements OnInit {
 
   startNextRound(playoffs: boolean) {
     this.roundModal.nativeElement.className = 'modal hidden';
-    let roundUpdateObs;
-    this.tournyType === 'singles' ?
-      roundUpdateObs = this._tournamentService.updateSinglesTournamentRound(this.tournament[0].id, 2)
-      : roundUpdateObs = this._tournamentService.updateDoublesTournamentRound(this.tournament[0].id, 2);
-    roundUpdateObs.subscribe((resp) => {
-      const nextRoundAdvancers = new Set();
-      for (const pool of this.recordPools) {
-        for (let i = 0; i < this.numberToAdvance; i++) {
-          this.tournyType === 'singles' ?
-            nextRoundAdvancers.add(this.players.find((player) => player.id === pool[i].playerId))
-            : nextRoundAdvancers.add(this.teams.find((team) => team.id === pool[i].teamId));
-        }
-        if (pool.length === this.findLargestPool() && this.extraPlayer === true && this.numberToAdvance !== this.findLargestPool()) {
-          this.tournyType === 'singles' ?
-            nextRoundAdvancers.add(this.players.find((player) => player.id === pool[this.numberToAdvance].playerId))
-            : nextRoundAdvancers.add(this.teams.find((team) => team.id === pool[this.numberToAdvance].teamId));
-        }
+    const nextRoundAdvancers = new Set();
+    for (const pool of this.recordPools) {
+      for (let i = 0; i < this.numberToAdvance; i++) {
+        this.tournyType === 'singles' ?
+          nextRoundAdvancers.add(this.players.find((player) => player.id === pool[i].playerId))
+          : nextRoundAdvancers.add(this.teams.find((team) => team.id === pool[i].teamId));
       }
-      if (playoffs) {
-        this.startPlayoffs(nextRoundAdvancers);
-      } else {
+      if (pool.length === this.findLargestPool() && this.extraPlayer === true && this.numberToAdvance !== this.findLargestPool()) {
+        this.tournyType === 'singles' ?
+          nextRoundAdvancers.add(this.players.find((player) => player.id === pool[this.numberToAdvance].playerId))
+          : nextRoundAdvancers.add(this.teams.find((team) => team.id === pool[this.numberToAdvance].teamId));
+      }
+    }
+    if (playoffs) {
+      this.startPlayoffs(nextRoundAdvancers);
+    } else {
+      let roundUpdateObs;
+      this.tournyType === 'singles' ?
+        roundUpdateObs = this._tournamentService.updateSinglesTournamentRound(this.tournament[0].id, 2)
+        : roundUpdateObs = this._tournamentService.updateDoublesTournamentRound(this.tournament[0].id, 2);
+      roundUpdateObs.subscribe((resp) => {
         this.recordPools = [];
         this.loading = true;
         this.allGamesPlayed = false;
         this.currentRound = 2;
         this.tournyType === 'singles' ?
-          this._setupService.createSinglesData(this.tournamentId, this.tournamentName, 2, nextRoundAdvancers, this.tournament[0]['robin_type']).subscribe((nav) => {
-            this.getRoundData();
-          })
-          : this._setupService.createDoublesDataForSecondRound(this.tournamentId, this.tournamentName, 2, nextRoundAdvancers, this.tournament[0]['robin_type']).subscribe((nav) => {
-            this.getRoundData();
-          });
-      }
-    });
+          this._setupService.createSinglesData(this.tournamentId, this.tournamentName, 2, nextRoundAdvancers,
+            this.tournament[0]['robin_type']).subscribe((nav) => {
+              this.getRoundData();
+            })
+          : this._setupService.createDoublesDataForSecondRound(this.tournamentId, this.tournamentName, 2,
+          nextRoundAdvancers, this.tournament[0]['robin_type']).subscribe((nav) => {
+              this.getRoundData();
+            });
+      });
+    }
   }
 
   goToRound(number) {
@@ -297,7 +304,8 @@ export class ViewRoundComponent implements OnInit {
     this.loading = true;
     this.allGamesPlayed = false;
     this.currentRound = number;
-    this.router.navigateByUrl('/tournaments/' + this.tournyType + '/' + this.tournamentName + '/' + this.tournamentId + '/' + this.currentRound);
+    this.router.navigateByUrl('/tournaments/' + this.tournyType + '/' + this.tournamentName + '/' + this.tournamentId + '/'
+      + this.currentRound);
     this.getRoundData();
   }
 

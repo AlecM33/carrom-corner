@@ -127,7 +127,7 @@ export class GameService {
     });
   }
 
-  getSinglesGamesInPool(poolId: number, tournamentId: number, roundId: number) {
+  getSinglesGamesInPool(poolId: number, tournamentId: number, roundId: number): Observable<any> {
     return this.http.request('get', '/api/games/get/singles/' + tournamentId + '/' + roundId + '/' + poolId, {
       headers: {
         'Content-Type': 'application/json'
@@ -167,7 +167,7 @@ export class GameService {
     }).map(this.populateWithDoublesGames);
   }
 
-  getDoublesGamesInPool(poolId: number, tournamentId: number, roundId: number) {
+  getDoublesGamesInPool(poolId: number, tournamentId: number, roundId: number): Observable<any> {
     return this.http.request('get', '/api/games/get/doubles/' + tournamentId + '/' + roundId + '/' + poolId, {
       headers: {
         'Content-Type': 'application/json'

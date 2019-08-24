@@ -15,7 +15,7 @@ import {catchError, tap} from 'rxjs/operators';
 import {of} from 'rxjs/observable/of';
 
 @Component({
-  selector: 'cr-tournaments',
+  selector: 'app-tournaments',
   templateUrl: './tournament-list.component.html',
 })
 
@@ -41,7 +41,7 @@ export class TournamentListComponent implements OnInit {
   }
 
   viewPlayoff(e, tournament) {
-    if (e) e.preventDefault();
+    if (e) { e.preventDefault(); }
     if (this.singlesTournaments.includes(tournament)) {
       this.router.navigateByUrl('/playoffs/singles/' + tournament.id);
     } else {
@@ -64,7 +64,7 @@ export class TournamentListComponent implements OnInit {
   }
 
   viewTournament(e, tournament) {
-    if (e) e.preventDefault();
+    if (e) { e.preventDefault(); }
     if (tournament.playoffsStarted) {
       this.viewPlayoff(e, tournament);
     } else {
