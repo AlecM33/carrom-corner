@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms'
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { Router, RouterModule } from '@angular/router';
 import { HttpModule, JsonpModule } from '@angular/http';
@@ -8,7 +8,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { PlayerListComponent } from './Players/player-list.component';
 import { AddPlayerComponent } from './Players/add-player.component';
 import { environment } from '../environments/environment';
-import { AddTournamentComponent } from './Tournaments/add-tournament.component'
+import { AddTournamentComponent } from './Tournaments/add-tournament.component';
 import { CoreModule } from './core.module';
 import { TournamentListComponent } from './Tournaments/tournament-list.component';
 import { PlayoffsComponent } from './Playoffs/playoffs.component';

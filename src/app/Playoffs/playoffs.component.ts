@@ -5,16 +5,9 @@ import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Player } from '../Players/player';
 import { GameService } from '../Services/game.service';
-import { NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
-import * as _swal from 'sweetalert';
-import { SweetAlert } from 'sweetalert/typings/core';
-import { EloService } from '../Services/elo.service';
 import {PlayoffService} from '../Services/playoff.service';
 import {BracketService} from '../Services/bracket.service';
-const swal: SweetAlert = _swal as any;
 import * as d3 from 'd3';
-import {SinglesGame} from '../Games/singles-game';
-import {DoublesGame} from '../Games/doubles-game';
 import {TeamService} from '../Services/team.service';
 import {Team} from '../Teams/team';
 
@@ -28,8 +21,6 @@ export class PlayoffsComponent implements OnInit {
                 public http: HttpClient, public router: Router,
                 public active_route: ActivatedRoute,
                 public _gameService: GameService,
-                public tooltipConfig: NgbTooltipConfig,
-                public elo_adjuster: EloService,
                 public _playoffService: PlayoffService,
                 public _bracketService: BracketService,
                 public _teamService: TeamService) {
@@ -56,13 +47,9 @@ export class PlayoffsComponent implements OnInit {
     public teams: Team[];
 
     // variables related to modal for playoff game result entry
-    public modalOpen = false;
     public validator: any;
     public modalWinner: any;
     public modalLoser: any;
-    validatorBlank = false;
-    scoreBlank = false;
-    scoreInvalid = false;
 
     @ViewChild('playoffModal') playoffModal: ElementRef;
     @ViewChild('updateBtn') updateBtn: ElementRef;
@@ -80,7 +67,7 @@ export class PlayoffsComponent implements OnInit {
           this._bracketService.getBracket(parseInt(this.playoffId, 10), this.tournyType).subscribe((bracket) => {
             this.bracketDepth = bracket[0]['depth'];
             this._bracketService.getBracketNodes(bracket[0]['id'], this.tournyType).subscribe((nodes) => {
-              this.constructBracketFromNodes(nodes, this.playoffId);
+              this.constructBracketFromNodes(nodes);
             });
           });
         });
@@ -98,7 +85,7 @@ export class PlayoffsComponent implements OnInit {
 
     }
 
-    constructBracketFromNodes(nodes, playoffId) {
+    constructBracketFromNodes(nodes) {
       this.nodes = JSON.parse(JSON.stringify(nodes));
       const root = nodes.shift();
       let tree;
@@ -115,13 +102,6 @@ export class PlayoffsComponent implements OnInit {
       }
       this.buildJSONTree(tree, nodes);
       this.buildD3Graph(tree);
-    }
-
-    sortNodes() {
-      this.nodes.sort((a, b) => {
-          return a.nodeIndex > b.nodeIndex ? 1 : -1;
-        }
-      );
     }
 
   buildJSONTree(tree, nodes) {
@@ -189,7 +169,7 @@ export class PlayoffsComponent implements OnInit {
       .attr('transform', 'translate(' + margin.left  + ',' + margin.top + ')');
 
     // adds the links between the nodes
-    const link = g.selectAll('.link')
+    g.selectAll('.link')
       .data(nodes.descendants().slice(1))
       .enter().append('path')
       .attr('class', 'link')
@@ -218,8 +198,6 @@ export class PlayoffsComponent implements OnInit {
       .html(d => gameTemplate(d));
 
     labels.exit();
-
-    const labelDivs = d3.select('#labels').selectAll('div');
     if (!this.tournament.ended) {
       labels.filter((div) => div.data.a && div.data.b).classed('node clickable', true).on('click', (node) => {
         this.enterPlayoffGame(node);
@@ -281,7 +259,8 @@ export class PlayoffsComponent implements OnInit {
   }
 
   goToRound() {
-    this.router.navigateByUrl('/tournaments/' + this.tournyType + '/' + this.tournament.name + '/' + this.tournament.id + '/' + this.tournament.current_round);
+    this.router.navigateByUrl('/tournaments/' + this.tournyType + '/' + this.tournament.name + '/' + this.tournament.id + '/'
+      + this.tournament.current_round);
   }
 
   hideModal() {
@@ -319,7 +298,7 @@ export class PlayoffsComponent implements OnInit {
         : this._bracketService.updateDoublesParentNode(this.nodes[parentIndex]).subscribe();
       const newNodes = JSON.parse(JSON.stringify(this.nodes));
       d3.select('#labels').selectAll('div').remove();
-      this.constructBracketFromNodes(newNodes, this.playoffId);
+      this.constructBracketFromNodes(newNodes);
     }
   }
 

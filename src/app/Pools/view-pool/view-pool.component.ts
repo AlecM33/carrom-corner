@@ -1,15 +1,11 @@
 import {Component, ElementRef, Inject, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
-import {PlayerRecord} from '../../Records/player-record';
 import {Player} from '../../Players/player';
 import {Team} from '../../Teams/team';
 import {PlayerService} from '../../Services/player.service';
 import {HttpClient} from '@angular/common/http';
-import {TournamentSetupService} from '../../Services/tournament-setup.service';
 import {GameService} from '../../Services/game.service';
 import {TeamService} from '../../Services/team.service';
-import {SinglesGame} from '../../Games/singles-game';
-import {environment} from '../../../environments/environment';
 import {TournamentService} from '../../Services/tournament.service';
 
 @Component({
@@ -92,7 +88,8 @@ export class ViewPoolComponent implements OnInit {
 
 
   backToRound() {
-    this.router.navigateByUrl('/tournaments/' + this.tournyType + '/' + this.tournamentName + '/' + this.tournamentId + '/' + this.currentRound);
+    this.router.navigateByUrl('/tournaments/' + this.tournyType + '/' + this.tournamentName + '/' + this.tournamentId
+      + '/' + this.currentRound);
   }
 
   retrieveSinglesData() {
@@ -140,9 +137,9 @@ export class ViewPoolComponent implements OnInit {
   gameIsPlayed(participant1Id: number, participant2Id: number) {
     let game;
     if (this.tournyType === 'singles') {
-      game = this.poolGames.find((game) => game.player1Id === participant1Id && game.player2Id === participant2Id);
+      game = this.poolGames.find((g) => g.player1Id === participant1Id && g.player2Id === participant2Id);
     } else {
-      game = this.poolGames.find((game) => game.team1Id === participant1Id && game.team2Id === participant2Id);
+      game = this.poolGames.find((g) => g.team1Id === participant1Id && g.team2Id === participant2Id);
     }
     return game && game.winner && (game.differential !== undefined);
   }
@@ -203,11 +200,6 @@ export class ViewPoolComponent implements OnInit {
       const call = this.tournyType === 'singles' ? this._gameService.updateSinglesGame(this.currentGame)
         : this._gameService.updateDoublesGame(this.currentGame);
       call.subscribe(() => {
-          if (this.tournyType === 'doubles') {
-            //this.patchDoublesPlayers();
-          } else {
-            //this.patchSinglesPlayers();
-          }
         this.updateBtn.nativeElement.innerText = 'Updated';
         this.updateBtn.nativeElement.className = 'app-btn confirmed';
         this.hideModal();

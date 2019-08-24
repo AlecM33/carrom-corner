@@ -2,12 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders} from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { Tournament } from '../Tournaments/tournament';
-import { SinglesPool } from '../Pools/singles-pool';
-import { Playoff } from '../Playoffs/playoff';
 import { environment } from 'environments/environment';
 import {SinglesTournament} from '../Tournaments/singles-tournament';
 import {DoublesTournament} from '../Tournaments/doubles-tournament';
-import {SinglesGame} from '../Games/singles-game';
 
 @Injectable()
 export class TournamentService {
@@ -19,7 +16,8 @@ export class TournamentService {
     populateWithSinglesTournaments(response: any[]): SinglesTournament[] {
         const tournaments = [];
         for (const jsonTourny of response) {
-          const retrievedTourny = new SinglesTournament(jsonTourny['name'], jsonTourny['size'], jsonTourny['rounds'], jsonTourny['robin_type']);
+          const retrievedTourny = new SinglesTournament(jsonTourny['name'], jsonTourny['size'], jsonTourny['rounds'],
+            jsonTourny['robin_type']);
           retrievedTourny.id = jsonTourny['id'];
           retrievedTourny.playoffsStarted = jsonTourny['playoffs_started'];
           retrievedTourny.winner = jsonTourny['winner'];
@@ -34,7 +32,8 @@ export class TournamentService {
   populateWithDoublesTournaments(response: any[]): DoublesTournament[] {
       const tournaments = [];
       for (const jsonTourny of response) {
-        const retrievedTourny = new DoublesTournament(jsonTourny['name'], jsonTourny['size'], jsonTourny['rounds'], jsonTourny['robin_type']);
+        const retrievedTourny = new DoublesTournament(jsonTourny['name'], jsonTourny['size'], jsonTourny['rounds'],
+          jsonTourny['robin_type']);
         retrievedTourny.id = jsonTourny['id'];
         retrievedTourny.playoffsStarted = jsonTourny['playoffs_started'];
         retrievedTourny.winner = jsonTourny['winner'];
@@ -210,10 +209,10 @@ export class TournamentService {
     // NOTE: Also deletes corresponding pools, games, and playoffs.
     deleteTournament(tournament, name) {
         const httpOptions = {headers: new HttpHeaders({ 'Content-Type': 'application/json' })};
-        if(tournament instanceof SinglesTournament) {
+        if (tournament instanceof SinglesTournament) {
           return this.http.delete('/api/tournaments/singles/' + tournament.id, httpOptions);
         }
-        if(tournament instanceof DoublesTournament) {
+        if (tournament instanceof DoublesTournament) {
           return this.http.delete('/api/tournaments/doubles/' + tournament.id, httpOptions);
         }
     }

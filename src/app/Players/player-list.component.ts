@@ -1,11 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Player } from './player';
-import { HttpModule, JsonpModule } from '@angular/http';
 import { PlayerService } from '../Services/player.service';
-import { AppComponent } from '../app.component';
 import { Observable } from 'rxjs/Observable';
 import { HttpClient } from '@angular/common/http';
-import { Config } from 'protractor';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/do';
 import {GameService} from '../Services/game.service';
@@ -15,7 +11,7 @@ import {tap} from 'rxjs/operators';
 import {forkJoin} from 'rxjs/observable/forkJoin';
 
 @Component({
-  selector: 'cr-players',
+  selector: 'app-players',
   templateUrl: './player-list.component.html',
 })
 
@@ -23,12 +19,11 @@ import {forkJoin} from 'rxjs/observable/forkJoin';
 export class PlayerListComponent implements OnInit {
 
   public players = [];
-  public newPlayers = [];
-  public sortablePlayers = [];
   public loading = true;
   public statChoice = 'total';
 
-  constructor(private _playerService: PlayerService, private http: HttpClient, public _gameService: GameService, public _teamService: TeamService) {}
+  constructor(private _playerService: PlayerService, private http: HttpClient, public _gameService: GameService,
+              public _teamService: TeamService) {}
 
   // gets player list for list view
   ngOnInit() {
@@ -70,13 +65,13 @@ export class PlayerListComponent implements OnInit {
 
   sortBySinglesStats(pool) {
     pool.sort((a, b) => {
-        if (a.singlesWinPtg !== undefined && b.singlesWinPtg === undefined) return -1;
-        if (a.singlesWinPtg > b.singlesWinPtg) return -1;
-        if (b.singlesWinPtg > a.singlesWinPtg) return 1;
-        if (a.singlesWins > b.singlesWins) return -1;
-        if (b.singlesWins > a.singlesWins) return 1;
-        if (a.singlesAvgDiff > b.singlesAvgDiff) return -1;
-        if (b.singlesAvgDiff > a.singlesAvgDiff) return 1;
+        if (a.singlesWinPtg !== undefined && b.singlesWinPtg === undefined) { return -1; }
+        if (a.singlesWinPtg > b.singlesWinPtg) { return -1; }
+        if (b.singlesWinPtg > a.singlesWinPtg) { return 1; }
+        if (a.singlesWins > b.singlesWins) { return -1; }
+        if (b.singlesWins > a.singlesWins) { return 1; }
+        if (a.singlesAvgDiff > b.singlesAvgDiff) { return -1; }
+        if (b.singlesAvgDiff > a.singlesAvgDiff) { return 1; }
         return a.singlesAvgDiff >= b.singlesAvgDiff ? -1 : 1;
       }
     );
@@ -84,13 +79,13 @@ export class PlayerListComponent implements OnInit {
 
   sortByDoublesStats(pool) {
     pool.sort((a, b) => {
-        if (a.doublesWinPtg !== undefined && b.doublesWinPtg === undefined) return -1;
-        if (a.doublesWinPtg > b.doublesWinPtg) return -1;
-        if (b.doublesWinPtg > a.doublesWinPtg) return 1;
-        if (a.doublesWins > b.doublesWins) return -1;
-        if (b.doublesWins > a.doublesWins) return 1;
-        if (a.doublesAvgDiff > b.doublesAvgDiff) return -1;
-        if (b.doublesAvgDiff > a.doublesAvgDiff) return 1;
+        if (a.doublesWinPtg !== undefined && b.doublesWinPtg === undefined) { return -1; }
+        if (a.doublesWinPtg > b.doublesWinPtg) { return -1; }
+        if (b.doublesWinPtg > a.doublesWinPtg) { return 1; }
+        if (a.doublesWins > b.doublesWins) { return -1; }
+        if (b.doublesWins > a.doublesWins) { return 1; }
+        if (a.doublesAvgDiff > b.doublesAvgDiff) { return -1; }
+        if (b.doublesAvgDiff > a.doublesAvgDiff) { return 1; }
         return a.doublesAvgDiff >= b.doublesAvgDiff ? -1 : 1;
       }
     );
@@ -98,13 +93,13 @@ export class PlayerListComponent implements OnInit {
 
   sortByTotalStats(pool) {
     pool.sort((a, b) => {
-        if (a.totalWinPtg !== undefined && b.totalWinPtg === undefined) return -1;
-        if (a.totalWinPtg > b.totalWinPtg) return -1;
-        if (b.totalWinPtg > a.totalWinPtg) return 1;
-        if (a.totalWins > b.totalWins) return -1;
-        if (b.totalWins > a.totalWins) return 1;
-        if (a.totalAvgDiff > b.totalAvgDiff) return -1;
-        if (b.totalAvgDiff > a.totalAvgDiff) return 1;
+        if (a.totalWinPtg !== undefined && b.totalWinPtg === undefined) { return -1; }
+        if (a.totalWinPtg > b.totalWinPtg) { return -1; }
+        if (b.totalWinPtg > a.totalWinPtg) { return 1; }
+        if (a.totalWins > b.totalWins) { return -1; }
+        if (b.totalWins > a.totalWins) { return 1; }
+        if (a.totalAvgDiff > b.totalAvgDiff) { return -1; }
+        if (b.totalAvgDiff > a.totalAvgDiff) { return 1; }
         return a.totalAvgDiff >= b.totalAvgDiff ? -1 : 1;
       }
     );
@@ -147,10 +142,14 @@ export class PlayerListComponent implements OnInit {
     player.singlesWins = 0;
     player.singlesLosses = 0;
     return this._gameService.getPlayerSinglesWinsAndLosses(player.id).pipe(tap((result) => {
-      if (result[0].win_count > 0)  player.singlesWins = result[0].win_count;
-      if (result[0].loss_count > 0) player.singlesLosses = result[0].loss_count;
-      player.singlesWinPtg = (player.singlesWins + player.singlesLosses) > 0 ? player.singlesWins / (player.singlesWins + player.singlesLosses) : undefined;
-      player.singlesAvgDiff = (player.singlesWins + player.singlesLosses) > 0 ? ((result[0].plus + result[0].minus) / (player.singlesWins + player.singlesLosses)) : undefined;
+      if (result[0].win_count > 0) {  player.singlesWins = result[0].win_count; }
+      if (result[0].loss_count > 0) { player.singlesLosses = result[0].loss_count; }
+      player.singlesWinPtg = (player.singlesWins + player.singlesLosses) > 0 ?
+        player.singlesWins / (player.singlesWins + player.singlesLosses)
+        : undefined;
+      player.singlesAvgDiff = (player.singlesWins + player.singlesLosses) > 0 ?
+        ((result[0].plus + result[0].minus) / (player.singlesWins + player.singlesLosses))
+        : undefined;
     }));
   }
 

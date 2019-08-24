@@ -84,7 +84,7 @@ describe('PlayoffsComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(PlayoffsComponent);
     component = fixture.componentInstance;
-    getPlayoffGamesSpy = spyOn(component, 'getPlayoffGames').and.callFake(function() {return{};});
+    getPlayoffGamesSpy = spyOn(component, 'getPlayoffGames').and.callFake(function() {return{}; });
     playerServiceSpy = spyOn(component._playerService, 'getPlayers').and.callThrough();
     constructPlayoffsSpy = spyOn(component, 'constructPlayoff');
     fixture.detectChanges();

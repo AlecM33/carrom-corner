@@ -31,11 +31,9 @@ export class ViewRoundComponent implements OnInit {
   public currentRound: number;
   public numberOfRounds: number;
   public tournamentName: string;
-  public playerPools = [];
   public recordPools = [];
   public roundId: number;
   public allGamesPlayed = false;
-  public selectingAdvancements = false;
   public numberToAdvance = 1;
   public extraPlayer = false;
   public gamePools = [];
@@ -114,10 +112,10 @@ export class ViewRoundComponent implements OnInit {
   sortByStanding() {
     for (const pool of this.recordPools) {
       pool.sort((a, b) => {
-          if(a.wins > b.wins) return -1;
-          if(b.wins > a.wins) return 1;
-          if(a.losses < b.losses) return -1;
-          if(b.losses > a.losses) return 1;
+          if (a.wins > b.wins) { return -1; }
+          if (b.wins > a.wins) { return 1; }
+          if (a.losses < b.losses) { return -1; }
+          if (b.losses > a.losses) { return 1; }
           return a.totalDiff >= b.totalDiff ? -1 : 1;
         }
       );
@@ -133,10 +131,10 @@ export class ViewRoundComponent implements OnInit {
 
   sortPlayoffPool(pool) {
     pool.sort((a, b) => {
-        if(a.wins > b.wins) return -1;
-        if(b.wins > a.wins) return 1;
-        if(a.losses < b.losses) return -1;
-        if(b.losses > a.losses) return 1;
+        if (a.wins > b.wins) { return -1; }
+        if (b.wins > a.wins) { return 1; }
+        if (a.losses < b.losses) { return -1; }
+        if (b.losses > a.losses) { return 1; }
         return a.totalDiff >= b.totalDiff ? -1 : 1;
       }
     );
