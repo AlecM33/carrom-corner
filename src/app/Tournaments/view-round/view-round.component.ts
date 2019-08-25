@@ -100,7 +100,6 @@ export class ViewRoundComponent implements OnInit {
             }
             this.recordPools.push(playerRecords);
             return this._gameService.getSinglesGamesInPool(poolId, this.tournamentId, this.roundId).pipe(tap((games) => {
-              console.log(games);
               this.allGamesPlayed = games.filter((game) => game.winner === null).length === 0;
               this.gamePools.push(games);
               this.calculatePlayerRecords(games);
