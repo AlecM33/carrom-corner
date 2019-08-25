@@ -66,8 +66,8 @@ export class HomepageComponent implements OnInit {
           / doublesFlipGames.length;
       }
       this.totalValidatorPct = this.setTotalValidationPtc(this.singlesValidatorPct, this.doublesValidatorPct, singlesValidatorGames,
-        singlesFlipGames);
-      this.totalCoinFlipPct = this.setTotalCoinFlipPtc(this.singlesCoinFlipPct, this.doublesCoinFlipPct, doublesValidatorGames,
+        doublesValidatorGames);
+      this.totalCoinFlipPct = this.setTotalCoinFlipPtc(this.singlesCoinFlipPct, this.doublesCoinFlipPct, singlesFlipGames,
         doublesFlipGames);
       this.totalAvgDiff = this.setTotalAvgDiff(this.singlesAvgDiff, this.doublesAvgDiff);
     }
