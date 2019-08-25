@@ -49,40 +49,46 @@ export class HomepageComponent implements OnInit {
     }
 
     calculateWinPercentages() {
+      const singlesValidatorGames = this.playedSinglesGames.filter((game) => game.validator);
+      const singlesFlipGames = this.playedSinglesGames.filter((game) => game.coinFlipWinner);
+      const doublesValidatorGames = this.playedDoublesGames.filter((game) => game.validator);
+      const doublesFlipGames = this.playedDoublesGames.filter((game) => game.coinFlipWinner);
       if (this.playedSinglesGames && this.playedSinglesGames.length > 0) {
-        this.singlesValidatorPct = this.playedSinglesGames.filter((game) => game.validator && (game.validator === game.winner)).length
-          / this.playedSinglesGames.length;
-        this.singlesCoinFlipPct = this.playedSinglesGames.filter((game) => game.coinFlipWinner
-          && (game.coinFlipWinner === game.winner)).length / this.playedSinglesGames.length;
+        this.singlesValidatorPct = this.playedSinglesGames.filter((game) => game.validator === game.winner).length
+          / singlesValidatorGames.length;
+        this.singlesCoinFlipPct = this.playedSinglesGames.filter((game) => game.coinFlipWinner === game.winner).length
+          / singlesFlipGames.length;
       }
       if (this.playedDoublesGames && this.playedDoublesGames.length > 0) {
-        this.doublesValidatorPct = this.playedDoublesGames.filter((game) => game.validator && (game.validator === game.winner)).length
-          / this.playedDoublesGames.length;
-        this.doublesCoinFlipPct = this.playedDoublesGames.filter((game) => game.coinFlipWinner
-          && game.coinFlipWinner === game.winner).length / this.playedDoublesGames.length;
+        this.doublesValidatorPct = this.playedDoublesGames.filter((game) => game.validator === game.winner).length
+          / doublesValidatorGames.length;
+        this.doublesCoinFlipPct = this.playedDoublesGames.filter((game) => game.coinFlipWinner === game.winner).length
+          / doublesFlipGames.length;
       }
-      this.totalValidatorPct = this.setTotalValidationPtc(this.singlesValidatorPct, this.doublesValidatorPct);
-      this.totalCoinFlipPct = this.setTotalCoinFlipPtc(this.singlesCoinFlipPct, this.doublesCoinFlipPct);
+      this.totalValidatorPct = this.setTotalValidationPtc(this.singlesValidatorPct, this.doublesValidatorPct, singlesValidatorGames,
+        singlesFlipGames);
+      this.totalCoinFlipPct = this.setTotalCoinFlipPtc(this.singlesCoinFlipPct, this.doublesCoinFlipPct, doublesValidatorGames,
+        doublesFlipGames);
       this.totalAvgDiff = this.setTotalAvgDiff(this.singlesAvgDiff, this.doublesAvgDiff);
     }
 
-  setTotalValidationPtc(singlesPtc, doublesPtc) {
+  setTotalValidationPtc(singlesPtc, doublesPtc, singlesSet, doublesSet) {
     if (!(typeof singlesPtc === 'number') && !(typeof doublesPtc === 'number')) { return undefined; }
     if (typeof singlesPtc === 'number' && !(typeof doublesPtc === 'number')) { return singlesPtc; }
     if (!(typeof singlesPtc === 'number') && typeof doublesPtc === 'number') { return doublesPtc; }
     if (typeof singlesPtc === 'number' && typeof doublesPtc === 'number') {
-      return ((singlesPtc * (this.playedSinglesGames.length / this.totalGamesPlayed))
-        + (doublesPtc * (this.playedDoublesGames.length / this.totalGamesPlayed)));
+      return ((singlesPtc * (singlesSet.length / (singlesSet.length + doublesSet.length)))
+        + (doublesPtc * (doublesSet.length / (singlesSet.length + doublesSet.length))));
     }
   }
 
-  setTotalCoinFlipPtc(singlesPtc, doublesPtc) {
+  setTotalCoinFlipPtc(singlesPtc, doublesPtc, singlesSet, doublesSet) {
     if (!(typeof singlesPtc === 'number') && !(typeof doublesPtc === 'number')) { return undefined; }
     if (typeof singlesPtc === 'number' && !(typeof doublesPtc === 'number')) { return singlesPtc; }
     if (!(typeof singlesPtc === 'number') && typeof doublesPtc === 'number') { return doublesPtc; }
     if (typeof singlesPtc === 'number' && typeof doublesPtc === 'number') {
-      return ((singlesPtc * (this.playedSinglesGames.length / this.totalGamesPlayed))
-        + (doublesPtc * (this.playedDoublesGames.length / this.totalGamesPlayed)));
+      return ((singlesPtc * (singlesSet.length / (singlesSet.length + doublesSet.length)))
+        + (doublesPtc * (doublesSet.length / (singlesSet.length + doublesSet.length))));
     }
   }
 
