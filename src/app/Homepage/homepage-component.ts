@@ -50,16 +50,16 @@ export class HomepageComponent implements OnInit {
 
     calculateWinPercentages() {
       if (this.playedSinglesGames && this.playedSinglesGames.length > 0) {
-        this.singlesValidatorPct = this.playedSinglesGames.filter((game) => game.validator === game.winner).length
+        this.singlesValidatorPct = this.playedSinglesGames.filter((game) => game.validator && (game.validator === game.winner)).length
           / this.playedSinglesGames.length;
-        this.singlesCoinFlipPct = this.playedSinglesGames.filter((game) => game.coinFlipWinner === game.winner).length
-          / this.playedSinglesGames.length;
+        this.singlesCoinFlipPct = this.playedSinglesGames.filter((game) => game.coinFlipWinner
+          && (game.coinFlipWinner === game.winner)).length / this.playedSinglesGames.length;
       }
       if (this.playedDoublesGames && this.playedDoublesGames.length > 0) {
-        this.doublesValidatorPct = this.playedDoublesGames.filter((game) => game.validator === game.winner).length
+        this.doublesValidatorPct = this.playedDoublesGames.filter((game) => game.validator && (game.validator === game.winner)).length
           / this.playedDoublesGames.length;
-        this.doublesCoinFlipPct = this.playedDoublesGames.filter((game) => game.coinFlipWinner === game.winner).length
-          / this.playedDoublesGames.length;
+        this.doublesCoinFlipPct = this.playedDoublesGames.filter((game) => game.coinFlipWinner
+          && game.coinFlipWinner === game.winner).length / this.playedDoublesGames.length;
       }
       this.totalValidatorPct = this.setTotalValidationPtc(this.singlesValidatorPct, this.doublesValidatorPct);
       this.totalCoinFlipPct = this.setTotalCoinFlipPtc(this.singlesCoinFlipPct, this.doublesCoinFlipPct);

@@ -100,7 +100,7 @@ export class ViewRoundComponent implements OnInit {
             }
             this.recordPools.push(playerRecords);
             return this._gameService.getSinglesGamesInPool(poolId, this.tournamentId, this.roundId).pipe(tap((games) => {
-              this.allGamesPlayed = !games.find((game) => !game.winner);
+              this.allGamesPlayed = games.find((game) => !game.winner) === undefined;
               this.gamePools.push(games);
               this.calculatePlayerRecords(games);
               this.sortByStanding();
@@ -160,7 +160,7 @@ export class ViewRoundComponent implements OnInit {
             }
             this.recordPools.push(playerRecords);
             return this._gameService.getDoublesGamesInPool(poolId, this.tournamentId, this.roundId).pipe(tap((games) => {
-              this.allGamesPlayed = !games.find((game) => !game.winner);
+              this.allGamesPlayed = games.find((game) => !game.winner) === undefined;
               this.gamePools.push(games);
               this.calculatePlayerRecords(games);
               this.sortByStanding();
