@@ -162,7 +162,7 @@ export class ViewRoundComponent implements OnInit {
             return this._gameService.getDoublesGamesInPool(poolId, this.tournamentId, this.roundId).pipe(tap((games) => {
               this.allGamesPlayed = games.filter((game) => game.winner === null).length === 0;
               this.gamePools.push(games);
-              this.calculatePlayerRecords(games);
+              this.calculateTeamRecords(games);
               this.sortByStanding();
             }));
           })));
