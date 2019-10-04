@@ -156,7 +156,7 @@ export class ViewRoundComponent implements OnInit {
           poolDataObservables.push(this._setupService.getDoublesPoolPlacements(pool['id']).pipe(concatMap((placements: any) => {
             const playerRecords: PlayerRecord[] = [];
             for (const placement of placements) {
-              playerRecords.push(new PlayerRecord(pool['id'], pool['number'], placement['team_id'], null));
+              playerRecords.push(new PlayerRecord(pool['id'], pool['number'], null, placement['team_id']));
             }
             this.recordPools.push(playerRecords);
             return this._gameService.getDoublesGamesInPool(poolId, this.tournamentId, this.roundId).pipe(tap((games) => {
