@@ -117,25 +117,20 @@ export class PlayerListComponent implements OnInit {
       for (const player of this.players) {
         player.totalWins = player.singlesWins + player.doublesWins;
         player.totalLosses = player.singlesLosses + player.doublesLosses;
-        player.totalWinPtg = this.setTotalWinPtg(player.singlesWinPtg, player.doublesWinPtg);
-        player.totalAvgDiff = this.setTotalAvgDiff(player.singlesAvgDiff, player.doublesAvgDiff);
+        player.totalWinPtg = this.setTotalWinPtg(player.totalWins, player.totalLosses);
+        player.totalAvgDiff = this.setTotalAvgDiff(player.totalSinglesDiff, player.totalDoublesDiff, player.totalWins, player.totalLosses);
       }
       this.sortPlayers('total');
     });
   }
 
-  setTotalWinPtg(singlesPtc, doublesPtc) {
-    if (!(typeof singlesPtc === 'number') && !(typeof doublesPtc === 'number')) { return undefined; }
-    if (typeof singlesPtc === 'number' && !(typeof doublesPtc === 'number')) { return singlesPtc; }
-    if (!(typeof singlesPtc === 'number') && typeof doublesPtc === 'number') { return doublesPtc; }
-    if (typeof singlesPtc === 'number' && typeof doublesPtc === 'number') { return (singlesPtc + doublesPtc) / 2; }
+  setTotalWinPtg(totalWins, totalLosses) {
+    return totalWins + totalLosses === 0 ? undefined : totalWins / (totalWins + totalLosses);
   }
 
-  setTotalAvgDiff(singlesDiff, doublesDiff) {
+  setTotalAvgDiff(singlesDiff, doublesDiff, wins, losses) {
     if (!(typeof singlesDiff === 'number') && !(typeof doublesDiff === 'number')) { return undefined; }
-    if (typeof singlesDiff === 'number' && !(typeof doublesDiff === 'number')) { return singlesDiff; }
-    if (!(typeof singlesDiff === 'number') && typeof doublesDiff === 'number') { return doublesDiff; }
-    if (typeof singlesDiff === 'number' && typeof doublesDiff === 'number') { return (singlesDiff + doublesDiff) / 2; }
+    return (singlesDiff + doublesDiff) / (wins + losses);
   }
 
   fetchCalculatedSinglesStats(player): Observable<any> {
@@ -147,6 +142,7 @@ export class PlayerListComponent implements OnInit {
       player.singlesWinPtg = (player.singlesWins + player.singlesLosses) > 0 ?
         player.singlesWins / (player.singlesWins + player.singlesLosses)
         : undefined;
+      player.totalSinglesDiff = result[0].plus + result[0].minus;
       player.singlesAvgDiff = (player.singlesWins + player.singlesLosses) > 0 ?
         ((result[0].plus + result[0].minus) / (player.singlesWins + player.singlesLosses))
         : undefined;
@@ -173,6 +169,7 @@ export class PlayerListComponent implements OnInit {
           totalPlus += record[0].plus;
           totalMinus += record[0].minus;
         }
+        player.totalDoublesDiff = totalPlus + totalMinus;
         player.doublesWinPtg = (player.doublesWins + player.doublesLosses) > 0
           ? player.doublesWins / (player.doublesWins + player.doublesLosses)
           : undefined;
