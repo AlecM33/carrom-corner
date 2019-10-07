@@ -130,6 +130,8 @@ export class PlayerListComponent implements OnInit {
 
   setTotalAvgDiff(singlesDiff, doublesDiff, wins, losses) {
     if (!(typeof singlesDiff === 'number') && !(typeof doublesDiff === 'number')) { return undefined; }
+    if (!(typeof singlesDiff === 'number') && typeof doublesDiff === 'number') { return doublesDiff / (wins + losses); }
+    if (typeof singlesDiff === 'number' && !(typeof doublesDiff === 'number')) { return singlesDiff / (wins + losses); }
     return (singlesDiff + doublesDiff) / (wins + losses);
   }
 
